@@ -1,5 +1,5 @@
 <!--meta {"title":"Explore sampling methods","description":"Stage 3: in Plan mode, brainstorm how users will explore the selection process, then add statistically correct simple random, systematic and stratified sampling to your app."} -->
-<p class="eyebrow">Stage 3 of 7</p>
+<p class="eyebrow">Stage 3 of 6</p>
 <h1>Explore sampling methods</h1>
 <p class="core-question">Can someone understand the difference between the three methods by using your app?</p>
 
@@ -34,7 +34,7 @@ Context: my data is data/<span class="sc" data-sc="file">your CSV file</span>, N
   <p class="mode-switch build"><span class="mode-icon" aria-hidden="true">2</span><span>Switch out of Plan mode before sending this.</span></p>
 <pre class="prompt"><code>I have switched you out of Plan mode. Implement the interaction approach I chose: [describe it]. My reason: [your reason]. Keep my existing visualization and design.
 - Replace the temporary sample with three methods in the shared sampling module, following the sampling rules in AGENT_BRIEF.md: simple random sampling without replacement; systematic sampling with a random start in the file's row order; stratified sampling on [your group column].
-- Use the same total sample size for all three methods, default 100, and let users change it. Systematic sampling must work for every n up to N, including 10, 40, 100, 160 and 640, so never restrict n to divisors of N.
+- Use the same total sample size for all three methods, default 100, and let users change it. Systematic sampling must work for every n up to N, including 10, 100 and 640, so never restrict n to divisors of N.
 - Users must be able to identify the selection rule for each method, change a relevant setting, and see the selected observations and the estimate update beside the true mean.
 - Systematic: show the row order, the interval and the random start, and tell the user whether the whole-number or the fractional-interval design is in use.
 - Stratified: show the allocation for each stratum (whole numbers that total n, none above the stratum size), and the population-weighted estimate with its weights.
@@ -46,19 +46,19 @@ Context: my data is data/<span class="sc" data-sc="file">your CSV file</span>, N
 {{checklist s3-done
 - You ran <code>bash run_app.sh</code> and used all three methods yourself.
 - <strong>Simple random:</strong> no row appears twice. With the same seed and settings you get the same sample; with several other seeds the rule and labels stay the same while the selected rows can change. {{help seed}}
-- <strong>Systematic:</strong> read the interval and the random start from the app, predict the next three selected row numbers, then check them. Change n (try 10, 40, 160 and 640): every sample still has exactly n distinct rows.
+- <strong>Systematic:</strong> read the interval and the random start from the app, predict the next three selected row numbers, then check them. Change n (try 10, 100 and 640): every sample still has exactly n distinct rows.
 - <strong>Stratified:</strong> the allocations add up to n and the weights add up to 1 (check by hand), and each stratum's allocation does not exceed its size.
-- Your choices and reasons are in <code>DECISIONS.md</code>. Commit and push.
 }}
 <p>Then ask yourself: can someone understand the difference between the three methods by using my app?</p>
+<p><span class="tag optional">Optional</span> Decorative styling, animations and extra features are optional; clear labels and working controls are what matter.</p>
 
 <h2 id="record">Record your findings</h2>
-<p>In <code>DECISIONS.md</code>, section 2, stage 3, before you build:</p>
+<p>In <code>DECISIONS.md</code>, section 2, before you build:</p>
 <ul>
   <li>the interaction approach you chose and why;</li>
   <li>your stratification column and why you chose it.</li>
 </ul>
-<p>Nothing else is needed for this stage.</p>
+<p>Then commit and push. Nothing else is needed for this stage.</p>
 
 <h2 id="more-help">More help</h2>
 <details><summary>Systematic sampling when N/n is not a whole number</summary><div class="details-body">

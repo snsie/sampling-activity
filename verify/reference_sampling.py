@@ -149,7 +149,7 @@ def check_dataset(key: str, reps: int) -> dict:
     groups = [r[STRATA[key]] for r in rows]
     rng = random.Random(1)
 
-    for n in (10, 40, 100, 160, 640):
+    for n in (10, 40, 100, 160, 640):  # required sizes 10, 100, 640, plus others: systematic must work for any n
         a = srs(N, n, rng)
         assert len(set(a)) == n and len(a) == n
         b = systematic(N, n, rng)
@@ -189,7 +189,7 @@ def check_dataset(key: str, reps: int) -> dict:
         report["baseline_n100"][m] = s
     if N % 100 == 0:
         report["baseline_n100"]["systematic_exact"] = summary(enumerate_systematic(y, 100), truth)
-    for n in (10, 40, 160, 640):
+    for n in (10, 100, 640):
         report["srs_by_size"][n] = summary(repeat("srs", y, groups, n, reps, seed=200 + n), truth)
     report["demonstration_challenges"] = demonstrations(key, rows, target, reps)
     return report

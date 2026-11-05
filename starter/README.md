@@ -24,7 +24,7 @@ Open the address it prints. Stop it with Ctrl+C.
 |---|---|
 | `AGENT_BRIEF.md` | Instructions and rules for the coding agent. It reads this first. |
 | `SETUP.md` | Setup, running, backing up and (optional) publishing. |
-| `DECISIONS.md` | My own decisions, predictions, hypothesis and interpretation. |
+| `DECISIONS.md` | My own decisions, results table, findings, challenge hypothesis and interpretation. |
 | `data/` | The three populations, data dictionary (`README.md`), `manifest.json` and `datasets.json`. |
 | `load_data.py` | Minimal loader: prints the size and columns of a dataset. |
 | `evidence/` | Screenshots or exported results for my submission. |

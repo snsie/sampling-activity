@@ -12,7 +12,7 @@ from playwright.sync_api import sync_playwright
 
 BASE = sys.argv[1] if len(sys.argv) > 1 else "http://localhost:8765/some-repo/"
 SHOTS = Path(sys.argv[2]) if len(sys.argv) > 2 else None
-PATH = ["", "data.html", "setup.html", "design.html", "methods.html", "repeated.html", "sample-size.html", "challenge.html", "submit.html"]
+PATH = ["", "data.html", "setup.html", "design.html", "methods.html", "compare.html", "challenge.html", "submit.html"]
 errors = []
 
 

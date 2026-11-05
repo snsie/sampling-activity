@@ -1,0 +1,104 @@
+<!--meta {"title":"Compare methods & sample size","description":"Stage 4: in Plan mode, design two experiments in your app: compare simple random, systematic and stratified sampling at n = 100, then investigate how sample size (n = 10, 100 and 640) changes the reliability of simple random sampling."} -->
+<p class="eyebrow">Stage 4 of 6</p>
+<h1>Compare methods &amp; sample size</h1>
+<p class="core-question">Across many samples, which method's estimates stay close to the true mean, and how does sample size change how reliable they are?</p>
+
+<dl class="facts">
+  <dt>Learning objective</dt><dd>Use repeated samples {{help sampling-distribution}} to tell bias {{help bias}} (consistent error) from variability {{help variability}} (random scatter), summarise both with RMSE {{help rmse}}, and show how the spread of estimates changes with n {{help sample-size}}.</dd>
+  <dt>Reader</dt><dd>The health professional deciding which method to trust, and how large a sample to pay for.</dd>
+  <dt>Data</dt><dd>The baseline population {{help baseline}}: <code>data/{{sc file}}</code> as supplied. The population stays the same in both experiments.</dd>
+</dl>
+
+<h2 id="task">Your task</h2>
+<p>Add two experiments to your app. How you present them is your design. Each result must show its settings, so you can read it and record it.</p>
+<ol class="steps">
+  <li><strong>Experiment A: compare the three methods at n = 100.</strong> Simple random {{help srs}}, systematic {{help systematic}} and stratified {{help stratified}} sampling, same population, same n.</li>
+  <li><strong>Experiment B: investigate sample size.</strong> Simple random sampling only, at <strong>n = 10, 100 and 640</strong>. Keep the population and method fixed so n is the only thing that changes. Reuse the simple random n = 100 results from experiment A when the population and settings match; otherwise rerun them.</li>
+</ol>
+<p>Your app must have all of these:</p>
+{{checklist s4-req
+- <strong>Experiment A:</strong> all three methods at n = 100, on the same population.
+- <strong>Experiment B:</strong> simple random sampling at n = 10, 100 and 640 (you may offer more sizes), with the population and method held fixed.
+- For each condition, <strong>at least 1,000 random repetitions, or all possible random starts when exact enumeration is available for systematic sampling.</strong> {{help repeated-sampling}} {{help exact-enumeration}}
+- Every current result labelled <strong>Monte Carlo</strong> (random repetitions, with the seed shown) or <strong>exact</strong> (every possible start; no seed), with its population, method, settings, n and repetition or start count. Different conditions are shown separately, never pooled. {{help monte-carlo}}
+- For each result: a display of the distribution of estimates with a clearly labelled true mean, and bias, SD of the estimates and RMSE in {{sc units}}.
+- A single sample's result clearly distinguished from the distribution across repetitions.
+- Readable labels, usable controls and visualizations someone else can interpret.
+}}
+<div class="callout optional">
+  <p class="callout-title"><span class="tag optional">Optional</span> Not needed to finish</p>
+  <p>Your app only has to show the <strong>current</strong> results with their settings. You can rerun an experiment and copy the key numbers into the table in <code>DECISIONS.md</code>. Saved experiment histories, tools for managing earlier runs, other methods across sample sizes, extra sizes, decorative styling, animations and extra features are all optional.</p>
+</div>
+
+<h2 id="plan-build">Plan and build</h2>
+<div class="callout plan-task">
+  <p class="callout-title">Ask your agent <span class="tag plan">Plan mode</span></p>
+  <p class="mode-switch"><span class="mode-icon" aria-hidden="true">1</span><span>First, switch your agent to Plan mode.<span class="note">No file changes during this discussion. <a href="setup.html#modes">How to switch</a></span></span></p>
+<pre class="prompt"><code>I have switched you to Plan mode. Stay in Plan mode and do not implement changes yet. Help me brainstorm three distinct ways to present two experiments in my app. Experiment A compares simple random, systematic and stratified sampling at n = 100 on the same population. Experiment B investigates sample size using simple random sampling at n = 10, 100 and 640, with the population and method fixed. Users must be able to see how much estimates vary, compare them with the true population mean, and tell consistent error from random variation. Keep the true mean visible and label each current result with its settings. Keep the plan simple: do not design saved experiment histories or extra features unless I ask. Explain the strengths and limitations of each approach, and discuss the ideas with me before implementing anything.
+
+Please do not run any experiments or tell me what results to expect: I will read and interpret them myself.</code></pre>
+</div>
+<p><strong>Choose one presentation</strong> and record it with a brief reason in <code>DECISIONS.md</code> (<a href="#record">below</a>). Then switch your agent out of Plan mode and send the build prompt.</p>
+<div class="callout agent-task">
+  <p class="callout-title">Ask your agent <span class="tag">Implementation mode</span></p>
+  <p class="mode-switch build"><span class="mode-icon" aria-hidden="true">2</span><span>Switch out of Plan mode before sending this.</span></p>
+<pre class="prompt"><code>I have switched you out of Plan mode. Implement the presentation I chose: [describe it]. My reason: [your reason]. Add it to my existing app and keep my design.
+- Following AGENT_BRIEF.md, add repeated sampling to the shared sampling module: for each condition, at least 1,000 random repetitions, or all possible random starts when exact enumeration is available for systematic sampling. Random repetitions must be seeded and reproducible.
+- Experiment A: simple random, systematic and stratified sampling at n = 100, same population.
+- Experiment B: simple random sampling at n = 10, 100 and 640, with the population and method fixed. Reuse the simple random n = 100 result from Experiment A when the population and settings match.
+- Label every current result Monte Carlo (with its seed) or exact (no seed), and show its population, method, settings, n and repetition or start count. Never pool results that differ in any label.
+- Show the distribution of estimates in my chosen presentation, with the true population mean clearly labelled, plus bias (mean of estimates minus true mean), the SD of the estimates and RMSE, in <span class="sc" data-sc="units">the target's units</span>, as AGENT_BRIEF.md defines them. Clearly distinguish a single sample's result from the distribution across repetitions.
+- The app only needs to show current results. Do not add saved experiment histories, styling, animations or other extras unless I ask.
+- Do not tell me what the results mean; I will interpret them myself.</code></pre>
+</div>
+
+<h2 id="check">Check your app</h2>
+{{checklist s4-done
+- You ran both experiments yourself, and every result shows its label (Monte Carlo or exact), seed if random, n and repetition or start count.
+- The same seed and settings reproduce the same Monte Carlo numbers. Compare several seeds: does the pattern stay the same? Exact results need no seed. {{help seed}}
+- The simple random n = 100 result in experiment B matches experiment A (reused, or rerun with the same seed and settings).
+- Using only your app, you can point to the number or feature that shows each method's spread and each method's distance from the true mean.
+- For one result, RMSE² is close to bias² + SD². {{help rmse}}
+- You can find one sample at a larger n that is farther from the true mean than some sample at a smaller n, and your app still shows the larger n has the smaller spread across repetitions.
+}}
+
+<h2 id="record">Record your findings</h2>
+<p>In <code>DECISIONS.md</code>:</p>
+<ul>
+  <li><strong>Before you build</strong> (section 2): the presentation you chose and why.</li>
+  <li><strong>After you run it</strong> (section 3): one row per result in the compact results table: population or condition, method, seed (or “exact”), n, repetition or start count, Monte Carlo or exact, and bias, SD and RMSE.</li>
+  <li><strong>After you read it</strong> (section 4), in your own words: <strong>(a)</strong> how the three methods compare at n = 100; <strong>(b)</strong> how sample size affects the spread of estimates and the estimation error, and what a larger sample cannot fix.</li>
+</ul>
+<p>Then commit and push.</p>
+
+<h2 id="more-help">More help</h2>
+<details><summary>Which methods can be enumerated exactly?</summary><div class="details-body">
+  <p>Only systematic sampling with a whole-number interval k = N/n. The random start is its only random step, so there are just k equally likely samples; listing all k gives the exact distribution, and drawing 1,000 random starts would only repeat them. Simple random sampling, stratified sampling and the fractional-interval design use random repetitions, which are Monte Carlo. For your file, the interval at each size is:</p>
+  {{intervals clinic}}
+  {{intervals costs}}
+  {{intervals heart}}
+  <p>Exact results do not depend on a seed. Monte Carlo results do, so compare several seeds before trusting small differences.</p></div></details>
+<details><summary>What does RMSE add to bias and SD?</summary><div class="details-body">
+  <p>RMSE is the typical size of the error of one estimate, counting both a consistent offset (bias) and random scatter (SD): RMSE² = bias² + SD², with SD calculated by dividing by the number of repetitions (or starts). It is in the same units as your target, so you can say “a typical estimate is off by about … {{sc units}}”.</p></div></details>
+<details><summary>Unbiased does not mean reliable</summary><div class="details-body">
+  <p>The specified designs and estimators are unbiased for the finite-population mean: across all possible samples the average estimate equals the true mean. A method can stay unbiased and still be less reliable, because its estimates vary more from sample to sample. A larger sample narrows that spread; it cannot repair an estimate that is consistently off for some other reason, such as a wrong weight or a changed population.</p>
+  <p>With random repetitions you only see a finite number of samples, so the bias you measure is a small nonzero number even for an unbiased method, and its sign can change with the seed.</p></div></details>
+<details><summary>Why keep the population and method fixed in experiment B?</summary><div class="details-body">
+  <p>To isolate one cause. If anything else changes along with n, you cannot tell which change produced the difference.</p></div></details>
+<details><summary>Optional extension: other methods across sample sizes</summary><div class="details-body">
+  <p>Compare systematic or stratified sampling across sizes one method at a time, with the same repetitions per size. Every size must follow that method's rules. <strong>Systematic:</strong> use the whole-number interval when N/n is whole and the fractional interval otherwise; never drop a size because N/n is not whole. <strong>Stratified:</strong> n must be at least the number of strata and no larger than N.</p></div></details>
+<details><summary>Troubleshooting</summary><div class="details-body">
+  <ul>
+    <li><strong>Numbers change every time I run it.</strong> Check the seed is shown, fixed and passed to the shared sampling module. The same seed and settings must give the same numbers.</li>
+    <li><strong>The simple random n = 100 numbers differ between experiments.</strong> The seed, repetition count or population differs. Rerun both with identical settings.</li>
+    <li><strong>It runs slowly.</strong> Ask your agent to run the repetitions once, in the shared module, and reuse the numbers for every display. Do not lower the repetition count below 1,000.</li>
+    <li><strong>A result is missing a label.</strong> Ask your agent to show population, method, settings, seed, n and repetition count beside every result.</li>
+  </ul></div></details>
+<details><summary>Claims to avoid</summary><div class="details-body">
+  <ul>
+    <li>Calling a method biased because one sample missed the true mean, or because a small Monte Carlo bias changes sign with the seed.</li>
+    <li>“Smaller spread means no bias.” Spread and bias are separate questions.</li>
+    <li>“A bigger sample is always closer to the truth.” Larger samples are closer <em>on average</em>; any one sample can still miss.</li>
+    <li>Calling a method the best without saying for which population, which n, and by which measure.</li>
+    <li>Combining estimates from different seeds, methods, sizes or conditions into one set, or changing the method or population along with n.</li>
+  </ul></div></details>

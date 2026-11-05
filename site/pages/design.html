@@ -1,5 +1,5 @@
 <!--meta {"title":"Design your app","description":"Stage 2: in Plan mode, brainstorm three ways to visualize your population and a sample, choose one, then build your first app with a temporary sample and a launcher."} -->
-<p class="eyebrow">Stage 2 of 7</p>
+<p class="eyebrow">Stage 2 of 6</p>
 <h1>Design your app</h1>
 <p class="core-question">Can someone see the whole population, which rows were sampled, and how the sample's estimate compares with the truth?</p>
 
@@ -18,7 +18,9 @@
 - A temporary simple random sample of 100 rows, labelled as temporary, with its seed shown. {{help seed}}
 - One visual feature you chose to help reveal a sampling problem.
 - A working <code>run_app.sh</code>, so <code>bash run_app.sh</code> starts the app.
+- Readable labels, usable controls and a display someone else can interpret.
 }}
+<p><span class="tag optional">Optional</span> Decorative styling, animations, elaborate layouts and extra features are optional. A plain, clear display is enough.</p>
 
 <h2 id="plan-build">Plan and build</h2>
 <div class="callout plan-task">
@@ -38,7 +40,7 @@ My dataset: data/<span class="sc" data-sc="file">your CSV file</span> (<span cla
 - Load data/<span class="sc" data-sc="file">your CSV file</span> as the whole finite population (target <span class="sc" data-sc="target">the target column</span>, in <span class="sc" data-sc="units">the target's units</span>). Show the true mean over all rows, labelled as the true population mean.
 - For now, select a temporary simple random sample of 100 rows without replacement, with a visible seed, labelled as temporary. Highlight the selected observations within the full population and show the sample mean beside the true mean.
 - Include the visual feature I chose to reveal a sampling problem: [describe it].
-- Do not add the three sampling methods yet; they come in the next stage.
+- Do not add the three sampling methods yet; they come in the next stage. Keep the display clear and simple; do not add styling, animations or extra features unless I ask.
 - Write run_app.sh as AGENT_BRIEF.md describes. Then tell me where to run bash run_app.sh, the address to open and how to stop it. Leave the app stopped; I will run it myself.</code></pre>
 </div>
 
@@ -51,7 +53,7 @@ My dataset: data/<span class="sc" data-sc="file">your CSV file</span> (<span cla
 }}
 
 <h2 id="record">Record your findings</h2>
-<p>In <code>DECISIONS.md</code>, section 2, stage 2, before you build:</p>
+<p>In <code>DECISIONS.md</code>, section 2, before you build:</p>
 <ul>
   <li>the design you chose and why it helps someone understand sampling;</li>
   <li>the one visual feature meant to reveal a sampling problem, and what it is meant to help a user learn.</li>

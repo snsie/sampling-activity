@@ -1,7 +1,7 @@
 # My decisions and evidence notes
 
-Written by me, not by my AI agent. Write each prediction and my stage 6 hypothesis **before**
-running the experiment, and do not edit them afterwards; add a dated revision below instead.
+Written by me, not by my AI agent. Write my challenge hypothesis (section 5) **before** consulting
+my agent about it, and do not edit it afterwards; add a dated revision below instead.
 
 ## 1. Population and target
 
@@ -19,26 +19,35 @@ For each stage: the option I chose, why, and what it is meant to help a user lea
 
 - Stage 2, visualization (include one visual feature meant to reveal a sampling problem):
 - Stage 3, sampling interactions and stratification column:
-- Stage 4, repeated-sampling presentation:
-- Stage 5, sample-size exploration:
-- Stage 6, challenge controls:
+- Stage 4, presentation of the method comparison and sample-size experiments:
+- Stage 5, challenge controls:
 
-## 3. Predictions before experiments
+## 3. Results table
 
-- Stage 4 (which method I expect to perform best, and why), date written:
-- Stage 5 (what I expect to change as n grows, and what larger samples cannot fix), date written:
+One row per result I read from my app. Add rows as needed. Rerun and update a row whenever I
+like: my app does not need to keep a history of runs. Seed is "exact" for exact enumeration;
+type is Monte Carlo or exact. Keep results from different conditions in separate rows.
 
-## 4. Observations after experiments
+| Experiment | Population or condition | Method | Seed (or exact) | n | Repetitions or starts | Type | Bias | SD | RMSE |
+|---|---|---|---|---|---|---|---|---|---|
+| Methods at n = 100 | baseline | Simple random | | 100 | | | | | |
+| Methods at n = 100 | baseline | Systematic | | 100 | | | | | |
+| Methods at n = 100 | baseline | Stratified | | 100 | | | | | |
+| Sample size | baseline | Simple random | | 10 | | | | | |
+| Sample size | baseline | Simple random | | 640 | | | | | |
+| Challenge | | | | | | | | | |
 
-For each result I read from my app: population or condition, method, settings, seed (or "exact
-enumeration"), n, number of repetitions (or starts enumerated), whether it is Monte Carlo or
-exact, and the bias, SD and RMSE.
+The simple random n = 100 row is also the middle sample-size result when the population and
+settings match. If I reran it with different settings, I add a separate row.
 
-- Stage 4:
-- Stage 5:
-- Stage 6:
+## 4. Findings (in my own words, using my own numbers)
 
-## 5. Challenge hypothesis (written independently, before consulting my agent)
+- (a) The three sampling methods compared at n = 100 (bias versus variability, and for which population):
+- (b) How sample size affects the spread of estimates and the estimation error, and what a larger sample cannot fix:
+
+## 5. Challenge (hypothesis written independently, before consulting my agent)
+
+Hypothesis, written before I consult my agent:
 
 - Date written:
 - Method I chose to challenge:
@@ -47,14 +56,12 @@ exact, and the bias, SD and RMSE.
 - Evidence I expect across repeated samples:
 - Evidence that would contradict my hypothesis:
 
-## 6. Interpretation
+After I test it:
 
-- Bias vs variability in my results, and how they compared with my stage 4 prediction:
-- What changed as n grew, and what larger samples cannot fix (compared with my stage 5 prediction):
-- Did the evidence support my hypothesis? What else could explain it? Any dated revision (keep the original above):
-- Alternative method or correction I compared, and what it showed:
+- Test settings (conditions, methods, alternative method or correction, n, seeds); results are in the table above:
+- Did the evidence support my hypothesis? Bias versus variability, other explanations, what the alternative or correction showed, and any dated revision (keep the original above):
 
-## 7. AI use
+## 6. AI use
 
 - Tools used:
 - What I asked my agent to do, and what I checked myself:

@@ -116,7 +116,7 @@
   "repeated-sampling": {
     "term": "Repeated sampling",
     "group": "Judging a method",
-    "short": "Drawing many samples with the same method, size, settings and population, and keeping every estimate as one labelled set, to see how the method behaves rather than how one draw turned out.",
+    "short": "Drawing many samples with the same method, size, settings and population, and keeping every estimate together, labelled with its settings, to see how the method behaves rather than how one draw turned out.",
     "more": "Keep each experiment's estimates as its own set. Never pool estimates from different populations, conditions, methods, settings or sample sizes."
   },
   "sampling-distribution": {
@@ -188,6 +188,6 @@
   "decisions-md": {
     "term": "DECISIONS.md",
     "group": "Working with your agent",
-    "short": "Your own notes file: population, design choices, predictions, observations, challenge hypothesis, interpretation and AI use. You write it; your agent does not."
+    "short": "Your own notes file: population, design choices, results table, findings, challenge hypothesis, interpretation and AI use. You write it; your agent does not."
   }
 }

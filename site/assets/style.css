@@ -113,6 +113,7 @@ main > .wide, main > .table-wrap, main > .dataset { max-width: 60rem; }
 .callout.agent-task { background: var(--surface-soft); border: 1px solid var(--line); border-left: 4px solid var(--accent); }
 .callout.plan-task { background: var(--plan-soft); border: 1px solid var(--line); border-left: 4px solid var(--plan); }
 .callout.try-it { background: var(--surface); border: 1px dashed var(--accent); }
+.callout.optional { background: var(--surface); border: 1px dashed var(--line); }
 .callout.avoid { background: var(--warn-soft); border-left: 4px solid var(--warn); }
 .callout.avoid .callout-title { color: var(--warn); }
 .mode-switch { display: flex; gap: 0.6rem; align-items: flex-start; font-weight: 650; background: var(--surface); border: 1.5px solid var(--plan); border-radius: 8px; padding: 0.6rem 0.8rem; margin: 0.25rem 0 0.9rem; }

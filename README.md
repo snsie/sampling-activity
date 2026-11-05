@@ -1,6 +1,6 @@
 # Judge the Sample
 
-Student guide and starter for an individual, agent-assisted sampling activity. Students choose one health population, build their own app with a coding agent across seven stages, and judge simple random, systematic and stratified sampling with repeated-sampling evidence.
+Student guide and starter for an individual, agent-assisted sampling activity. Students choose one health population, build their own app with a coding agent across six stages, and judge simple random, systematic and stratified sampling with repeated-sampling evidence.
 
 > Which sampling method would you trust for this population, at what sample size, and with what limits?
 
@@ -34,7 +34,7 @@ Deployed by `.github/workflows/deploy.yml`: pushes to `main` build `dist/` and p
 
 | Path | What it is |
 |---|---|
-| `site/pages/` | Page fragments: overview, seven stage briefs, setup, glossary |
+| `site/pages/` | Page fragments: overview, six stage briefs, setup, glossary |
 | `site/layout.html`, `site/assets/` | Shared layout, styles and behaviour (menu, help, checklists, scenario, copy) |
 | `site/terms.json` | Glossary; inline `?` help is generated from it |
 | `scripts/build.mjs` | Static build; fails on unknown terms, missing downloads or numbers, or stray tokens |

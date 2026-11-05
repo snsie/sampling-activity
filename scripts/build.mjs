@@ -36,11 +36,10 @@ export const NAV = [
   { group: "Build & investigate" },
   { file: "design", label: "2. Design your app", title: "Stage 2: Design your app" },
   { file: "methods", label: "3. Explore sampling methods", title: "Stage 3: Explore sampling methods" },
-  { file: "repeated", label: "4. Compare repeated samples", title: "Stage 4: Compare repeated samples" },
-  { file: "sample-size", label: "5. Change sample size", title: "Stage 5: Change sample size" },
-  { file: "challenge", label: "6. Challenge a method", title: "Stage 6: Challenge a method" },
+  { file: "compare", label: "4. Compare methods & sample size", title: "Stage 4: Compare methods & sample size" },
+  { file: "challenge", label: "5. Challenge a method", title: "Stage 5: Challenge a method" },
   { group: "Finish" },
-  { file: "submit", label: "7. Submit evidence", title: "Stage 7: Submit evidence" },
+  { file: "submit", label: "6. Submit evidence", title: "Stage 6: Submit evidence" },
   { group: "Resources" },
   { file: "glossary", label: "Glossary", title: "Glossary" },
 ];
@@ -194,7 +193,7 @@ function scenarioData() {
 }
 
 // Systematic-sampling design for each required sample size, computed from the manifest's row counts.
-export const REQUIRED_SIZES = [10, 40, 100, 160, 640];
+export const REQUIRED_SIZES = [10, 100, 640];
 const fmtRatio = (r) => (Number.isInteger(r) ? int(r) : r.toLocaleString("en-US", { maximumFractionDigits: 2 }));
 export function intervalRows(key) {
   const N = manifest.datasets[key].n_rows;

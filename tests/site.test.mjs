@@ -21,7 +21,7 @@ test("every page marks exactly one nav link as current, and it is itself", () =>
   }
 });
 
-test("Previous/Next follow the seven-stage path in order", () => {
+test("Previous/Next follow the six-stage path in order", () => {
   PATH.forEach((p, i) => {
     const prev = html[p].match(/rel="prev" href="([^"]+)"/)?.[1];
     const next = html[p].match(/rel="next" href="([^"]+)"/)?.[1];
@@ -31,10 +31,10 @@ test("Previous/Next follow the seven-stage path in order", () => {
   assert.ok(!/rel="(prev|next)"/.test(html.glossary), "glossary is off the path");
 });
 
-test("stage numbers 1-7 each appear once in the navigation, nothing higher", () => {
+test("stage numbers 1-6 each appear once in the navigation, nothing higher", () => {
   const labels = NAV.filter((n) => n.file).map((n) => n.label);
   const nums = labels.map((l) => l.match(/^(\d+)\./)?.[1]).filter(Boolean).map(Number);
-  assert.deepEqual(nums, [1, 2, 3, 4, 5, 6, 7]);
+  assert.deepEqual(nums, [1, 2, 3, 4, 5, 6]);
 });
 
 test("every relative link and download resolves to a built file", () => {
@@ -76,7 +76,7 @@ test("the starter contains no finished sampling app or launcher", () => {
 });
 
 test("every Plan-mode prompt tells the agent to stay in Plan mode and not implement", () => {
-  for (const p of ["design", "methods", "repeated", "sample-size", "challenge"]) {
+  for (const p of ["design", "methods", "compare", "challenge"]) {
     const blocks = [...html[p].matchAll(/<div class="callout plan-task">([\s\S]*?)<\/div>\s*\n/g)].map((m) => m[1]);
     assert.equal(blocks.length, 1, `${p} has one Plan-mode block`);
     assert.match(blocks[0], /switch your agent to Plan mode/i, `${p} visible switch instruction`);
@@ -85,7 +85,7 @@ test("every Plan-mode prompt tells the agent to stay in Plan mode and not implem
   }
 });
 
-test("stage 6: the hypothesis task comes before any agent prompt", () => {
+test("stage 5: the hypothesis task comes before any agent prompt", () => {
   const src = html.challenge;
   assert.ok(src.indexOf("write your hypothesis") < src.indexOf('<pre class="prompt"'));
   assert.ok(src.indexOf("I have already written my own hypothesis independently") > 0);
@@ -104,11 +104,11 @@ test("numbers on the guide come from the manifest", () => {
   assert.ok(html.data.includes(m.costs.true_mean.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })));
 });
 
-const STAGES = ["design", "methods", "repeated", "sample-size", "challenge"];
+const STAGES = ["design", "methods", "compare", "challenge"];
 const text = (h) => h.replace(/<[^>]+>/g, " ").replace(/&[a-z]+;/g, " ").replace(/\s+/g, " ");
 const starterText = (name) => readFileSync(join(ROOT, "starter", name), "utf8").replace(/\s+/g, " ");
 
-test("stages 2-6 share the same four sections, in order", () => {
+test("stages 2-5 share the same four sections, in order", () => {
   for (const p of STAGES) {
     const ids = ["task", "plan-build", "check", "record"].map((id) => html[p].indexOf(`id="${id}"`));
     assert.ok(ids.every((i) => i > 0) && ids.every((v, i) => i === 0 || v > ids[i - 1]), p);
@@ -117,7 +117,7 @@ test("stages 2-6 share the same four sections, in order", () => {
 });
 
 test("required sample sizes give a valid systematic design for every dataset", () => {
-  assert.deepEqual(REQUIRED_SIZES, [10, 40, 100, 160, 640]);
+  assert.deepEqual(REQUIRED_SIZES, [10, 100, 640]);
   for (const key of ["clinic", "costs", "heart"]) {
     const rows = intervalRows(key);
     assert.equal(rows.length, REQUIRED_SIZES.length);
@@ -126,7 +126,7 @@ test("required sample sizes give a valid systematic design for every dataset", (
   assert.ok(intervalRows("clinic").find((r) => r.n === 100).whole, "clinic n=100 is a whole interval");
   assert.ok(!intervalRows("costs").find((r) => r.n === 100).whole, "costs n=100 needs the fractional interval");
   assert.ok(!intervalRows("heart").find((r) => r.n === 100).whole, "heart n=100 needs the fractional interval");
-  for (const p of ["methods", "repeated", "sample-size"]) assert.equal((html[p].match(/data-sc-only="(clinic|costs|heart)"><table|class="table-wrap" data-sc-only/g) || []).length, 3, p);
+  for (const p of ["methods", "compare"]) assert.equal((html[p].match(/data-sc-only="(clinic|costs|heart)"><table|class="table-wrap" data-sc-only/g) || []).length, 3, p);
 });
 
 test("the divisor-of-N option is gone and the repetition rule is consistent", () => {
@@ -136,19 +136,56 @@ test("the divisor-of-N option is gone and the repetition rule is consistent", ()
     assert.ok(!/changes? them only slightly|always (produces|gives) a different/i.test(text(f)), "no seed guarantee");
   }
   const rule = /at least 1,000 random repetitions, or all possible random starts when exact enumeration is available for systematic sampling/;
-  for (const p of ["repeated", "challenge"]) assert.match(text(html[p]), rule, p);
+  for (const p of ["compare", "challenge"]) assert.match(text(html[p]), rule, p);
   assert.match(starterText("AGENT_BRIEF.md"), /at least 1,000 random repetitions, or all possible random starts when\s+exact enumeration is available for systematic sampling/);
 });
 
-test("stage 5 requires simple random sampling at four sizes and makes other methods optional", () => {
-  const t = text(html["sample-size"]);
-  assert.match(t, /Simple random sampling at n = 10, 40, 160 and 640/);
-  assert.match(t, /at least 1,000 random repetitions per size/);
-  assert.match(t, /Optional Other methods are an optional extension/);
-  assert.match(text(html.submit), /simple random sampling at n = 10, 40, 160 and 640, at least 1,000 random repetitions each/);
+test("stage 4 merges two experiments: methods at n = 100, then SRS at n = 10, 100 and 640", () => {
+  const t = text(html.compare);
+  assert.match(t, /Experiment A: compare the three methods at n = 100/);
+  assert.match(t, /Experiment B: investigate sample size/);
+  assert.match(t, /simple random sampling at n = 10, 100 and 640/);
+  assert.match(t, /Reuse the simple random n = 100 results from experiment A when the population and settings match/);
+  assert.match(t, /For each condition, at least 1,000 random repetitions, or all possible random starts/);
+  assert.match(t, /population and method held fixed/);
+  assert.match(t, /Unbiased does not mean reliable/);
+  assert.match(t, /Optional Not needed to finish/);
+  assert.match(text(html.submit), /simple random sampling at n = 10, 100 and 640/);
 });
 
-test("stage 6 explains unbiased-but-variable methods without example scenarios", () => {
+test("no required four-size comparison, old stage pages or experiment history requirement remains", () => {
+  const files = [...Object.values(html), ...["AGENT_BRIEF.md", "DECISIONS.md", "README.md", "SETUP.md", "evidence/README.md"].map(starterText)];
+  for (const f of files) {
+    const t = text(f);
+    assert.ok(!/n = 10, 40, 160/.test(t) && !/10, 40, 100, 160/.test(t) && !/\b(40|160) and 640\b/.test(t), "no four-size comparison");
+    assert.ok(!/stage 7|Stage 7|of 7\b|seven/.test(t), "no seventh stage");
+    assert.ok(!/(Compare repeated samples|Change sample size)/.test(t), "old stage titles are gone");
+  }
+  for (const gone of ["repeated.html", "sample-size.html"]) assert.ok(!existsSync(join(DIST, gone)), gone);
+  for (const f of files) assert.ok(!/kept as (a|its own) (separate|labelled) set|as its own labelled set|separate set/i.test(text(f)), "no persistent result-set requirement");
+});
+
+test("history, polish and extra features are marked optional and population visualization stays required", () => {
+  for (const p of ["design", "methods", "compare", "challenge", "submit"]) assert.match(text(html[p]), /Optional/, p);
+  assert.match(text(html.compare), /Saved experiment histories, tools for managing earlier runs/);
+  assert.match(text(html.index), /Essential and optional/);
+  const brief = starterText("AGENT_BRIEF.md");
+  assert.match(brief, /Saved experiment histories and tools for managing earlier runs are optional/);
+  assert.match(brief, /Optional:\*\* decorative styling, animations, elaborate layouts, experiment histories/);
+  assert.match(text(html.design), /The full population: all/);
+  assert.match(text(html.design), /One visual feature you chose to help reveal a sampling problem/);
+  assert.match(text(html.design), /Readable labels, usable controls/);
+});
+
+test("DECISIONS.md has a compact results table with the three findings and the challenge", () => {
+  const d = starterText("DECISIONS.md");
+  assert.match(d, /\| Experiment \| Population or condition \| Method \| Seed \(or exact\) \| n \|/);
+  for (const row of ["Simple random | | 100", "Systematic | | 100", "Stratified | | 100", "Simple random | | 10", "Simple random | | 640"]) assert.ok(d.includes(row), row);
+  assert.ok(!/\| 40 \||\| 160 \|/.test(d), "no 40 or 160 row");
+  for (const f of ["(a) The three sampling methods compared at n = 100", "(b) How sample size affects the spread of estimates and the estimation error", "Hypothesis, written before I consult my agent", "Evidence that would contradict my hypothesis"]) assert.ok(d.includes(f), f);
+});
+
+test("stage 5 explains unbiased-but-variable methods without example scenarios", () => {
   const t = text(html.challenge);
   assert.match(t, /unbiased for the finite-population mean/);
   assert.match(t, /stay unbiased and still become less reliable, because its estimates vary more/);
@@ -159,10 +196,10 @@ test("stage 6 explains unbiased-but-variable methods without example scenarios",
 
 test("DECISIONS.md has every field the instructions ask students to fill in", () => {
   const d = starterText("DECISIONS.md");
-  for (const field of ["Number of rows (N)", "Row order", "Date written", "Evidence that would contradict my hypothesis", "date written", "What changed as n grew", "stratification column"]) {
+  for (const field of ["Number of rows (N)", "Row order", "Date written", "Evidence that would contradict my hypothesis", "How sample size affects the spread", "stratification column"]) {
     assert.ok(d.includes(field), field);
   }
-  assert.ok(!/Stage 6 \(what evidence I expect/.test(d), "stage 6 prediction lives with the hypothesis in section 5");
+  assert.ok(!/Stage 6 \(what evidence I expect/.test(d), "challenge prediction lives with the hypothesis in section 5");
 });
 
 test("the overview opens with the agreed sentence and the guide invents no submission details", () => {

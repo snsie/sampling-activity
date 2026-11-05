@@ -23,19 +23,19 @@ days or all people.
 ## Roles and boundaries
 
 - **You write, run and debug code.** You explain what you did in plain language.
-- **The student decides.** They choose and justify designs, record predictions, write the
+- **The student decides.** They choose and justify designs, write the
   challenge hypothesis, run the checks, interpret the evidence and write every explanation.
 - **Preserve the student's chosen design.** Build what they chose. If you think it must change,
   say why and ask first; never silently replace it with a default.
 - **Do not write the student's reasoning or responses.** Do not fill in or rewrite
   `DECISIONS.md`. You may build a display that shows notes the student wrote, unchanged.
-- **Do not supply the stage-6 challenge hypothesis.** Do not suggest population changes,
+- **Do not supply the stage-5 challenge hypothesis.** Do not suggest population changes,
   orderings or scenarios, before or after the student writes theirs. Do not suggest that a method
   should fail or show bias. The student does not have to "break" anything: a hypothesis that is
   not supported is a valid result. You may ask clarifying questions, check mathematical
   consistency, and help interpret evidence after the test.
-- **Do not reveal results before the student predicts.** When the student is about to record a
-  prediction, do not run the experiment or tell them what to expect.
+- **Do not reveal results or predict them.** Do not tell the student what to expect from an
+  experiment, and do not run one for them to interpret. Leave interpretation to the student.
 - Do not calculate the population's true mean for the student in stage 1 unless they ask you to
   check a value they have already calculated themselves.
 
@@ -66,7 +66,7 @@ language how each rule behaves and what the student can check in the app.
 - **Simple random sampling (SRS):** n distinct rows **without replacement**; every set of n rows
   equally likely. Estimate = sample mean.
 - **Systematic sampling with a random start**, in the file's row order (show that order). Support
-  every n with 1 ≤ n ≤ N, including the required sizes 10, 40, 100, 160 and 640: never restrict n
+  every n with 1 ≤ n ≤ N, including the required sizes 10, 100 and 640: never restrict n
   to divisors of N.
   - If N/n is a whole number k: random start r from 1..k, then rows r, r+k, r+2k, … (n rows).
   - Otherwise use the fractional-interval design: k = N/n, start u uniform on (0, k], rows
@@ -104,15 +104,17 @@ language how each rule behaves and what the student can check in the app.
   "Monte Carlo". The specified designs with their correct estimators are unbiased for the
   finite-population mean, so a small nonzero bias in a Monte Carlo result can be simulation
   variability.
-- **Result sets.** Keep each experiment's estimates available as its own set, so experiments can
-  be compared. Label every set with: population or condition, method, settings (for example the
-  stratification column and allocation), seed (where random), n, and the repetition count or
-  exact-enumeration count. Summaries use one set only. Never pool or average sets that differ in
-  any label. Re-running an experiment replaces its set or starts a new labelled set; it never
-  silently adds to an old one.
+- **Current results.** The app must show its current results clearly identified with their
+  settings: population or condition, method, settings (for example the stratification column and
+  allocation), seed (where random), n, and the repetition count or exact-enumeration count.
+  Summaries use one condition only. Never pool or average results that differ in any label.
+  Re-running an experiment replaces its current result; it never silently adds to an old one.
+  The app does **not** need to save earlier runs: the student records the key results in a table
+  in `DECISIONS.md`. Saved experiment histories and tools for managing earlier runs are optional;
+  build them only if the student asks.
 - **Labels.** Always label the true population mean. Label a single sample's result separately
   from repeated-sampling results. Label baseline vs modified populations.
-- **Modified populations (stage 6).** Keep the original data recoverable and unchanged on disk;
+- **Modified populations (stage 5).** Keep the original data recoverable and unchanged on disk;
   apply changes to a copy, label it as modified, recompute its true mean (reordering rows does
   not change it; changing values or membership does), and keep n equal across methods and
   conditions. Never alter a sampling rule or estimator to force a result.
@@ -126,6 +128,16 @@ language how each rule behaves and what the student can check in the app.
   how to stop it (Ctrl+C). Let the student run it themselves.
 - Keep dependencies few and pinned (for example in `requirements.txt` or `package.json`).
 
+## Essential and optional
+
+- **Essential:** the correct sampling rules and estimators, reproducible results (same seed and
+  settings), and labels, controls and visualizations that a health professional can read and
+  interpret. The population visualization is the student's own design and must show the full
+  population, the sampled rows, and the sample estimate beside the labelled true mean.
+- **Optional:** decorative styling, animations, elaborate layouts, experiment histories and extra
+  app features. Do not add them unless the student asks, and never suggest they are needed to
+  finish. Keep the app simple and clear.
+
 ## Stages (the student's guide has the full brief for each)
 
 1. Understand the population (student work; no app yet).
@@ -134,16 +146,15 @@ language how each rule behaves and what the student can check in the app.
 3. Plan mode: brainstorm interactions → student chooses → implement SRS, systematic and stratified
    sampling (rules above), with an explained selection rule, a changeable setting, and the selected
    rows and estimate updating.
-4. Student predicts → Plan mode: brainstorm presentation → student chooses → repeated sampling at
-   n = 100 for all three methods on the baseline population (repetition rule above), distribution
-   of estimates with labelled true mean, bias, SD and RMSE, each result labelled exact or Monte
-   Carlo.
-5. Student predicts → Plan mode: brainstorm sample-size exploration → student chooses → SRS at
-   n = 10, 40, 160 and 640 (at least), ≥1,000 repetitions per size, baseline population and method
-   held fixed, one labelled result set per size. Other methods across sizes are an optional
-   extension: every size must follow that method's rules.
-6. Student writes their own hypothesis first → Plan mode: plan controls for *their* hypothesis →
+4. Plan mode: brainstorm a presentation → student chooses → two experiments on the baseline
+   population, each result labelled exact or Monte Carlo, with a distribution of estimates, the
+   labelled true mean, bias, SD and RMSE (repetition rule above):
+   - Experiment A: SRS, systematic and stratified at n = 100.
+   - Experiment B: SRS at n = 10, 100 and 640, with the population and method held fixed. Reuse
+     the SRS n = 100 result from experiment A when the population and settings match.
+   Other methods across sizes are an optional extension: every size must follow that method's rules.
+5. Student writes their own hypothesis first → Plan mode: plan controls for *their* hypothesis →
    student chooses → build user-controlled conditions, baseline vs modified comparison, repeated
    sampling (repetition rule above) for each method and condition, and an alternative method or
    justified correction.
-7. Student assembles evidence.
+6. Student assembles evidence: the results table, three findings and the challenge in `DECISIONS.md`.

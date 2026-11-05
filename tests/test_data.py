@@ -112,11 +112,11 @@ class TestReferenceDesigns(unittest.TestCase):
         self.assertLessEqual(alloc["x"], 2)
 
     def test_required_sample_sizes_work_for_every_dataset(self):
-        """n = 10, 40, 100, 160, 640 must give exactly n distinct rows and inclusion probability n/N."""
+        """n = 10, 100, 640 must give exactly n distinct rows and inclusion probability n/N."""
         rng = random.Random(11)
         for key, m in MANIFEST.items():
             N = m["n_rows"]
-            for n in (10, 40, 100, 160, 640):
+            for n in (10, 100, 640):
                 k = N / n
                 if N % n == 0:
                     hits = [0] * N
