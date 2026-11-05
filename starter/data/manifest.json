@@ -1,0 +1,145 @@
+{
+  "generated_by": "data-prep/prepare_data.py",
+  "python": "standard library only",
+  "datasets": {
+    "clinic": {
+      "file": "clinic_visits.csv",
+      "n_rows": 10000,
+      "columns": [
+        "visit_id",
+        "week",
+        "weekday",
+        "slot",
+        "visit_type",
+        "wait_time"
+      ],
+      "target": "wait_time",
+      "true_mean": 22.6842,
+      "population_sd": 14.503967400680407,
+      "min": 0.0,
+      "median": 19.0,
+      "max": 145.0,
+      "missing_target": 0,
+      "groups": {
+        "visit_type": {
+          "Follow-up": 5475,
+          "New": 2469,
+          "Same-day": 2056
+        },
+        "weekday": {
+          "Mon": 2000,
+          "Tue": 2000,
+          "Wed": 2000,
+          "Thu": 2000,
+          "Fri": 2000
+        },
+        "slot": {
+          "1": 500,
+          "2": 500,
+          "3": 500,
+          "4": 500,
+          "5": 500,
+          "6": 500,
+          "7": 500,
+          "8": 500,
+          "9": 500,
+          "10": 500,
+          "11": 500,
+          "12": 500,
+          "13": 500,
+          "14": 500,
+          "15": 500,
+          "16": 500,
+          "17": 500,
+          "18": 500,
+          "19": 500,
+          "20": 500
+        }
+      },
+      "sha256": "594c0f62bb522b383670661a531410a89ac376311c9a11a8b840110970621980",
+      "bytes": 255318,
+      "seed": 20261105,
+      "kind": "simulated"
+    },
+    "costs": {
+      "file": "healthcare_costs.csv",
+      "n_rows": 1338,
+      "columns": [
+        "row_id",
+        "age",
+        "age_band",
+        "sex",
+        "bmi",
+        "children",
+        "smoker",
+        "region",
+        "charges"
+      ],
+      "target": "charges",
+      "true_mean": 13270.422265141257,
+      "population_sd": 12105.484975561612,
+      "min": 1121.8739,
+      "median": 9382.033,
+      "max": 63770.42801,
+      "missing_target": 0,
+      "groups": {
+        "age_band": {
+          "18-29": 417,
+          "30-39": 257,
+          "40-49": 279,
+          "50-64": 385
+        },
+        "region": {
+          "northeast": 324,
+          "northwest": 325,
+          "southeast": 364,
+          "southwest": 325
+        },
+        "smoker": {
+          "no": 1064,
+          "yes": 274
+        },
+        "sex": {
+          "female": 662,
+          "male": 676
+        }
+      },
+      "sha256": "d51bc2b911e7d636d232ee6e9fb94b0c0e9bbad2d898894d9938afb7fa2bbbbd",
+      "bytes": 67916,
+      "kind": "public"
+    },
+    "heart": {
+      "file": "heart_rate_week.csv",
+      "n_rows": 9864,
+      "columns": [
+        "row_id",
+        "timestamp",
+        "heart_rate_bpm",
+        "n_readings",
+        "activity_state"
+      ],
+      "target": "heart_rate_bpm",
+      "true_mean": 66.41105028386075,
+      "population_sd": 18.815267575817803,
+      "min": 40.8,
+      "median": 60.0,
+      "max": 165.6,
+      "missing_target": 0,
+      "groups": {
+        "activity_state": {
+          "exercise": 1049,
+          "rest": 5886,
+          "sleep": 2929
+        }
+      },
+      "sha256": "40be3d58fea1c1aa12b58be75d26460baa8c8a988caac34ff22f3262e98cf5e8",
+      "bytes": 342812,
+      "minutes_in_week": 10080,
+      "missing_minutes": 216,
+      "longest_gap_minutes": 135,
+      "first_timestamp": "2016-04-25 00:00",
+      "last_timestamp": "2016-05-01 23:59",
+      "kind": "real"
+    }
+  }
+}

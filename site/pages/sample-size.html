@@ -1,0 +1,77 @@
+<!--meta {"title":"Change sample size","description":"Stage 5: predict how sample size affects estimation, then in Plan mode design how users compare repeated samples at sizes including 10, 40, 160 and 640."} -->
+<p class="eyebrow">Stage 5 of 7</p>
+<h1>Change sample size</h1>
+<p class="core-question">How does sample size change the reliability of estimates, and what can a larger sample not fix?</p>
+
+<dl class="facts">
+  <dt>Learning objective</dt><dd>Show, with repeated samples at several sizes, how the spread of estimates changes with n {{help sample-size}}, and tell that apart from a single sample's error.</dd>
+  <dt>Reader</dt><dd>The health professional deciding how large a sample to pay for.</dd>
+  <dt>Data</dt><dd>The baseline population, <code>data/{{sc file}}</code>, held fixed. Simple random sampling at n = 10, 40, 160 and 640 at least; one method at a time; at least 1,000 repetitions per size.</dd>
+</dl>
+
+<div class="callout student">
+  <p class="callout-title">Before you build: predict</p>
+  <p>Write in <code>DECISIONS.md</code> (section 3, stage 5), with today's date and before running anything: what you expect to happen to the spread of estimates as n goes from 10 to 640, roughly how much, and one problem you think a larger sample cannot repair. Do not ask your agent to predict.</p>
+</div>
+
+<h2>Required minimum <span class="tag required">Required</span></h2>
+{{checklist s5-req
+- Sample-size controls, and an updated sample estimate shown beside the true mean.
+- Accumulated repeated-sampling results for each size, kept so sizes can be compared; a single changing estimate is not enough. {{help repeated-sampling}}
+- Several sizes, including 10, 40, 160 and 640 for simple random sampling. {{help srs}}
+- At least 1,000 repetitions per size, with the population and sampling method held fixed while n changes.
+- Spread (SD of estimates) and RMSE for each size, in {{sc units}}. {{help variability}} {{help rmse}}
+- Repeated-run spread clearly distinguished from a single sample's error.
+}}
+
+<div class="callout plan-task">
+  <p class="callout-title">Ask your agent <span class="tag plan">Plan mode</span></p>
+  <p class="mode-switch"><span class="mode-icon" aria-hidden="true">1</span><span>Record your prediction first. Then switch your agent to Plan mode.<span class="note"><a href="setup.html#modes">How to switch</a></span></span></p>
+<pre class="prompt"><code>I have switched you to Plan mode. Stay in Plan mode and do not implement changes yet. Help me brainstorm three ways to let users explore how sample size changes the variability of sample estimates in my app. Users must be able to change sample size, compare estimates with the true population mean, and compare repeated-sampling results at several sizes. Explain the strengths and limitations of each idea. Discuss the ideas with me before implementing anything.
+
+Please do not run experiments or tell me what to expect: I have already recorded my own prediction.</code></pre>
+</div>
+
+<h2>Choose, then build</h2>
+<ol class="steps">
+  <li><strong>Choose one approach</strong> and record it, with a brief reason, in <code>DECISIONS.md</code> (section 2, stage 5).</li>
+  <li><strong>Switch your agent out of Plan mode.</strong></li>
+  <li><strong>Give it the build prompt.</strong></li>
+</ol>
+<div class="callout agent-task">
+  <p class="callout-title">Ask your agent <span class="tag">Implementation mode</span></p>
+  <p class="mode-switch build"><span class="mode-icon" aria-hidden="true">2</span><span>Switch out of Plan mode before sending this.</span></p>
+<pre class="prompt"><code>I have switched you out of Plan mode. Implement the sample-size exploration I chose: [describe it]. My reason: [your reason]. Add it to my existing app and keep my design.
+- Users can change the sample size and see the sample estimate update beside the labelled true mean.
+- Keep the population and the sampling method fixed while n changes. Include at least n = 10, 40, 160 and 640 with simple random sampling.
+- For each size, run at least 1,000 seeded repetitions with the shared sampling module and keep the results, so sizes can be compared side by side.
+- Show the SD of the estimates and RMSE for each size in <span class="sc" data-sc="units">the target's units</span>, and distinguish the repeated-run spread from a single sample's error.
+- Do not tell me what the results mean; I will interpret them myself.</code></pre>
+</div>
+
+<h2>Done when</h2>
+{{checklist s5-done
+- You ran all four sizes yourself and recorded the seed, repetitions, SD and RMSE for each in <code>DECISIONS.md</code> (section 4).
+- You worked out, from your own numbers, how much the spread changed each time n was multiplied by 4.
+- You wrote, in your own words, what changed in the spread and what larger samples cannot repair. Commit and push.
+}}
+
+<div class="callout try-it">
+  <p class="callout-title">Try it yourself: explain a sample-size result</p>
+  <p>Find, in your app, one sample at a larger n whose estimate is farther from the true mean than some sample at a smaller n. Explain in two sentences why that does not contradict your repeated-sampling result. Then ask yourself: could someone using my app understand how sample size affects reliability?</p>
+</div>
+
+<div class="callout avoid">
+  <p class="callout-title">Claims to avoid</p>
+  <ul>
+    <li>“A bigger sample is always closer to the truth.” Larger samples are closer <em>on average</em>; any one sample can still miss.</li>
+    <li>“A larger sample fixes bias.” Think about what larger samples cannot repair.</li>
+    <li>Changing the method or the population at the same time as n, then crediting n for the difference.</li>
+  </ul>
+</div>
+
+<h2>Common questions</h2>
+<details><summary>Why fix the method and the population?</summary><div class="details-body">
+  <p>To isolate one cause. If anything else changes along with n, you cannot tell which change produced the difference.</p></div></details>
+<details><summary>Can I compare other methods across sizes too?</summary><div class="details-body">
+  <p>Yes, as an extra, one method at a time, with the same repetitions per size. Check that every size you offer is valid for that method (for example, the systematic interval and the stratified allocation).</p></div></details>

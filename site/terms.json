@@ -1,0 +1,192 @@
+{
+  "population": {
+    "term": "Population (finite population)",
+    "group": "Populations and samples",
+    "short": "Every unit you want to describe. Here it is exactly the rows of your chosen CSV: a fixed, finite list you can count.",
+    "more": "Because the whole population is in the file, you can calculate its true mean and check every sampling method against it. That luxury is why this is a teaching exercise: in real work the population is usually too large or costly to measure completely. Your file is not all patients, all clinics or all days."
+  },
+  "unit": {
+    "term": "Unit (one row)",
+    "group": "Populations and samples",
+    "short": "The thing one row describes: one appointment, one person, or one recorded minute. Samples are sets of units.",
+    "more": "Saying what one row means stops you from mixing up, for example, the average per appointment with the average per patient or per day."
+  },
+  "target": {
+    "term": "Target variable",
+    "group": "Populations and samples",
+    "short": "The column whose average you are estimating, such as wait_time, charges or heart_rate_bpm. Always state its units."
+  },
+  "true-mean": {
+    "term": "True (population) mean",
+    "group": "Populations and samples",
+    "short": "The average of the target over every row of the population. It is fixed: it does not change from sample to sample.",
+    "more": "If you change the population's values or which rows it contains, its true mean changes too and must be recalculated. Reordering rows does not change it."
+  },
+  "sample": {
+    "term": "Sample",
+    "group": "Populations and samples",
+    "short": "The subset of rows a sampling method selects. Its size is n.",
+    "more": "A sample is one draw. Two samples of the same size from the same method usually differ."
+  },
+  "sample-size": {
+    "term": "Sample size (n)",
+    "group": "Populations and samples",
+    "short": "How many rows are in one sample. N (capital) is the number of rows in the population.",
+    "more": "Comparisons between methods are fair only when every method uses the same n."
+  },
+  "estimate": {
+    "term": "Estimate",
+    "group": "Populations and samples",
+    "short": "A number calculated from a sample to stand in for an unknown population value, here the sample's estimate of the true mean.",
+    "more": "One estimate comes from one sample. Whether a method is trustworthy is judged by how its estimates behave over many samples, not by one result."
+  },
+  "sample-mean": {
+    "term": "Sample mean",
+    "group": "Populations and samples",
+    "short": "The plain average of the target over the sampled rows. It is the estimate for simple random and systematic sampling."
+  },
+  "without-replacement": {
+    "term": "Without replacement",
+    "group": "Populations and samples",
+    "short": "A row can be selected at most once in a sample, so a sample of n contains n different rows."
+  },
+  "seed": {
+    "term": "Seed",
+    "group": "Populations and samples",
+    "short": "A starting number for the random number generator. The same seed reproduces the same samples, so you and others can check a result.",
+    "more": "Record the seed with every piece of evidence. Trying several seeds shows whether a conclusion depends on one lucky or unlucky run."
+  },
+  "srs": {
+    "term": "Simple random sampling (SRS)",
+    "group": "Sampling methods",
+    "short": "Choose n rows without replacement so that every possible set of n rows is equally likely.",
+    "more": "Each row has the same chance of selection, n/N. The sample mean is the estimate."
+  },
+  "systematic": {
+    "term": "Systematic sampling",
+    "group": "Sampling methods",
+    "short": "Take every k-th row in the file's order, beginning at a random start. With N rows and sample size n, the interval is k = N/n.",
+    "more": "When N/n is a whole number, there are only k possible samples, one for each start. When it is not, a design such as the fractional interval (start u on (0, k], rows ceil(u + j·k)) keeps exactly n rows and the same chance n/N for every row. What the method sees depends on the row order."
+  },
+  "sampling-interval": {
+    "term": "Sampling interval (k)",
+    "group": "Sampling methods",
+    "short": "The step between selected rows in systematic sampling: k = N/n. With N = 10,000 and n = 100, k = 100."
+  },
+  "random-start": {
+    "term": "Random start",
+    "group": "Sampling methods",
+    "short": "The randomly chosen first row of a systematic sample, between 1 and k. It is the only random step: once it is chosen, every other selected row is fixed.",
+    "more": "Because of the random start, every row still has the same chance of being selected, so systematic sampling is a probability sample."
+  },
+  "row-order": {
+    "term": "Row order",
+    "group": "Sampling methods",
+    "short": "The sequence of rows in the file. Systematic sampling walks through it, so its meaning matters: time order in a clinic log or a wearable record, but only file order in an unordered list of people.",
+    "more": "In the heart-rate file, rows are in time order but minutes with no reading are missing, so row number and clock time are not the same thing."
+  },
+  "stratified": {
+    "term": "Stratified sampling",
+    "group": "Sampling methods",
+    "short": "Split the population into groups (strata) using a column you can observe, take a simple random sample within each group, then combine the group means with population weights.",
+    "more": "The allocation says how many rows come from each stratum; it must total n and cannot exceed any stratum's size."
+  },
+  "stratum": {
+    "term": "Stratum (plural: strata)",
+    "group": "Sampling methods",
+    "short": "One group in stratified sampling, defined by an observable column such as visit_type, age_band or activity_state. Every row belongs to exactly one stratum."
+  },
+  "allocation": {
+    "term": "Allocation",
+    "group": "Sampling methods",
+    "short": "How the total sample size n is split among strata. Proportional allocation gives each stratum about n × N_h / N rows, rounded to whole numbers that still total n.",
+    "more": "Rounding needs a rule (for example, largest remainder) and a check that no stratum is asked for more rows than it has, and that each stratum gets at least one."
+  },
+  "weighting": {
+    "term": "Population weighting",
+    "group": "Sampling methods",
+    "short": "The stratified estimate is Σ (N_h / N) × (sample mean in stratum h): each group's mean counts in proportion to that group's share of the population.",
+    "more": "Averaging all sampled rows together only matches this when the allocation is exactly proportional. Getting the weights wrong is a calculation error, not a failure of stratification."
+  },
+  "inclusion-probability": {
+    "term": "Inclusion probability",
+    "group": "Sampling methods",
+    "short": "The chance that a particular row ends up in the sample. In SRS and systematic sampling with a random start, it is n/N for every row."
+  },
+  "repeated-sampling": {
+    "term": "Repeated sampling",
+    "group": "Judging a method",
+    "short": "Drawing many samples with the same method, size and population, and keeping every estimate, to see how the method behaves rather than how one draw turned out."
+  },
+  "sampling-distribution": {
+    "term": "Sampling distribution",
+    "group": "Judging a method",
+    "short": "The spread of estimates a method produces across repeated samples. Its centre shows bias; its width shows variability."
+  },
+  "monte-carlo": {
+    "term": "Monte Carlo",
+    "group": "Judging a method",
+    "short": "Approximating a sampling distribution by drawing many random samples (here at least 1,000). Results change slightly with the seed.",
+    "more": "More repetitions make the approximation steadier; they do not change how good the method itself is."
+  },
+  "exact-enumeration": {
+    "term": "Exact enumeration",
+    "group": "Judging a method",
+    "short": "Listing every possible sample instead of drawing random ones. Systematic sampling with a whole-number interval k has only k possible samples, so all k can be listed.",
+    "more": "With N = 10,000 and n = 100 there are exactly 100 possible systematic samples, each with probability 1/100. Drawing 1,000 of them at random just repeats those 100."
+  },
+  "bias": {
+    "term": "Bias",
+    "group": "Judging a method",
+    "short": "The average of a method's estimates minus the true mean, in the target's units. It is a consistent error in one direction, seen across many samples.",
+    "more": "One estimate that misses the true mean is not evidence of bias. A Monte Carlo bias near zero, of a size that changes sign with the seed, is consistent with no bias."
+  },
+  "variability": {
+    "term": "Variability",
+    "group": "Judging a method",
+    "short": "How much a method's estimates differ from sample to sample. Usually summarised as the standard deviation (SD) of the estimates.",
+    "more": "A method can be unbiased but highly variable (right on average, often far off), or have low variability but be biased (consistent, but consistently off)."
+  },
+  "rmse": {
+    "term": "RMSE (root mean squared error)",
+    "group": "Judging a method",
+    "short": "√(average of (estimate − true mean)²) over repeated samples, in the target's units: the typical size of the estimation error.",
+    "more": "It accounts for both bias and variability: RMSE² = bias² + SD², when the SD divides by the number of repetitions."
+  },
+  "standard-error": {
+    "term": "Standard error",
+    "group": "Judging a method",
+    "short": "The standard deviation of an estimate across repeated samples. In this activity you measure it directly as the SD of your repeated estimates."
+  },
+  "baseline": {
+    "term": "Baseline",
+    "group": "Judging a method",
+    "short": "The supplied population, in its supplied order, with the default settings. Every changed condition is compared against it."
+  },
+  "modified-population": {
+    "term": "Modified population",
+    "group": "Judging a method",
+    "short": "A labelled copy of the population with values, membership or row order changed by the user. Its true mean must be recalculated; the original stays recoverable."
+  },
+  "plan-mode": {
+    "term": "Plan mode",
+    "group": "Working with your agent",
+    "short": "An agent mode for discussion only: the agent proposes and compares options but does not edit files or run changing commands.",
+    "more": "You switch it yourself. In Claude Code, press Shift+Tab until the status line shows plan mode. In Cursor or VS Code with GitHub Copilot, choose Plan in the chat's mode or agent picker. Other tools: check their documentation."
+  },
+  "implementation-mode": {
+    "term": "Implementation mode",
+    "group": "Working with your agent",
+    "short": "Any agent mode that may edit files and run commands, used after you have chosen a design. For example, Claude Code's default or accept-edits mode, or Agent in Cursor or VS Code with GitHub Copilot."
+  },
+  "agent-brief": {
+    "term": "AGENT_BRIEF.md",
+    "group": "Working with your agent",
+    "short": "The starter file your agent reads first: the task, the sampling rules, the mode workflow and its boundaries."
+  },
+  "decisions-md": {
+    "term": "DECISIONS.md",
+    "group": "Working with your agent",
+    "short": "Your own notes file: population, design choices, predictions, observations, challenge hypothesis, interpretation and AI use. You write it; your agent does not."
+  }
+}

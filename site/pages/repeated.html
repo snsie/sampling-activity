@@ -1,0 +1,82 @@
+<!--meta {"title":"Compare repeated samples","description":"Stage 4: predict which method will perform best, then in Plan mode design how your app presents at least 1,000 repeated samples per method, with bias and RMSE against the true mean."} -->
+<p class="eyebrow">Stage 4 of 7</p>
+<h1>Compare repeated samples</h1>
+<p class="core-question">Across many samples, which method's estimates stay close to the true mean, and which vary or miss consistently?</p>
+
+<dl class="facts">
+  <dt>Learning objective</dt><dd>Use a sampling distribution {{help sampling-distribution}} to tell bias {{help bias}} (consistent error) from variability {{help variability}} (random scatter), and summarise both with RMSE {{help rmse}}.</dd>
+  <dt>Reader</dt><dd>The health professional deciding which method to trust.</dd>
+  <dt>Data</dt><dd>The baseline population {{help baseline}}: <code>data/{{sc file}}</code> as supplied, n = 100 for every method, at least 1,000 repetitions per method.</dd>
+</dl>
+
+<div class="callout student">
+  <p class="callout-title">Before you build: predict</p>
+  <p>Before running anything, write in <code>DECISIONS.md</code> (section 3, stage 4), with today's date: which method you expect to perform best for your population, and why, based on what you know about its rows, row order and groups. Do not ask your agent to predict, and do not edit the prediction afterwards.</p>
+</div>
+
+<h2>Required minimum <span class="tag required">Required</span></h2>
+{{checklist s4-req
+- At least 1,000 repetitions per method, all at the same n, with the seed shown; every estimate is kept. {{help repeated-sampling}}
+- A display of the distribution of estimates for each method, in a presentation you choose, with a clearly labelled true mean reference. {{help sampling-distribution}}
+- Bias and RMSE for each method, in {{sc units}}, from the shared functions. The spread (SD of estimates) is shown too. {{help bias}} {{help rmse}}
+- Users can inspect the accumulated estimates for each method and compare their spread and closeness to the true mean.
+- A single sample's result is clearly distinguished from the distribution across repetitions.
+- If systematic sampling has a whole-number interval, its results are either enumerated exactly or labelled Monte Carlo, and the app says which. {{help exact-enumeration}} {{help monte-carlo}}
+}}
+
+<div class="callout plan-task">
+  <p class="callout-title">Ask your agent <span class="tag plan">Plan mode</span></p>
+  <p class="mode-switch"><span class="mode-icon" aria-hidden="true">1</span><span>Record your prediction first. Then switch your agent to Plan mode.<span class="note"><a href="setup.html#modes">How to switch</a></span></span></p>
+<pre class="prompt"><code>I have switched you to Plan mode. Stay in Plan mode and do not implement changes yet. Help me brainstorm three distinct ways to present repeated sampling results in my app so a user can understand how much estimates vary and compare the reliability of the three sampling methods. Keep the true population mean visible and retain results across repeated runs. Explain the strengths and limitations of each approach, including how it distinguishes consistent error from random variation. Discuss the ideas with me before implementing anything.
+
+Please do not run any experiments or tell me which method you expect to perform best: I have already recorded my own prediction.</code></pre>
+</div>
+
+<h2>Choose, then build</h2>
+<ol class="steps">
+  <li><strong>Choose one presentation</strong> and record it, with a brief reason, in <code>DECISIONS.md</code> (section 2, stage 4).</li>
+  <li><strong>Switch your agent out of Plan mode.</strong></li>
+  <li><strong>Give it the build prompt.</strong></li>
+</ol>
+<div class="callout agent-task">
+  <p class="callout-title">Ask your agent <span class="tag">Implementation mode</span></p>
+  <p class="mode-switch build"><span class="mode-icon" aria-hidden="true">2</span><span>Switch out of Plan mode before sending this.</span></p>
+<pre class="prompt"><code>I have switched you out of Plan mode. Implement the repeated-sampling presentation I chose: [describe it]. My reason: [your reason]. Add it to my existing app and keep my design.
+- In the shared sampling module, add repeated sampling: at least 1,000 repetitions per method, the same n for all three methods (default 100), seeded and reproducible, keeping every estimate.
+- Show the distribution of estimates for each method in my chosen presentation, with the true population mean clearly labelled.
+- For each method, show bias (mean of estimates minus true mean), the SD of the estimates and RMSE, in <span class="sc" data-sc="units">the target's units</span>, as AGENT_BRIEF.md defines them.
+- Clearly distinguish a single sample's result from the distribution across repetitions.
+- Systematic sampling: if N/n is a whole number, offer exact enumeration of every random start and label it exact; label random repetitions Monte Carlo.
+- Do not tell me which method performed best. I will read the results and interpret them myself.</code></pre>
+</div>
+
+<h2>Done when</h2>
+{{checklist s4-done
+- You ran the comparison yourself in your app, and recorded the seed, n, repetitions, bias, SD and RMSE for each method in <code>DECISIONS.md</code> (section 4).
+- You checked one method's numbers: RMSE² should be close to bias² + SD². {{help rmse}}
+- Re-running with the same seed reproduces the numbers; a different seed changes them only slightly.
+- You compared the result with your prediction in your own words. Commit and push.
+}}
+
+<div class="callout try-it">
+  <p class="callout-title">Try it yourself: compare spread and error</p>
+  <p>Using only your app, rank the three methods twice: once by spread, once by how close the centre of their estimates is to the true mean. Point to the exact number or feature that shows each. Then ask yourself: could someone using my app tell when a method produces inconsistent estimates, or estimates consistently far from the true value?</p>
+</div>
+
+<div class="callout avoid">
+  <p class="callout-title">Claims to avoid</p>
+  <ul>
+    <li>Calling a method biased because one sample missed the true mean.</li>
+    <li>Treating a small Monte Carlo bias that changes sign with the seed as evidence of real bias.</li>
+    <li>“Smaller spread means no bias.” Spread and bias are separate questions.</li>
+    <li>Calling a method the best without saying for which population, which n, and by which measure.</li>
+  </ul>
+</div>
+
+<h2>Common questions</h2>
+<details><summary>What does RMSE add to bias and SD?</summary><div class="details-body">
+  <p>RMSE is the typical size of the error of one estimate, counting both a consistent offset (bias) and random scatter (SD): RMSE² = bias² + SD². It is in the same units as your target, so you can say “a typical estimate is off by about … {{sc units}}”.</p></div></details>
+<details><summary>Why can systematic sampling be enumerated exactly?</summary><div class="details-body">
+  <p>With a whole-number interval k, the random start is the only random step, and there are only k starts. Listing all k samples gives the exact distribution. Drawing 1,000 random starts just repeats those k samples many times. For the clinic file at n = 100, k = 10,000 / 100 = 100.</p></div></details>
+<details><summary>My prediction was wrong. Is that a problem?</summary><div class="details-body">
+  <p>No. Keep it as written and add, under observations, what happened and what you think explains the difference.</p></div></details>

@@ -1,0 +1,86 @@
+<!--meta {"title":"Data & files","description":"Stage 1: choose one of three health populations, download the starter and CSVs, understand what one row means, and calculate the finite population's true mean."} -->
+<p class="eyebrow">Stage 1 of 7</p>
+<h1>Data &amp; files</h1>
+<p class="core-question">What exactly is your population, and what is its true mean?</p>
+
+<dl class="facts">
+  <dt>Learning objective</dt><dd>Identify the unit {{help unit}}, the target {{help target}} and the finite population {{help population}} of your dataset, and calculate its true mean {{help true-mean}}.</dd>
+  <dt>Reader</dt><dd>You, now; later, the health professional who uses your app.</dd>
+  <dt>Data</dt><dd>One supplied CSV. All of its rows are the population.</dd>
+</dl>
+
+<p>{{zip}}</p>
+<p class="small muted">The ZIP holds the data, the data dictionary, <code>README.md</code>, <code>SETUP.md</code>, <code>AGENT_BRIEF.md</code> and a blank <code>DECISIONS.md</code>. <a href="#files">All files</a></p>
+
+<h2 id="choose">Before you build: choose ONE scenario</h2>
+<p>You complete one track, not all three. Your choice adapts the instructions and agent prompts on every page. Clinic waiting times is the default if you have no preference.</p>
+{{scenario-picker}}
+
+<h2>Required minimum <span class="tag required">Required</span></h2>
+<p>Write these in section 1 of {{dl DECISIONS.md}} yourself:</p>
+{{checklist s1-req
+- Your scenario and file: {{sc title}}, <code>data/{{sc file}}</code>.
+- What one row means ({{sc row}}) and how many rows (N) there are. {{help unit}}
+- The target column and its units: {{sc target}}, in {{sc units}}. {{help target}}
+- One sentence defining your finite population, including what it is <em>not</em>. {{help population}}
+- The true mean of the target over every row, and how you calculated it. {{help true-mean}}
+- What the row order means in your file. {{help row-order}}
+}}
+
+<h2>Calculate the true mean</h2>
+<p>Use any method you can check: open the CSV in a spreadsheet and average the whole target column, or run a short script. To confirm the file loads and see its columns, run the starter's loader in a terminal in your project folder:</p>
+<pre><code>python3 load_data.py data/<span class="sc" data-sc="file">your CSV file</span></code></pre>
+<details><summary>Check your answer (open after you have calculated it)</summary><div class="details-body">
+  <ul>
+    <li data-sc-only="clinic"><strong>Clinic waiting times:</strong> mean <code>wait_time</code> over {{num clinic.n_rows}} appointments = {{mean clinic}}.</li>
+    <li data-sc-only="costs"><strong>Healthcare costs:</strong> mean <code>charges</code> over {{num costs.n_rows}} people = {{mean costs}}.</li>
+    <li data-sc-only="heart"><strong>Wearable heart rate:</strong> mean <code>heart_rate_bpm</code> over {{num heart.n_rows}} recorded minutes = {{mean heart}}.</li>
+  </ul>
+  <p class="small">If yours differs, check you included every row, used the target column, and did not average a column of IDs.</p>
+</div></details>
+
+<h2 id="datasets">The three populations</h2>
+<p>Each card gives the unit, row count, target, row order, group columns {{help stratum}}, the column dictionary, and provenance. <span class="tag real">Real data</span> and <span class="tag sim">Simulated</span> labels say where values came from.</p>
+{{dataset clinic}}
+{{dataset costs}}
+{{dataset heart}}
+<p>The full dictionary is {{dl data/README.md}}. Row counts, group sizes and SHA-256 fingerprints are in {{dl data/manifest.json}}.</p>
+
+<h2>Done when</h2>
+{{checklist s1-done
+- You downloaded and unzipped the starter, and your CSV opens.
+- Section 1 of <code>DECISIONS.md</code> is complete, in your own words.
+- Your true mean matches the check above.
+}}
+
+<div class="callout try-it">
+  <p class="callout-title">Try it yourself</p>
+  <p>Without looking at the card, explain to yourself in two sentences what one row is and what the true mean of your target describes. Then name one group of people, places or times your population does <em>not</em> describe.</p>
+</div>
+
+<div class="callout avoid">
+  <p class="callout-title">Claims to avoid</p>
+  <ul>
+    <li>“This is the average for all patients” (or all clinics, all days, all wearers). It is the average of this file.</li>
+    <li>Calling the simulated clinic data or the cost teaching data real patient records.</li>
+    <li>Treating the heart-rate rows as evenly spaced minutes.</li>
+  </ul>
+</div>
+
+<h2>Common questions</h2>
+<details><summary>Why is a whole dataset called a “population” here?</summary><div class="details-body">
+  <p>Because you can measure all of it, you know the true mean exactly, so you can see how close each sampling method gets. In real work you rarely have this luxury.</p></div></details>
+<details><summary>Is the clinic file the same as the one in the course notebook?</summary><div class="details-body">
+  <p>No. The notebook's <code>clinic_visits.csv</code> was not available, so this one was newly simulated with the same layout (10,000 appointments: 100 weeks, Monday–Friday, 20 slots a day, columns <code>visit_id</code>, <code>slot</code>, <code>visit_type</code>, <code>wait_time</code>, plus <code>week</code> and <code>weekday</code>). Its values, and so its true mean, differ from any numbers quoted in the notebook. Use the numbers from this file.</p></div></details>
+<details><summary>Why do some heart-rate minutes have no row?</summary><div class="details-body">
+  <p>The device recorded nothing in those minutes, for example while it was off the wrist or charging. Those minutes are not in your population. Your true mean is the mean of the recorded minutes.</p></div></details>
+
+<h2 id="files">All files</h2>
+{{files}}
+
+<h2 id="sources">Sources and licences</h2>
+<ul class="small">
+  <li><strong>Clinic waiting times:</strong> simulated for this activity (seed 20261105). No external source.</li>
+  <li><strong>Healthcare costs:</strong> <code>insurance.csv</code> from Brett Lantz, <em>Machine Learning with R</em> (Packt), via the <a href="https://github.com/stedy/Machine-Learning-with-R-datasets">stedy/Machine-Learning-with-R-datasets</a> repository. Described by its author as simulated from US Census demographic statistics. No licence is stated in the source repository; confirm reuse fits your course policy.</li>
+  <li><strong>Wearable heart rate:</strong> Furberg R, Brinton J, Keating M, Ortiz A. <em>Crowd-sourced Fitbit datasets 03.12.2016–05.12.2016.</em> Zenodo, 2016. <a href="https://zenodo.org/records/53894">doi:10.5281/zenodo.53894</a>. CC BY 4.0. One participant's week, aggregated to one row per recorded minute; activity states derived from the device's own sleep and intensity logs.</li>
+</ul>

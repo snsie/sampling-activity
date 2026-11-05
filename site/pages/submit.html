@@ -1,0 +1,53 @@
+<!--meta {"title":"Submit evidence","description":"Stage 7: the deliverables for Judge the Sample and a final self-check checklist."} -->
+<p class="eyebrow">Stage 7 of 7</p>
+<h1>Submit evidence</h1>
+<p class="lead">Submit your work the way your instructor specifies. Your project folder, backed up with git, should contain everything below.</p>
+<p class="core-question">Which sampling method would you trust for this population, at what sample size, and with what limits?</p>
+
+<h2 id="deliverables">Deliverables <span class="tag required">Required</span></h2>
+<div class="table-wrap"><table>
+  <thead><tr><th scope="col">Deliverable</th><th scope="col">Where it goes</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Your app</strong>, runnable with <code>bash run_app.sh</code> (and its public link, if your course requires one)</td><td>Project folder; link on the first line of <code>README.md</code></td></tr>
+    <tr><td><strong>Source code</strong>, including the shared sampling module and <code>run_app.sh</code></td><td>Your git repository</td></tr>
+    <tr><td><strong>Scenario, data source and seed(s)</strong> used for your evidence</td><td><code>README.md</code></td></tr>
+    <tr><td><strong>Baseline comparison:</strong> the three methods at the same n, at least 1,000 repetitions each, with the distribution of estimates, labelled true mean, bias, SD and RMSE</td><td><code>evidence/</code> (screenshot or export) and <code>DECISIONS.md</code> section 4</td></tr>
+    <tr><td><strong>Sample-size comparison:</strong> at least n = 10, 40, 160 and 640, one method, at least 1,000 repetitions each</td><td><code>evidence/</code> and <code>DECISIONS.md</code> section 4</td></tr>
+    <tr><td><strong>Challenge comparison:</strong> baseline vs changed conditions, with an alternative method or correction</td><td><code>evidence/</code> and <code>DECISIONS.md</code> section 4</td></tr>
+    <tr><td><strong>Your challenge hypothesis and reasoning</strong>, written independently, the <strong>user controls</strong> you chose, your <strong>initial prediction</strong>, and <strong>whether the evidence supported it</strong></td><td><code>DECISIONS.md</code> sections 2, 3, 5 and 6</td></tr>
+    <tr><td><strong>A brief explanation distinguishing bias from variability</strong>, using your own numbers</td><td><code>DECISIONS.md</code> section 6</td></tr>
+    <tr><td><strong>AI use:</strong> tools used, and what you checked yourself</td><td><code>DECISIONS.md</code> section 7</td></tr>
+  </tbody>
+</table></div>
+<p>Your notes file is {{dl DECISIONS.md}} (blank copy). Evidence is from your own app: each screenshot or export notes its seed, n and number of repetitions.</p>
+
+<h2 id="checklist">Final self-check</h2>
+{{checklist submit
+- <code>bash run_app.sh</code> starts your app from a fresh terminal, and every stage's features work.
+- Every display uses the shared calculation functions; the true mean in the app matches your stage 1 value. {{help true-mean}}
+- All three methods use the same n, follow the rules in <code>AGENT_BRIEF.md</code>, and show their selection rule.
+- Baseline, sample-size and challenge evidence are in <code>evidence/</code>, each with seed, n and repetitions.
+- Single-sample and repeated-sampling results, and baseline and modified populations, are labelled throughout. {{help modified-population}}
+- Your predictions are unchanged from when you wrote them; observations and revisions are added separately.
+- Your challenge hypothesis predates your Plan mode discussion, and your explanation says whether the evidence supported it.
+- You explain bias versus variability with your own numbers. {{help bias}} {{help variability}}
+- Every section of <code>DECISIONS.md</code> is in your own words, including AI use.
+- <code>README.md</code> names your scenario, data source and seed(s); everything is committed and pushed.
+- If your course requires a public app: the link opens in a private window and live sampling and challenge controls work there.
+}}
+<p class="small muted">Ticks are saved in this browser only and are not submission evidence.</p>
+<div class="progress-tools"><button type="button" class="reset" data-reset>Reset saved ticks and scenario</button></div>
+
+<div class="callout try-it">
+  <p class="callout-title">Try it yourself</p>
+  <p>Close everything, open a new terminal, run <code>bash run_app.sh</code>, and answer the central question for your population using only what your app shows. If you have to look at your code or notes to answer, your app is not yet telling the whole story.</p>
+</div>
+
+<div class="callout avoid">
+  <p class="callout-title">Claims to avoid in your write-up</p>
+  <ul>
+    <li>Generalising beyond your file: your population is the rows of your CSV.</li>
+    <li>A ranking of methods without the population, n, and measure (bias, SD or RMSE) it depends on.</li>
+    <li>Conclusions drawn from one sample instead of repeated sampling.</li>
+  </ul>
+</div>

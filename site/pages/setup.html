@@ -1,0 +1,87 @@
+<!--meta {"title":"Setup & run","description":"Set up your project with your coding agent, learn the Plan mode and implementation mode workflow, run your app with bash run_app.sh, back it up with git, and optionally publish it."} -->
+<p class="eyebrow">Get started</p>
+<h1>Setup &amp; run</h1>
+<p class="lead">Prepare your project and agent once. You will build and run your app from stage 2 onward. Running locally, backing up and publishing are three separate things; only the first two are needed unless your course asks for a public link.</p>
+
+<h2 id="needs">What you need</h2>
+<ul>
+  <li><strong>A Bash terminal:</strong> Terminal on macOS or Linux; on Windows, <strong>Git Bash</strong> (installed with <a href="https://git-scm.com/downloads">Git for Windows</a>) or <strong>WSL</strong>. PowerShell and Command Prompt cannot run <code>bash run_app.sh</code>.</li>
+  <li><strong>git</strong>, and <strong>Python 3.10 or newer</strong>. Node.js 20 or newer too, if you and your agent choose a JavaScript app.</li>
+  <li><strong>An AI coding agent</strong> that can read and edit your project folder and has a Plan mode.</li>
+  <li>The starter, from <a href="data.html">Data &amp; files</a>, unzipped into a folder of its own.</li>
+</ul>
+
+<h2 id="modes">Plan mode and implementation mode</h2>
+<p>Every design discussion in stages 2–6 happens in <strong>Plan mode</strong> {{help plan-mode}}: the agent proposes and compares options without changing files. You choose, write down why, and only then switch to <strong>implementation mode</strong> {{help implementation-mode}} to build. The guide cannot switch modes for you.</p>
+<div class="table-wrap"><table>
+  <thead><tr><th scope="col">Agent</th><th scope="col">Enter Plan mode</th><th scope="col">Switch to implementation</th></tr></thead>
+  <tbody>
+    <tr><td>Claude Code</td><td>Press <kbd>Shift</kbd>+<kbd>Tab</kbd> until the status line shows <em>plan mode on</em></td><td>Press <kbd>Shift</kbd>+<kbd>Tab</kbd> to leave plan mode (default or accept-edits mode)</td></tr>
+    <tr><td>Cursor</td><td>Choose <em>Plan</em> in the chat's mode picker</td><td>Choose <em>Agent</em></td></tr>
+    <tr><td>VS Code with GitHub Copilot</td><td>Choose <em>Plan</em> in the chat's agent picker</td><td>Choose <em>Agent</em></td></tr>
+    <tr><td>Another agent</td><td>Use its planning or read-only mode (see its documentation)</td><td>Its normal editing mode</td></tr>
+  </tbody>
+</table></div>
+<p class="small muted">Mode names change between versions; if yours differ, use your tool's documentation. If your agent offers to leave Plan mode and start building, accept only after you have chosen and recorded your reason.</p>
+
+<h2 id="setup">1. Set up with your agent</h2>
+<ol class="steps">
+  <li>Open the starter folder in your agent.</li>
+  <li>Give it this starting prompt. It works in the agent's normal mode, because setup is not a design discussion.
+<pre class="prompt" id="start-prompt"><code>Read AGENT_BRIEF.md and follow it for this whole project.
+My scenario is <span class="sc" data-sc="title">your scenario</span>, file data/<span class="sc" data-sc="file">your CSV file</span>.
+Inspect the project (README.md, SETUP.md, DECISIONS.md, load_data.py) and the data (data/README.md and my CSV). Summarise in a few sentences what the project contains and what the columns of my CSV are. Do not calculate the true mean for me.
+Then explain what setup this project needs on my computer, recommend one simple stack that can run my app locally (following my course's tools if I name them), and wait for my OK before installing anything.
+After I agree, prepare the environment, explaining each command before you run it and what its output means. Do not design or build the app yet: I will brainstorm the design with you in Plan mode in stage 2.</code></pre></li>
+  <li>Read the summary yourself. Check it against <code>data/README.md</code>.</li>
+  <li>Confirm the data loads: <code>python3 load_data.py data/<span class="sc" data-sc="file">your CSV file</span></code> (in Git Bash, the command may be <code>python</code>).</li>
+</ol>
+
+<h2 id="launch">2. Run your app: <code>bash run_app.sh</code></h2>
+<p>Your agent writes <code>run_app.sh</code> when it builds your first app in <a href="design.html">stage 2</a> (the build prompt asks for it). From then on, you start the app yourself:</p>
+<ol class="steps">
+  <li><strong>Where:</strong> a Bash terminal whose current folder is your project (the folder with <code>run_app.sh</code>). Check with <code>ls</code>.</li>
+  <li><strong>Command:</strong> <code>bash run_app.sh</code></li>
+  <li><strong>Open:</strong> the address it prints, usually <code>http://localhost:</code> followed by a port number, in your browser.</li>
+  <li><strong>Stop:</strong> press <kbd>Ctrl</kbd>+<kbd>C</kbd> in that terminal.</li>
+</ol>
+<p>If you need the launcher before stage 2 or it goes missing, ask in implementation mode:</p>
+<div class="callout agent-task">
+  <p class="callout-title">Ask your agent <span class="tag">Implementation mode</span></p>
+<pre class="prompt"><code>Write run_app.sh as AGENT_BRIEF.md describes: a Bash script, saved with LF line endings, that starts my app on this computer from the project folder. Then tell me where to run it, the exact command, the address to open and how to stop it. Do not run it for me.</code></pre>
+</div>
+
+<h2 id="backup">3. Back up with git</h2>
+<p>Create a new, empty repository on GitHub (or your course's host). Do not add a README; the starter has one. Then, in your project folder:</p>
+<pre><code>git init -b main
+git add .
+git commit -m "Starter"
+git remote add origin https://github.com/&lt;username&gt;/&lt;repository&gt;.git
+git push -u origin main</code></pre>
+<p>Commit and push at the end of every stage. A commit is not a backup until it is pushed. Never commit passwords, tokens or API keys.</p>
+
+<h2 id="publish">4. Publish <span class="tag optional">Optional</span></h2>
+<p>Running locally is enough unless your course requires a public app. If it does, publish only once your app exists, and only the app you built.</p>
+<details><summary>Choosing a host and checking the link</summary><div class="details-body">
+  <ul>
+    <li><strong>A browser-only app</strong> (HTML and JavaScript, sampling done in the page) can be served by GitHub Pages: repository <strong>Settings → Pages</strong>, deploy from branch <code>main</code>. GitHub Pages serves files only; it cannot run a Python or Node server.</li>
+    <li><strong>An app that needs a Python or Node server</strong> needs a host that runs one, such as the host your course recommends, or must be converted to run in the browser. Ask your agent in Plan mode which option fits your stack.</li>
+    <li><strong>The published app must really work:</strong> live sampling, repeated sampling and your challenge controls must run there. Static exported results or screenshots do not satisfy these interactions.</li>
+    <li><strong>Check it in a private (incognito) window</strong>: it must load without signing in. Then put the link on the first line of your <code>README.md</code>.</li>
+  </ul>
+</div></details>
+
+<h2 id="troubleshooting">Troubleshooting and reporting errors</h2>
+<p>When something fails, give your agent: the command you ran, the folder you ran it in, and the <strong>first</strong> error line (copy it as text, not a screenshot). Ask it to explain the cause before changing anything.</p>
+<details><summary><code>bash: run_app.sh: No such file or directory</code></summary><div class="details-body">
+  <p>You are in the wrong folder, or the launcher has not been written yet. Run <code>ls</code>; if <code>run_app.sh</code> is not listed, <code>cd</code> into your project folder or ask your agent to write it.</p></div></details>
+<details><summary><code>\r</code>, <code>$'\r': command not found</code> or “bad interpreter”</summary><div class="details-body">
+  <p>The script has Windows line endings. Ask your agent to save <code>run_app.sh</code> with LF line endings. The starter's <code>.gitattributes</code> keeps them LF in git.</p></div></details>
+<details><summary>“python3: command not found” on Windows</summary><div class="details-body">
+  <p>In Git Bash the command is often <code>python</code>, or <code>py</code>. Tell your agent which one works so <code>run_app.sh</code> uses it.</p></div></details>
+<details><summary>“Address already in use” or the port is busy</summary><div class="details-body">
+  <p>An earlier copy is still running. Stop it with <kbd>Ctrl</kbd>+<kbd>C</kbd> in its terminal, or ask your agent to make the launcher choose a free port.</p></div></details>
+<details><summary>The page is blank or shows no data</summary><div class="details-body">
+  <p>Open your browser's developer console (F12) and copy the first error into your agent. Check that the data path in your app is relative to the project, for example <code>data/<span class="sc" data-sc="file">your CSV file</span></code>.</p></div></details>
+<details><summary>Windows: which terminal?</summary><div class="details-body">
+  <p>Use Git Bash or WSL. In Git Bash, your C: drive is <code>/c/</code>, so a project in Documents is at <code>/c/Users/&lt;you&gt;/Documents/&lt;folder&gt;</code>. In WSL, keep the project inside your Linux home folder for speed.</p></div></details>

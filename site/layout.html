@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{title}} · Judge the Sample</title>
+  <meta name="description" content="{{description}}">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23336f70'/%3E%3Cg fill='white'%3E%3Ccircle cx='9' cy='10' r='2.4'/%3E%3Ccircle cx='16' cy='10' r='2.4' opacity='.45'/%3E%3Ccircle cx='23' cy='10' r='2.4'/%3E%3Ccircle cx='9' cy='17' r='2.4' opacity='.45'/%3E%3Ccircle cx='16' cy='17' r='2.4'/%3E%3Ccircle cx='23' cy='17' r='2.4' opacity='.45'/%3E%3C/g%3E%3Crect x='6' y='23' width='20' height='2.5' rx='1.2' fill='white'/%3E%3C/svg%3E">
+  <script>document.documentElement.classList.add("js")</script>
+  <link rel="stylesheet" href="assets/style.css?v={{v}}">
+  <script type="module" src="assets/site.js?v={{v}}"></script>
+</head>
+<body data-page="{{page}}">
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="./"><span class="brand-mark" aria-hidden="true"></span>Judge the Sample</a>
+      <div class="header-tools">
+        <label class="scenario-select" hidden>
+          <span>Scenario</span>
+          <select data-scenario-select>
+            <option value="">Not chosen</option>
+            <option value="clinic">Clinic waiting times</option>
+            <option value="costs">Healthcare costs</option>
+            <option value="heart">Wearable heart rate</option>
+          </select>
+        </label>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      </div>
+    </div>
+  </header>
+  <div class="shell">
+    <nav id="site-nav" class="site-nav" aria-label="Main">
+      <ul>{{nav}}</ul>
+    </nav>
+    <main id="main" tabindex="-1">
+      <div class="scenario-banner" hidden></div>
+      {{content}}
+    </main>
+  </div>
+  <footer class="site-footer">
+    <p>Judge the Sample: an individual, agent-assisted sampling activity.
+      Data: simulated clinic visits; insurance.csv teaching dataset (B. Lantz, <em>Machine Learning with R</em>); Crowd-sourced Fitbit datasets (Furberg et al., Zenodo 2016, CC BY 4.0).</p>
+    <p><a href="data.html#sources">Sources and licences</a> · <a href="glossary.html">Glossary</a> · {{version}}</p>
+  </footer>
+</body>
+</html>

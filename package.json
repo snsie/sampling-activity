@@ -1,0 +1,11 @@
+{
+  "name": "judge-the-sample",
+  "private": true,
+  "type": "module",
+  "description": "Student guide and starter for the Judge the Sample sampling activity",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "preview": "node scripts/build.mjs && node scripts/serve.mjs",
+    "test": "node scripts/build.mjs && node --test tests/ && python3 -m unittest discover -s tests -p 'test_*.py'"
+  }
+}

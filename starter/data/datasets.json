@@ -1,0 +1,199 @@
+{
+  "clinic": {
+    "file": "clinic_visits.csv",
+    "title": "Clinic waiting times",
+    "default": true,
+    "kind": "simulated",
+    "row": "one appointment",
+    "rows_word": "appointments",
+    "target": "wait_time",
+    "target_label": "waiting time",
+    "units": "minutes",
+    "order": "Chronological: visit_id runs week by week, Monday to Friday, slot 1 to 20 within each day.",
+    "order_meaning": "Row order is time order. Neighbouring rows are neighbouring appointments.",
+    "groups": [
+      "visit_type",
+      "weekday",
+      "slot"
+    ],
+    "scenario": "A clinic manager wants to know the average time patients wait past their appointment time over the last 100 weeks, without reviewing every record.",
+    "population": "All 10,000 appointments in this file (100 weeks x 5 days x 20 slots). It is not every clinic or every week.",
+    "provenance": "Newly simulated for this activity by data-prep/prepare_data.py (seed 20261105). It follows the layout of the course notebook's clinic_visits.csv, which was not available, so its values are NOT the notebook's values.",
+    "source": "Simulated (no external source)",
+    "url": "",
+    "license": "Created for this activity; reuse with the rest of this repository.",
+    "columns": [
+      {
+        "name": "visit_id",
+        "meaning": "Appointment number, 1-10,000, in chronological order",
+        "units": "id",
+        "kind": "id"
+      },
+      {
+        "name": "week",
+        "meaning": "Week of the record, 1-100",
+        "units": "week number",
+        "kind": "order"
+      },
+      {
+        "name": "weekday",
+        "meaning": "Day of the week",
+        "units": "Mon-Fri",
+        "kind": "group"
+      },
+      {
+        "name": "slot",
+        "meaning": "Appointment slot within the day, 1 (first) to 20 (last)",
+        "units": "slot number",
+        "kind": "group"
+      },
+      {
+        "name": "visit_type",
+        "meaning": "Type of appointment",
+        "units": "Follow-up, New, Same-day",
+        "kind": "group"
+      },
+      {
+        "name": "wait_time",
+        "meaning": "Minutes the patient waited after the appointment time",
+        "units": "minutes (whole)",
+        "kind": "target"
+      }
+    ]
+  },
+  "costs": {
+    "file": "healthcare_costs.csv",
+    "title": "Healthcare costs",
+    "default": false,
+    "kind": "public",
+    "row": "one person (a beneficiary record)",
+    "rows_word": "people",
+    "target": "charges",
+    "target_label": "medical charges",
+    "units": "US dollars",
+    "order": "The order of the source file. row_id is added; the order has no documented meaning and is not a time sequence.",
+    "order_meaning": "Row order is file order only. It is not a time sequence.",
+    "groups": [
+      "age_band",
+      "region",
+      "smoker",
+      "sex"
+    ],
+    "scenario": "A health-plan analyst wants to estimate average medical charges per person in this list without reviewing every record.",
+    "population": "The 1,338 people in this file. It is a teaching dataset, not a representative sample of current claims.",
+    "provenance": "The insurance.csv teaching dataset distributed with Brett Lantz's book Machine Learning with R (Packt), as mirrored in the stedy/Machine-Learning-with-R-datasets GitHub repository. The book describes it as hypothetical (simulated) data created using US Census Bureau demographic statistics; the repository itself documents nothing further, and how charges were generated is not published. Unchanged except for the added row_id and age_band columns.",
+    "source": "stedy/Machine-Learning-with-R-datasets, insurance.csv",
+    "url": "https://raw.githubusercontent.com/stedy/Machine-Learning-with-R-datasets/master/insurance.csv",
+    "license": "No licence is stated in the source repository. Widely redistributed for teaching; confirm this use fits your course policy.",
+    "columns": [
+      {
+        "name": "row_id",
+        "meaning": "Row number in the source file, 1-1,338 (added)",
+        "units": "id",
+        "kind": "id"
+      },
+      {
+        "name": "age",
+        "meaning": "Age of the primary beneficiary",
+        "units": "years",
+        "kind": "attribute"
+      },
+      {
+        "name": "age_band",
+        "meaning": "Age group derived from age (added)",
+        "units": "18-29, 30-39, 40-49, 50-64",
+        "kind": "group"
+      },
+      {
+        "name": "sex",
+        "meaning": "Recorded sex",
+        "units": "female, male",
+        "kind": "group"
+      },
+      {
+        "name": "bmi",
+        "meaning": "Body mass index",
+        "units": "kg/m²",
+        "kind": "attribute"
+      },
+      {
+        "name": "children",
+        "meaning": "Number of dependants covered",
+        "units": "count",
+        "kind": "attribute"
+      },
+      {
+        "name": "smoker",
+        "meaning": "Smoker",
+        "units": "yes, no",
+        "kind": "group"
+      },
+      {
+        "name": "region",
+        "meaning": "US region of residence",
+        "units": "northeast, northwest, southeast, southwest",
+        "kind": "group"
+      },
+      {
+        "name": "charges",
+        "meaning": "Individual medical costs billed",
+        "units": "US dollars",
+        "kind": "target"
+      }
+    ]
+  },
+  "heart": {
+    "file": "heart_rate_week.csv",
+    "title": "Wearable heart rate",
+    "default": false,
+    "kind": "real",
+    "row": "one recorded minute",
+    "rows_word": "recorded minutes",
+    "target": "heart_rate_bpm",
+    "target_label": "heart rate",
+    "units": "beats per minute",
+    "order": "Chronological by timestamp. Minutes with no reading are absent, so consecutive rows are not always one minute apart.",
+    "order_meaning": "Row order is time order, but with gaps: row number is not the same as time.",
+    "groups": [
+      "activity_state"
+    ],
+    "scenario": "A researcher wants to estimate one wearer's average heart rate over a week from a subset of the recorded minutes.",
+    "population": "The recorded minutes of one wearer's week (25 April - 1 May 2016). It is not every minute of that week, and not other people.",
+    "provenance": "A real extract from the Crowd-sourced Fitbit datasets (Furberg, Brinton, Keating & Ortiz, Zenodo 2016): participant 5577150313, 2016-04-25 00:00 to 2016-05-01 23:59 (device local time), export 4.12.16-5.12.16. heart_rate_bpm is the mean of that minute's readings (the device records every few seconds). activity_state is derived from the same participant's Fitbit sleep log (asleep or restless = sleep) and minute intensity (fairly or very active = exercise); everything else is rest. These are device estimates, not observed or clinically verified labels.",
+    "source": "Crowd-sourced Fitbit datasets 03.12.2016-05.12.2016, Zenodo record 53894",
+    "url": "https://zenodo.org/records/53894",
+    "license": "CC BY 4.0. Cite: Furberg R, Brinton J, Keating M, Ortiz A. Crowd-sourced Fitbit datasets 03.12.2016-05.12.2016. Zenodo; 2016. doi:10.5281/zenodo.53894",
+    "columns": [
+      {
+        "name": "row_id",
+        "meaning": "Row number, 1 to N, in time order",
+        "units": "id",
+        "kind": "id"
+      },
+      {
+        "name": "timestamp",
+        "meaning": "Start of the minute, device local time",
+        "units": "YYYY-MM-DD HH:MM",
+        "kind": "order"
+      },
+      {
+        "name": "heart_rate_bpm",
+        "meaning": "Mean of the heart-rate readings in that minute",
+        "units": "beats per minute (1 decimal)",
+        "kind": "target"
+      },
+      {
+        "name": "n_readings",
+        "meaning": "How many device readings were averaged for that minute",
+        "units": "count",
+        "kind": "attribute"
+      },
+      {
+        "name": "activity_state",
+        "meaning": "Device-derived state: sleep, rest or exercise (see provenance)",
+        "units": "sleep, rest, exercise",
+        "kind": "group"
+      }
+    ]
+  }
+}
