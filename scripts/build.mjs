@@ -6,6 +6,7 @@
 //   {{zip}}                             starter ZIP button
 //   {{num key.field}} {{mean key}}      numbers read from starter/data/manifest.json
 //   {{dataset key}}                     a dataset card (dictionary, provenance, licence)
+//   {{intervals key}}                   systematic design (whole or fractional interval) at each required n
 //   {{sc field}}                        scenario-adapted text (filled in by site.js)
 //   {{checklist id ... }}               a saved checklist with "X of Y done" status
 //   {{files}} {{glossary}} {{scenario-picker}}
@@ -192,6 +193,26 @@ function scenarioData() {
   return out;
 }
 
+// Systematic-sampling design for each required sample size, computed from the manifest's row counts.
+export const REQUIRED_SIZES = [10, 40, 100, 160, 640];
+const fmtRatio = (r) => (Number.isInteger(r) ? int(r) : r.toLocaleString("en-US", { maximumFractionDigits: 2 }));
+export function intervalRows(key) {
+  const N = manifest.datasets[key].n_rows;
+  return REQUIRED_SIZES.map((n) => {
+    const k = N / n;
+    if (n > N) throw new Error(`required n=${n} exceeds N=${N} for ${key}`);
+    return { n, k, whole: Number.isInteger(k), text: fmtRatio(k) };
+  });
+}
+function intervalTable(key) {
+  const N = manifest.datasets[key].n_rows;
+  const rows = intervalRows(key).map((r) => `<tr><td>${r.n}</td><td>${int(N)} ÷ ${r.n} = ${r.text}</td><td>${r.whole ? "Whole-number interval; exact enumeration available" : "Fractional interval; Monte Carlo"}</td></tr>`).join("");
+  return `<div class="table-wrap" data-sc-only="${key}"><table>
+    <caption>Systematic sampling design at each required sample size: ${esc(datasets[key].title)}</caption>
+    <thead><tr><th scope="col">n</th><th scope="col">Interval k = N/n</th><th scope="col">Design to use</th></tr></thead>
+    <tbody>${rows}</tbody></table></div>`;
+}
+
 function scenarioPicker() {
   const opts = Object.entries(datasets).map(([k, d]) => `<label class="pick"><input type="radio" name="scenario-pick" value="${k}"> <span><strong>${esc(d.title)}</strong> ${KIND[d.kind]}<br><span class="small muted">${int(manifest.datasets[k].n_rows)} ${esc(d.rows_word)} · target <code>${esc(d.target)}</code> (${esc(d.units)})</span></span></label>`).join("");
   return `<fieldset class="picker" data-scenario-picker><legend>Your scenario</legend>${opts}<p class="small muted picker-note">Saved in this browser only. You can change it at any time; it changes the instructions and prompts, not your files.</p></fieldset>`;
@@ -218,6 +239,7 @@ function expand(html, zipBytes) {
     .replace(/\{\{num ([\w.]+)\}\}/g, (_, p) => fact(p))
     .replace(/\{\{mean (\w+)\}\}/g, (_, k) => fmtMean(k))
     .replace(/\{\{dataset (\w+)\}\}/g, (_, k) => datasetCard(k))
+    .replace(/\{\{intervals (\w+)\}\}/g, (_, k) => intervalTable(k))
     .replace(/\{\{sc (\w+)\}\}/g, (_, f) => sc(f))
     .replace(/\{\{scenario-picker\}\}/g, () => scenarioPicker())
     .replace(/\{\{glossary\}\}/g, () => glossary())

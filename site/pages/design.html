@@ -6,16 +6,11 @@
 <dl class="facts">
   <dt>Learning objective</dt><dd>Design a display that makes a sample {{help sample}} visible inside its population, and compare a sample mean {{help sample-mean}} with the true mean {{help true-mean}}.</dd>
   <dt>Reader</dt><dd>A health professional who understands {{sc title}} but is new to sampling.</dd>
-  <dt>Data</dt><dd><code>data/{{sc file}}</code>: all {{sc n}} {{sc rows}}; target {{sc target}} in {{sc units}}. A temporary sample of 100 rows until stage 3.</dd>
+  <dt>Data</dt><dd><code>data/{{sc file}}</code>: all {{sc n}} {{sc rows}}; target {{sc target}} in {{sc units}}.</dd>
 </dl>
 
-<div class="callout student">
-  <p class="callout-title">Before you build</p>
-  <p>Finish <a href="data.html">stage 1</a> and <a href="setup.html">setup</a>. Think about what your reader must be able to see at a glance. You will choose among your agent's ideas, so have your own criteria ready: what would make a sampling problem visible?</p>
-</div>
-
-<h2>Required minimum <span class="tag required">Required</span></h2>
-<p>Any visual form is allowed, as long as your app communicates:</p>
+<h2 id="task">Your task</h2>
+<p>Build the first version of your app. Finish <a href="data.html">stage 1</a> and <a href="setup.html">setup</a> first. You will choose among your agent's ideas, so decide what would make a sampling problem visible to your reader. Any visual form is allowed, as long as your app has all of these:</p>
 {{checklist s2-req
 - The full population: all {{sc n}} {{sc rows}}, not only the sample. {{help population}}
 - Which observations were sampled, distinguishable from the rest.
@@ -25,58 +20,53 @@
 - A working <code>run_app.sh</code>, so <code>bash run_app.sh</code> starts the app.
 }}
 
+<h2 id="plan-build">Plan and build</h2>
 <div class="callout plan-task">
   <p class="callout-title">Ask your agent <span class="tag plan">Plan mode</span></p>
   <p class="mode-switch"><span class="mode-icon" aria-hidden="true">1</span><span>First, switch your agent to Plan mode.<span class="note">It must not change files during this discussion. <a href="setup.html#modes">How to switch</a></span></span></p>
 <pre class="prompt"><code>I have switched you to Plan mode. Stay in Plan mode and do not implement changes yet. Help me brainstorm three different ways to visualize my dataset for a sampling activity. Each design should help a viewer understand the full population, identify which observations were sampled, and compare the sample estimate with the true population mean. Explain the strengths and limitations of each idea and how it could help reveal a sampling problem. Discuss the ideas with me before implementing anything.
 
 My dataset: data/<span class="sc" data-sc="file">your CSV file</span> (<span class="sc" data-sc="title">your scenario</span>). One row is <span class="sc" data-sc="row">one row</span>; the target is <span class="sc" data-sc="target">the target column</span> in <span class="sc" data-sc="units">the target's units</span>. <span class="sc" data-sc="order">Row order: see data/README.md.</span></code></pre>
-  <p>Ask follow-up questions until you understand each idea's trade-offs. The ideas come from your agent, not from this guide.</p>
+  <p>The ideas come from your agent, not from this guide. Ask follow-up questions until you understand each idea's trade-offs.</p>
 </div>
-
-<h2>Choose, then build</h2>
-<ol class="steps">
-  <li><strong>Choose one design</strong> and write in <code>DECISIONS.md</code> (section 2, stage 2): which design, why it helps someone understand sampling, and the one visual feature meant to reveal a sampling problem.</li>
-  <li><strong>Switch your agent out of Plan mode</strong> into implementation mode.</li>
-  <li><strong>Give it the build prompt</strong>, with your choice filled in.</li>
-</ol>
+<p><strong>Choose one design</strong> and write your choice and reason in <code>DECISIONS.md</code> (<a href="#record">below</a>). Then switch your agent out of Plan mode and send the build prompt with your choice filled in.</p>
 <div class="callout agent-task">
   <p class="callout-title">Ask your agent <span class="tag">Implementation mode</span></p>
   <p class="mode-switch build"><span class="mode-icon" aria-hidden="true">2</span><span>Switch out of Plan mode before sending this.</span></p>
 <pre class="prompt"><code>I have switched you out of Plan mode. Build the first version of my app using the design I chose: [describe your chosen design]. My reason: [your reason]. Keep this design; ask me before changing it.
-- Load data/<span class="sc" data-sc="file">your CSV file</span> as the whole finite population (target <span class="sc" data-sc="target">the target column</span>, in <span class="sc" data-sc="units">the target's units</span>).
-- Put the calculations in one shared sampling module, as AGENT_BRIEF.md describes. Calculate the true mean over all rows and show it labelled as the true population mean.
-- For now, select a temporary simple random sample of 100 rows without replacement, with a visible seed, labelled as temporary. Highlight the selected observations within the full population and display the sample mean alongside the true mean.
+- Follow AGENT_BRIEF.md for the project structure, including one shared sampling module.
+- Load data/<span class="sc" data-sc="file">your CSV file</span> as the whole finite population (target <span class="sc" data-sc="target">the target column</span>, in <span class="sc" data-sc="units">the target's units</span>). Show the true mean over all rows, labelled as the true population mean.
+- For now, select a temporary simple random sample of 100 rows without replacement, with a visible seed, labelled as temporary. Highlight the selected observations within the full population and show the sample mean beside the true mean.
 - Include the visual feature I chose to reveal a sampling problem: [describe it].
 - Do not add the three sampling methods yet; they come in the next stage.
 - Write run_app.sh as AGENT_BRIEF.md describes. Then tell me where to run bash run_app.sh, the address to open and how to stop it. Leave the app stopped; I will run it myself.</code></pre>
 </div>
 
-<h2>Done when</h2>
+<h2 id="check">Check your app</h2>
 {{checklist s2-done
 - You ran <code>bash run_app.sh</code> yourself and the app opened at the printed address.
-- Every item in the required minimum is visible in the app.
+- Without reading your code, you can point to the full population, three sampled rows, the sample mean and the true mean, each clearly labelled.
 - The true mean in the app matches your stage 1 value.
-- Your design choice and reason are in <code>DECISIONS.md</code>, in your words. Commit and push.
+- The same seed and settings give the same temporary sample. Try a few other seeds: the display stays readable and still shows which rows were sampled. {{help seed}}
 }}
 
-<div class="callout try-it">
-  <p class="callout-title">Try it yourself</p>
-  <p>Open the app and, without reading your code, point to: the full population, three sampled rows, the sample mean and the true mean. Change the seed: does it stay obvious which rows are sampled? Then write one sentence on what your chosen visual feature would show if a sample were badly unrepresentative.</p>
-</div>
+<h2 id="record">Record your findings</h2>
+<p>In <code>DECISIONS.md</code>, section 2, stage 2, before you build:</p>
+<ul>
+  <li>the design you chose and why it helps someone understand sampling;</li>
+  <li>the one visual feature meant to reveal a sampling problem, and what it is meant to help a user learn.</li>
+</ul>
+<p>Then commit and push.</p>
 
-<div class="callout avoid">
-  <p class="callout-title">Claims to avoid</p>
-  <ul>
-    <li>“The sample mean is close to the true mean, so the method works.” One sample cannot show that.</li>
-    <li>An unlabelled line or number that could be either the sample mean or the true mean.</li>
-  </ul>
-</div>
-
-<h2>Common questions</h2>
+<h2 id="more-help">More help</h2>
 <details><summary>Why a temporary random sample?</summary><div class="details-body">
   <p>It lets you test the display before the three methods exist. Stage 3 replaces it with simple random, systematic and stratified sampling.</p></div></details>
 <details><summary>My agent suggested a design I like better than my own idea. Can I use it?</summary><div class="details-body">
   <p>Yes. Choosing well is the skill. Record why it suits your reader and your data, and what it is meant to help them learn.</p></div></details>
 <details><summary>My agent started editing files in Plan mode.</summary><div class="details-body">
   <p>Stop it and check your mode indicator. Ask it to list and undo the changes it just made, or restore a file from your last commit with <code>git restore &lt;file&gt;</code> (this discards that file's uncommitted changes, so never use it on <code>DECISIONS.md</code> unless you mean to). Then restart the discussion in Plan mode.</p></div></details>
+<details><summary>Claims to avoid</summary><div class="details-body">
+  <ul>
+    <li>“The sample mean is close to the true mean, so the method works.” One sample cannot show that.</li>
+    <li>An unlabelled line or number that could be either the sample mean or the true mean.</li>
+  </ul></div></details>

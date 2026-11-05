@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { join, relative } from "node:path";
-import { build, NAV, ZIP_NAME, starterFiles } from "../scripts/build.mjs";
+import { build, NAV, ZIP_NAME, starterFiles, intervalRows, REQUIRED_SIZES } from "../scripts/build.mjs";
 
 const ROOT = new URL("..", import.meta.url).pathname;
 const DIST = join(ROOT, "dist");
@@ -102,4 +102,79 @@ test("numbers on the guide come from the manifest", () => {
   assert.ok(html.data.includes(`${m.clinic.true_mean.toFixed(2)} minutes`));
   assert.ok(html.data.includes(`${m.heart.true_mean.toFixed(2)} bpm`));
   assert.ok(html.data.includes(m.costs.true_mean.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })));
+});
+
+const STAGES = ["design", "methods", "repeated", "sample-size", "challenge"];
+const text = (h) => h.replace(/<[^>]+>/g, " ").replace(/&[a-z]+;/g, " ").replace(/\s+/g, " ");
+const starterText = (name) => readFileSync(join(ROOT, "starter", name), "utf8").replace(/\s+/g, " ");
+
+test("stages 2-6 share the same four sections, in order", () => {
+  for (const p of STAGES) {
+    const ids = ["task", "plan-build", "check", "record"].map((id) => html[p].indexOf(`id="${id}"`));
+    assert.ok(ids.every((i) => i > 0) && ids.every((v, i) => i === 0 || v > ids[i - 1]), p);
+    for (const title of ["Your task", "Plan and build", "Check your app", "Record your findings"]) assert.ok(html[p].includes(title), `${p}: ${title}`);
+  }
+});
+
+test("required sample sizes give a valid systematic design for every dataset", () => {
+  assert.deepEqual(REQUIRED_SIZES, [10, 40, 100, 160, 640]);
+  for (const key of ["clinic", "costs", "heart"]) {
+    const rows = intervalRows(key);
+    assert.equal(rows.length, REQUIRED_SIZES.length);
+    assert.ok(rows.every((r) => r.k >= 1), key);
+  }
+  assert.ok(intervalRows("clinic").find((r) => r.n === 100).whole, "clinic n=100 is a whole interval");
+  assert.ok(!intervalRows("costs").find((r) => r.n === 100).whole, "costs n=100 needs the fractional interval");
+  assert.ok(!intervalRows("heart").find((r) => r.n === 100).whole, "heart n=100 needs the fractional interval");
+  for (const p of ["methods", "repeated", "sample-size"]) assert.equal((html[p].match(/data-sc-only="(clinic|costs|heart)"><table|class="table-wrap" data-sc-only/g) || []).length, 3, p);
+});
+
+test("the divisor-of-N option is gone and the repetition rule is consistent", () => {
+  const files = [...Object.values(html), ...["AGENT_BRIEF.md", "DECISIONS.md", "README.md", "SETUP.md", "evidence/README.md"].map(starterText)];
+  for (const f of files) {
+    assert.ok(!/restrict (your )?(sample )?sizes? to|restricted sizes|only allow sample sizes where/i.test(text(f)), "no restricted-size option");
+    assert.ok(!/changes? them only slightly|always (produces|gives) a different/i.test(text(f)), "no seed guarantee");
+  }
+  const rule = /at least 1,000 random repetitions, or all possible random starts when exact enumeration is available for systematic sampling/;
+  for (const p of ["repeated", "challenge"]) assert.match(text(html[p]), rule, p);
+  assert.match(starterText("AGENT_BRIEF.md"), /at least 1,000 random repetitions, or all possible random starts when\s+exact enumeration is available for systematic sampling/);
+});
+
+test("stage 5 requires simple random sampling at four sizes and makes other methods optional", () => {
+  const t = text(html["sample-size"]);
+  assert.match(t, /Simple random sampling at n = 10, 40, 160 and 640/);
+  assert.match(t, /at least 1,000 random repetitions per size/);
+  assert.match(t, /Optional Other methods are an optional extension/);
+  assert.match(text(html.submit), /simple random sampling at n = 10, 40, 160 and 640, at least 1,000 random repetitions each/);
+});
+
+test("stage 6 explains unbiased-but-variable methods without example scenarios", () => {
+  const t = text(html.challenge);
+  assert.match(t, /unbiased for the finite-population mean/);
+  assert.match(t, /stay unbiased and still become less reliable, because its estimates vary more/);
+  assert.match(t, /small nonzero bias/);
+  assert.match(t, /You do not need to produce bias or .{0,3}break.{0,3} a method/);
+  assert.ok(!/for example,? (sort|reorder|inflate|remove|add|multiply|group)/i.test(t));
+});
+
+test("DECISIONS.md has every field the instructions ask students to fill in", () => {
+  const d = starterText("DECISIONS.md");
+  for (const field of ["Number of rows (N)", "Row order", "Date written", "Evidence that would contradict my hypothesis", "date written", "What changed as n grew", "stratification column"]) {
+    assert.ok(d.includes(field), field);
+  }
+  assert.ok(!/Stage 6 \(what evidence I expect/.test(d), "stage 6 prediction lives with the hypothesis in section 5");
+});
+
+test("the overview opens with the agreed sentence and the guide invents no submission details", () => {
+  assert.ok(text(html.index).includes("Build an interactive app with a coding agent to explore three sampling methods using one health dataset. You choose the design, predict the results, and explain what the evidence shows. Your agent writes and debugs the code."));
+  for (const p of ["index", "submit"]) assert.ok(!/\b(TBD|TODO|\[instructor|insert (due|deadline))/i.test(html[p]), p);
+});
+
+test("the ZIP carries the updated starter files", () => {
+  const zip = join(DIST, "downloads", ZIP_NAME);
+  const read = (name) => execFileSync("python3", ["-I", "-c", "import sys, zipfile; sys.stdout.write(zipfile.ZipFile(sys.argv[1]).read(sys.argv[2]).decode())", zip, `judge-the-sample/${name}`]).toString();
+  for (const name of ["AGENT_BRIEF.md", "DECISIONS.md", "README.md", "evidence/README.md"]) {
+    assert.equal(read(name), readFileSync(join(ROOT, "starter", name), "utf8"), name);
+  }
+  assert.match(read("DECISIONS.md"), /Number of rows \(N\)/);
 });

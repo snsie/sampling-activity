@@ -10,44 +10,42 @@
   <tbody>
     <tr><td><strong>Your app</strong>, runnable with <code>bash run_app.sh</code> (and its public link, if your course requires one)</td><td>Project folder; link on the first line of <code>README.md</code></td></tr>
     <tr><td><strong>Source code</strong>, including the shared sampling module and <code>run_app.sh</code></td><td>Your git repository</td></tr>
-    <tr><td><strong>Scenario, data source and seed(s)</strong> used for your evidence</td><td><code>README.md</code></td></tr>
-    <tr><td><strong>Baseline comparison:</strong> the three methods at the same n, at least 1,000 repetitions each, with the distribution of estimates, labelled true mean, bias, SD and RMSE</td><td><code>evidence/</code> (screenshot or export) and <code>DECISIONS.md</code> section 4</td></tr>
-    <tr><td><strong>Sample-size comparison:</strong> at least n = 10, 40, 160 and 640, one method, at least 1,000 repetitions each</td><td><code>evidence/</code> and <code>DECISIONS.md</code> section 4</td></tr>
-    <tr><td><strong>Challenge comparison:</strong> baseline vs changed conditions, with an alternative method or correction</td><td><code>evidence/</code> and <code>DECISIONS.md</code> section 4</td></tr>
-    <tr><td><strong>Your challenge hypothesis and reasoning</strong>, written independently, the <strong>user controls</strong> you chose, your <strong>initial prediction</strong>, and <strong>whether the evidence supported it</strong></td><td><code>DECISIONS.md</code> sections 2, 3, 5 and 6</td></tr>
-    <tr><td><strong>A brief explanation distinguishing bias from variability</strong>, using your own numbers</td><td><code>DECISIONS.md</code> section 6</td></tr>
+    <tr><td><strong>Scenario, data source and seed(s)</strong> used for your evidence (exact enumeration needs no seed)</td><td><code>README.md</code></td></tr>
+    <tr><td><strong>Population and true mean:</strong> row count, row order, target and your calculated true mean</td><td><code>DECISIONS.md</code> section 1</td></tr>
+    <tr><td><strong>Baseline comparison:</strong> the three methods at n = 100, each with at least 1,000 random repetitions or, for systematic sampling, exact enumeration when available. Distribution of estimates, labelled true mean, bias, SD and RMSE</td><td><code>evidence/</code> (screenshot or export) and <code>DECISIONS.md</code> section 4</td></tr>
+    <tr><td><strong>Sample-size comparison:</strong> simple random sampling at n = 10, 40, 160 and 640, at least 1,000 random repetitions each</td><td><code>evidence/</code> and <code>DECISIONS.md</code> section 4</td></tr>
+    <tr><td><strong>Challenge comparison:</strong> baseline vs changed conditions for each method at the same n, with an alternative method or correction</td><td><code>evidence/</code> and <code>DECISIONS.md</code> section 4</td></tr>
+    <tr><td><strong>Your design choices and predictions</strong>, and your <strong>challenge hypothesis</strong> with its date, reasoning, expected evidence and evidence that would contradict it, written independently</td><td><code>DECISIONS.md</code> sections 2, 3 and 5</td></tr>
+    <tr><td><strong>Your explanations</strong>, using your own numbers: bias versus variability, what sample size changed, and whether the evidence supported your hypothesis</td><td><code>DECISIONS.md</code> section 6</td></tr>
     <tr><td><strong>AI use:</strong> tools used, and what you checked yourself</td><td><code>DECISIONS.md</code> section 7</td></tr>
   </tbody>
 </table></div>
-<p>Your notes file is {{dl DECISIONS.md}} (blank copy). Evidence is from your own app: each screenshot or export notes its seed, n and number of repetitions.</p>
+<p>Your notes file is {{dl DECISIONS.md}} (blank copy). Evidence comes from your own app. Label each screenshot or export with the population or condition, method, settings, seed (where random), n, and the repetition or exact-enumeration count, and mark it Monte Carlo or exact. Keep results from different conditions in separate files.</p>
 
 <h2 id="checklist">Final self-check</h2>
 {{checklist submit
 - <code>bash run_app.sh</code> starts your app from a fresh terminal, and every stage's features work.
-- Every display uses the shared calculation functions; the true mean in the app matches your stage 1 value. {{help true-mean}}
+- The true mean in the app matches your stage 1 value. {{help true-mean}}
 - All three methods use the same n, follow the rules in <code>AGENT_BRIEF.md</code>, and show their selection rule.
-- Baseline, sample-size and challenge evidence are in <code>evidence/</code>, each with seed, n and repetitions.
-- Single-sample and repeated-sampling results, and baseline and modified populations, are labelled throughout. {{help modified-population}}
-- Your predictions are unchanged from when you wrote them; observations and revisions are added separately.
-- Your challenge hypothesis predates your Plan mode discussion, and your explanation says whether the evidence supported it.
-- You explain bias versus variability with your own numbers. {{help bias}} {{help variability}}
-- Every section of <code>DECISIONS.md</code> is in your own words, including AI use.
+- Baseline, sample-size and challenge evidence are in <code>evidence/</code>, each labelled with population or condition, method, settings, seed (if random), n and repetition or start count, and marked Monte Carlo or exact.
+- Single-sample and repeated-sampling results, and baseline and modified populations, are labelled throughout, and results from different conditions are never combined. {{help modified-population}}
+- Your predictions are unchanged from when you wrote them; observations and dated revisions are added separately.
+- Your challenge hypothesis is dated and predates your Plan mode discussion about it, and your explanation says whether the evidence supported it.
+- You explain bias versus variability with your own numbers, and checked whether your conclusions are stable across several seeds. {{help bias}} {{help variability}}
+- Every section of <code>DECISIONS.md</code> is complete and in your own words, including AI use.
 - <code>README.md</code> names your scenario, data source and seed(s); everything is committed and pushed.
 - If your course requires a public app: the link opens in a private window and live sampling and challenge controls work there.
+- Using only what your app shows, you can answer the central question for your population.
 }}
 <p class="small muted">Ticks are saved in this browser only and are not submission evidence.</p>
 <div class="progress-tools"><button type="button" class="reset" data-reset>Reset saved ticks and scenario</button></div>
 
-<div class="callout try-it">
-  <p class="callout-title">Try it yourself</p>
-  <p>Close everything, open a new terminal, run <code>bash run_app.sh</code>, and answer the central question for your population using only what your app shows. If you have to look at your code or notes to answer, your app is not yet telling the whole story.</p>
-</div>
-
-<div class="callout avoid">
-  <p class="callout-title">Claims to avoid in your write-up</p>
+<h2 id="more-help">More help</h2>
+<details><summary>Test your app from scratch</summary><div class="details-body">
+  <p>Close everything, open a new terminal, run <code>bash run_app.sh</code>, and answer the central question for your population using only what your app shows. If you have to look at your code or notes to answer, your app is not yet telling the whole story.</p></div></details>
+<details><summary>Claims to avoid in your write-up</summary><div class="details-body">
   <ul>
     <li>Generalising beyond your file: your population is the rows of your CSV.</li>
     <li>A ranking of methods without the population, n, and measure (bias, SD or RMSE) it depends on.</li>
-    <li>Conclusions drawn from one sample instead of repeated sampling.</li>
-  </ul>
-</div>
+    <li>Conclusions drawn from one sample, or from one seed, instead of repeated sampling.</li>
+  </ul></div></details>

@@ -1,7 +1,7 @@
 # Evidence
 
 Save the evidence for your submission here: screenshots or exported tables from your own app.
-Name each file by what it shows, and note the seed, n and number of repetitions in it or beside it, for example:
+Name each file by what it shows. In it or beside it, note the population or condition, method, settings, seed (if the result is random), n, and the number of repetitions or exact-enumeration starts. Keep results from different conditions in separate files. For example:
 
 - `baseline-comparison.png` (or `.csv`)
 - `sample-size-comparison.png`

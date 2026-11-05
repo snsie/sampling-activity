@@ -111,6 +111,35 @@ class TestReferenceDesigns(unittest.TestCase):
         self.assertEqual(sum(alloc.values()), 500)
         self.assertLessEqual(alloc["x"], 2)
 
+    def test_required_sample_sizes_work_for_every_dataset(self):
+        """n = 10, 40, 100, 160, 640 must give exactly n distinct rows and inclusion probability n/N."""
+        rng = random.Random(11)
+        for key, m in MANIFEST.items():
+            N = m["n_rows"]
+            for n in (10, 40, 100, 160, 640):
+                k = N / n
+                if N % n == 0:
+                    hits = [0] * N
+                    for r in range(1, N // n + 1):
+                        idx = ref.systematic(N, n, None, start=r)
+                        self.assertEqual(len(set(idx)), n, (key, n))
+                        for i in idx:
+                            hits[i] += 1
+                    self.assertEqual(set(hits), {1}, (key, n))
+                    continue
+                for u in [k, 1e-9, k / 2] + [k * (1.0 - rng.random()) for _ in range(150)]:
+                    idx = ref.systematic(N, n, None, start=u)
+                    self.assertEqual(len(set(idx)), n, (key, n, u))
+                    self.assertTrue(0 <= min(idx) and max(idx) < N, (key, n, u))
+                # exact inclusion probability of every row: measure of starts u in (0, k] that select it
+                measure = [0.0] * (N + 1)
+                for j in range(n):
+                    for i in range(max(1, math.floor(j * k)), min(N, math.ceil(j * k + k)) + 1):
+                        lo, hi = max(0.0, i - 1 - j * k), min(k, i - j * k)
+                        measure[i] += max(0.0, hi - lo)
+                for i in range(1, N + 1):
+                    self.assertAlmostEqual(measure[i] / k, n / N, places=9, msg=(key, n, i))
+
     def test_full_checks_pass_quickly(self):
         for key in ("clinic", "costs", "heart"):
             report = ref.check_dataset(key, reps=200)

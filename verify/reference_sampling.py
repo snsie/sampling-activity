@@ -60,7 +60,8 @@ def systematic(N: int, n: int, rng: random.Random, start: float | None = None) -
         return [r - 1 + j * k for j in range(n)]
     k = N / n
     u = start if start is not None else k * (1.0 - rng.random())  # (0, k]
-    return [math.ceil(u + j * k) - 1 for j in range(n)]
+    # min(N, ...) guards floating-point rounding at u = k, where the exact last row is N
+    return [min(N, math.ceil(u + j * k)) - 1 for j in range(n)]
 
 
 def proportional_allocation(sizes: dict[str, int], n: int) -> dict[str, int]:

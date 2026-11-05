@@ -1,96 +1,95 @@
-<!--meta {"title":"Challenge a method","description":"Stage 6: independently write a hypothesis about a condition that could make a sampling method less reliable, then in Plan mode design user controls to test it, and compare baseline and changed conditions with repeated sampling."} -->
+<!--meta {"title":"Challenge a method","description":"Stage 6: independently write a hypothesis about a condition that could change a sampling method's reliability, then in Plan mode design user controls to test it, and compare baseline and changed conditions with repeated sampling."} -->
 <p class="eyebrow">Stage 6 of 7</p>
 <h1>Challenge a method</h1>
-<p class="core-question">Under what condition, that you identified yourself, does a sampling method become less reliable, and does the evidence agree?</p>
+<p class="core-question">Under a condition you identify yourself, does a sampling method become more or less reliable, and does the evidence agree with your hypothesis?</p>
 
 <dl class="facts">
   <dt>Learning objective</dt><dd>Form a testable hypothesis about how a selection rule interacts with a population's values or order, test it fairly with repeated samples, and interpret the result, whether or not it supports you.</dd>
-  <dt>Reader</dt><dd>The health professional, who should be able to change your conditions themselves and see when the method struggles.</dd>
+  <dt>Reader</dt><dd>The health professional, who should be able to change your conditions themselves and see how each method responds.</dd>
   <dt>Data</dt><dd>The baseline population, <code>data/{{sc file}}</code>, and a labelled modified copy {{help modified-population}} that your users control. Same total n across methods and conditions.</dd>
 </dl>
 
+<h2 id="task">Your task</h2>
 <div class="callout student">
   <p class="callout-title">Before you consult your agent: write your hypothesis <span class="tag required">Required first</span></p>
-  <p>Do this alone, before any conversation with your agent about this stage. Write it in <code>DECISIONS.md</code>, section 5, with today's date. Think about these questions; this guide does not answer them.</p>
+  <p>Do this alone, before any conversation with your agent about this stage. Write it in <code>DECISIONS.md</code>, section 5, with today's date. This guide does not answer these questions for you:</p>
   <ul>
     <li>Which method will you challenge: simple random, systematic or stratified?</li>
-    <li>What change to your population, or to its ordering, could make that method less reliable?</li>
+    <li>What change to your population's values, membership or row order will you test?</li>
     <li>Why would that method's selection rule interact with the change? What does the rule “see”, and what does it miss?</li>
-    <li>What evidence do you expect across repeated samples: more bias, more spread, both, or neither? For which methods?</li>
-    <li>What result would show that your hypothesis is wrong?</li>
+    <li>What do you expect across repeated samples: how spread out the estimates will be, and where their centre will fall relative to the true mean? For which methods?</li>
+    <li>What result would contradict your hypothesis?</li>
   </ul>
-  <p>Your hypothesis does not have to succeed. An unsupported prediction, honestly tested and explained, is a valid outcome.</p>
+  <p><strong>Keep in mind:</strong> the specified sampling designs, with their correct estimators, are unbiased for the finite-population mean. A method can stay unbiased and still become less reliable, because its estimates vary more from sample to sample. You do not need to produce bias or “break” a method. A hypothesis that is not supported, or a method that stays reliable, is a valid result to explain.</p>
 </div>
-
-<h2>Required minimum <span class="tag required">Required</span></h2>
+<p>Then build controls that test your own hypothesis fairly. The app must have all of these:</p>
 {{checklist s6-req
-- Your hypothesis and reasoning, written before consulting your agent, and a recorded prediction of the evidence.
-- A baseline: the supplied population, labelled, recoverable at any time. {{help baseline}}
+- A baseline: the supplied population, labelled and recoverable at any time. {{help baseline}}
 - User-controlled changes to the conditions you identified, applied to a clearly labelled modified copy. {{help modified-population}}
-- The true mean recalculated whenever population values or membership change. {{help true-mean}}
-- Repeated-sampling evidence (at least 1,000 repetitions per method and condition) with bias, SD and RMSE, at the same total n across methods and conditions. {{help rmse}}
+- The true mean recalculated whenever the modified population's values or membership change. {{help true-mean}}
+- For each method and condition at the same total n: <strong>at least 1,000 random repetitions, or all possible random starts when exact enumeration is available for systematic sampling</strong>, with bias, SD and RMSE side by side for baseline and changed conditions. {{help rmse}} {{help exact-enumeration}}
+- Every result labelled Monte Carlo (with its seed) or exact, and kept as a separate set labelled with the population or condition, method, settings, seed (if random), n, and repetition or start count. Baseline and modified results are compared, never pooled.
 - A comparison with an alternative method, or a correction you justify.
-- Your own explanation of whether the results support your hypothesis.
 }}
 
+<h2 id="plan-build">Plan and build</h2>
 <div class="callout plan-task">
   <p class="callout-title">Ask your agent <span class="tag plan">Plan mode</span></p>
   <p class="mode-switch"><span class="mode-icon" aria-hidden="true">1</span><span>Only after your hypothesis is written: switch your agent to Plan mode.<span class="note">This discussion is about how to build controls for <em>your</em> idea, not about finding one. <a href="setup.html#modes">How to switch</a></span></span></p>
-<pre class="prompt"><code>I have already written my own hypothesis independently and have now switched you to Plan mode. Stay in Plan mode and do not implement changes yet. Here is my own hypothesis about a condition that could make my chosen sampling method less reliable: [paste hypothesis and reasoning]. Help me plan a feature that lets users manipulate those conditions in my existing app. Do not implement it until I have chosen an approach and switched to implementation mode. Keep the sampling method statistically correct and do not substitute a different failure scenario. Discuss implementation and interaction choices with me before building. Recalculate the modified population’s true mean, allow repeated sampling, and let users compare the baseline and changed conditions and test an alternative method or correction.</code></pre>
+<pre class="prompt"><code>I have already written my own hypothesis independently and have now switched you to Plan mode. Stay in Plan mode and do not implement changes yet. Here is my own hypothesis about how a condition could change the reliability of my chosen sampling method: [paste hypothesis and reasoning]. Help me plan a feature that lets users manipulate those conditions in my existing app. Do not implement it until I have chosen an approach and switched to implementation mode. Keep the sampling methods statistically correct and do not substitute a different hypothesis. Discuss implementation and interaction choices with me before building. Recalculate the modified population’s true mean, allow repeated sampling with each condition's results kept as its own labelled set, and let users compare the baseline and changed conditions and test an alternative method or correction.</code></pre>
   <p>Your agent may ask clarifying questions and check the mathematics. It should not propose a different hypothesis or rewrite your reasoning.</p>
 </div>
-
-<h2>Choose, then build</h2>
-<ol class="steps">
-  <li><strong>Choose an interaction design</strong> for your controls and record it, with a brief reason, in <code>DECISIONS.md</code> (section 2, stage 6).</li>
-  <li><strong>Switch your agent out of Plan mode.</strong></li>
-  <li><strong>Give it the build prompt</strong> with your design and hypothesis filled in.</li>
-</ol>
+<p><strong>Choose an interaction design</strong> for your controls and record it with a brief reason in <code>DECISIONS.md</code> (<a href="#record">below</a>). Then switch your agent out of Plan mode and send the build prompt with your design and hypothesis filled in.</p>
 <div class="callout agent-task">
   <p class="callout-title">Ask your agent <span class="tag">Implementation mode</span></p>
   <p class="mode-switch build"><span class="mode-icon" aria-hidden="true">2</span><span>Switch out of Plan mode before sending this.</span></p>
 <pre class="prompt"><code>I have switched you out of Plan mode. Implement the challenge controls I chose: [describe the interaction design], to test my own hypothesis: [paste it]. Keep my existing app and design.
 - Keep the original data recoverable and unchanged on disk. Apply user changes to a copy, label it clearly as modified, and let users return to the baseline.
-- Recalculate the true mean whenever population values or membership change, and show which population each result comes from.
-- Keep the sampling rules in AGENT_BRIEF.md exactly; never change a rule to force a failure.
-- Keep the same total n across methods and conditions. Run at least 1,000 seeded repetitions per method and condition with the shared sampling module, and show bias, SD and RMSE for baseline and changed conditions side by side.
+- Recalculate the true mean whenever the modified population's values or membership change, and show which population each result comes from.
+- Keep the sampling rules in AGENT_BRIEF.md exactly; never change a rule or estimator to force a result.
+- Keep the same total n across methods and conditions. For each method and condition, run at least 1,000 seeded random repetitions, or all possible random starts for systematic sampling when exact enumeration is available. Label each result Monte Carlo or exact.
+- Keep each condition's estimates as a separate set labelled with the population or condition, method, settings, seed (if random), n, and repetition or start count. Never pool sets. Show bias, SD and RMSE for baseline and changed conditions side by side.
 - Include the comparison method or correction I chose: [describe it].
 - Do not tell me whether my hypothesis is supported; I will interpret the evidence myself.</code></pre>
 </div>
 
-<h2>Done when</h2>
+<h2 id="check">Check your app</h2>
 {{checklist s6-done
-- You ran baseline and changed conditions yourself, and recorded the settings, seeds, n, repetitions, bias, SD and RMSE in <code>DECISIONS.md</code> (section 4).
-- You stated whether the evidence supports your hypothesis, distinguishing bias from variability.
-- If it was not supported, you considered an alternative explanation and recorded any revision below your original hypothesis, which stays unchanged.
-- You checked that a surprising result is not a coding or averaging mistake (for example wrong weights, a stale true mean, or unequal n). Commit and push.
+- You ran baseline and changed conditions yourself, and each result shows its label, seed (if random), n and repetition or start count.
+- Back at the baseline, your stage 4 numbers come back (same seed and settings; exact results are identical every time). {{help seed}}
+- When you change the condition, the label switches to modified, and the true mean updates when, and only when, values or membership change.
+- n is identical across methods and conditions, and results from different conditions are never combined.
+- With several other seeds, you checked whether your conclusion is stable or depended on one run.
+- A surprising result is not a coding or averaging mistake (for example wrong weights, a stale true mean, or unequal n).
 }}
 
-<div class="callout try-it">
-  <p class="callout-title">Try it yourself: test your own controls</p>
-  <ul>
-    <li>Return to the baseline. Do your stage 4 numbers come back (same seed, same n)?</li>
-    <li>Change your condition. Does the label switch to modified, and does the true mean update when, and only when, it should?</li>
-    <li>Check that n is identical across methods and conditions.</li>
-    <li>Re-run with two other seeds. Does your conclusion hold, or did it depend on one run?</li>
-  </ul>
-</div>
+<h2 id="record">Record your findings</h2>
+<p>In <code>DECISIONS.md</code>:</p>
+<ul>
+  <li><strong>Before you consult your agent</strong> (section 5): the date, the method you chose to challenge, the change you will test, why the selection rule would interact with it, the evidence you expect, and the evidence that would contradict your hypothesis.</li>
+  <li><strong>Before you build:</strong> the controls you chose and why (section 2, stage 6).</li>
+  <li><strong>After you run it</strong> (section 4, stage 6): for baseline and changed conditions, each method and your alternative or correction, the population or condition, settings, seed (or “exact enumeration”), n, repetition or start count, whether it is Monte Carlo or exact, and the bias, SD and RMSE.</li>
+  <li><strong>After you read it</strong> (section 6): whether the evidence supported your hypothesis, separating bias from variability; other explanations; what the alternative or correction showed; and any dated revision. Keep your original hypothesis unchanged in section 5.</li>
+</ul>
+<p>Then commit and push.</p>
 
-<div class="callout avoid">
-  <p class="callout-title">Claims to avoid</p>
-  <ul>
-    <li>“Random sampling is biased.” Simple random sampling is unbiased for the mean; one bad draw is variability.</li>
-    <li>“Systematic sampling always fails.” Any result depends on the row order and the condition you tested.</li>
-    <li>Calling wrong stratum weights a failure of stratification. That is a calculation error.</li>
-    <li>Deliberately corrupting a sampling rule, or comparing conditions at different n, to produce a failure.</li>
-    <li>Judging a method from one unlucky draw instead of repeated estimates, bias and RMSE.</li>
-  </ul>
-</div>
-
-<h2>Common questions</h2>
+<h2 id="more-help">More help</h2>
+<details><summary>Bias, variability and simulation noise</summary><div class="details-body">
+  <p>Bias is the average of a method's estimates minus the true mean of the population being sampled. For a modified population that is its recalculated true mean, not the baseline's. The specified designs and estimators are unbiased for that mean, so across all possible samples the average estimate matches it. What can differ between conditions is how much the estimates vary around it.</p>
+  <p>With random repetitions you only see a finite number of samples, so the bias you measure is a small nonzero number even for an unbiased method, and its sign can change with the seed. Compare several seeds before reading anything into it. Exact enumeration of systematic sampling uses every possible start, so it involves no simulation noise and no seed.</p>
+  <p>RMSE combines both: RMSE² = bias² + SD². If RMSE rises while bias stays near zero, the SD is what rose.</p></div></details>
 <details><summary>Why can't my agent help me come up with the hypothesis?</summary><div class="details-body">
   <p>Devising the hypothesis is the critical reasoning this stage assesses. Your agent can help you build, check and interpret the test once your idea is written.</p></div></details>
 <details><summary>Does reordering rows change the true mean?</summary><div class="details-body">
-  <p>No: the same values in a different order have the same mean. Changing values, or adding or removing rows, does change it, so it must be recalculated.</p></div></details>
+  <p>No: the same values in a different order have the same mean. Changing values, or adding or removing rows, does change it, so it must be recalculated. Changing N can also change whether a systematic interval is a whole number, so check which design applies.</p></div></details>
 <details><summary>My hypothesis wasn't supported. What now?</summary><div class="details-body">
-  <p>That is a valid result. Check the test was fair (same n, enough repetitions, correct rules and weights, true mean recalculated). Then explain what the evidence shows and what else might explain it. If you revise your hypothesis, add the revision below the original rather than replacing it.</p></div></details>
+  <p>That is a valid result. Check the test was fair (same n, enough repetitions, correct rules and weights, true mean recalculated, results labelled and not pooled). Then explain what the evidence shows and what else might explain it. If you revise your hypothesis, add a dated revision below the original rather than replacing it.</p></div></details>
+<details><summary>Claims to avoid</summary><div class="details-body">
+  <ul>
+    <li>“This method is biased” based on one unlucky draw, or on a small nonzero bias from random repetitions.</li>
+    <li>“Simple random sampling is biased.” It is unbiased for the mean; one bad draw is variability.</li>
+    <li>“This method always (or never) works.” Any result depends on the population, row order, n and condition you tested.</li>
+    <li>Calling wrong stratum weights a failure of stratification. That is a calculation error.</li>
+    <li>Changing a sampling rule, or comparing conditions at different n, to force a result.</li>
+    <li>Judging a method from one draw instead of repeated estimates, bias, SD and RMSE.</li>
+  </ul></div></details>

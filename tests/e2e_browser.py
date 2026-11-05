@@ -76,6 +76,11 @@ with sync_playwright() as p:
     page.reload()
     check(page.is_checked("#s2-req-1"), "tick persists after reload")
 
+    # Expandable sections open, and only the chosen scenario's interval table shows
+    page.goto(BASE + "methods.html")
+    page.click("summary:has-text('Systematic sampling when N/n is not a whole number')")
+    check(page.locator("details[open] .table-wrap:visible").count() == 1, "interval table: only the chosen scenario is visible")
+
     # Inline help: open, Escape closes and returns focus
     btn = page.locator("button.help").first
     btn.click()

@@ -9,24 +9,18 @@
   <dt>Data</dt><dd><code>data/{{sc file}}</code>, N = {{sc n}}, in its supplied row order. Same total n for all three methods; default n = 100.</dd>
 </dl>
 
-<div class="callout student">
-  <p class="callout-title">Before you build</p>
-  <p>Keep your stage 2 visualization. Decide what a user should be able to <em>do</em> to understand a selection rule, and choose the group column you will stratify on from your file's observable columns: {{sc groups}}. Write down why.</p>
-</div>
-
-<h2>Required minimum <span class="tag required">Required</span></h2>
-<p>How users explore is your design. The rules are not:</p>
+<h2 id="task">Your task</h2>
+<p>Keep your stage 2 visualization and add the three sampling methods. How users explore is your design; the sampling rules are not. Before you plan, decide what a user should be able to <em>do</em> to understand a selection rule, and choose the group column you will stratify on from your file's observable columns: {{sc groups}}.</p>
 {{checklist s3-req
 - <strong>Simple random sampling</strong> without replacement: n distinct rows, every set of n equally likely. {{help without-replacement}}
-- <strong>Systematic sampling</strong> with a random start, walking the file's row order with interval k = N/n. When N/n is not whole, either restrict n to sizes where it is, or use the documented equal-probability design in <code>AGENT_BRIEF.md</code>. {{help random-start}} {{help sampling-interval}}
-- <strong>Stratified sampling</strong> on an observable group column, with the allocation shown: whole numbers that total n, none larger than its stratum. {{help stratum}} {{help allocation}}
-- The stratified estimate is the population-weighted mean of the stratum means, and the app explains the weights. {{help weighting}}
-- The same total n for all three methods (default 100).
-- For each method, a user can identify the selection rule, change a relevant setting, and see the selected observations and the estimate update beside the true mean.
+- <strong>Systematic sampling</strong> with a random start through the file's row order. Use the whole-number interval when N/n is whole; otherwise use the fractional-interval design in <code>AGENT_BRIEF.md</code>. Either way the sample has exactly n distinct rows and every row has chance n/N. {{help random-start}} {{help sampling-interval}} {{help inclusion-probability}}
+- <strong>Stratified sampling</strong> on your chosen group column, with the allocation shown (whole numbers that total n, none larger than its stratum) and the estimate shown as the population-weighted mean, with its weights explained. {{help stratum}} {{help allocation}} {{help weighting}}
+- The same total n for all three methods (default 100), which users can change.
+- For each method, a user can see the selection rule, change a relevant setting, and watch the selected observations and the estimate update beside the true mean.
 - The row order is visible, and the app explains that interval sampling of an unordered list means something different from sampling a time-ordered record. {{help row-order}}
-- All three methods use the shared calculation functions.
 }}
 
+<h2 id="plan-build">Plan and build</h2>
 <div class="callout plan-task">
   <p class="callout-title">Ask your agent <span class="tag plan">Plan mode</span></p>
   <p class="mode-switch"><span class="mode-icon" aria-hidden="true">1</span><span>First, switch your agent to Plan mode.<span class="note">No file changes during this discussion. <a href="setup.html#modes">How to switch</a></span></span></p>
@@ -34,59 +28,53 @@
 
 Context: my data is data/<span class="sc" data-sc="file">your CSV file</span>, N = <span class="sc" data-sc="n">N</span>. <span class="sc" data-sc="order">Row order: see data/README.md.</span> The sampling rules are in AGENT_BRIEF.md.</code></pre>
 </div>
-
-<h2>Choose, then build</h2>
-<ol class="steps">
-  <li><strong>Choose one interaction approach</strong> and your stratification column. Record both, with a brief reason, in <code>DECISIONS.md</code> (section 2, stage 3).</li>
-  <li><strong>Switch your agent out of Plan mode.</strong></li>
-  <li><strong>Give it the build prompt</strong> with your choices filled in.</li>
-</ol>
+<p><strong>Choose one interaction approach</strong> and your stratification column, and record them with a brief reason in <code>DECISIONS.md</code> (<a href="#record">below</a>). Then switch your agent out of Plan mode and send the build prompt with your choices filled in.</p>
 <div class="callout agent-task">
   <p class="callout-title">Ask your agent <span class="tag">Implementation mode</span></p>
   <p class="mode-switch build"><span class="mode-icon" aria-hidden="true">2</span><span>Switch out of Plan mode before sending this.</span></p>
 <pre class="prompt"><code>I have switched you out of Plan mode. Implement the interaction approach I chose: [describe it]. My reason: [your reason]. Keep my existing visualization and design.
 - Replace the temporary sample with three methods in the shared sampling module, following the sampling rules in AGENT_BRIEF.md: simple random sampling without replacement; systematic sampling with a random start in the file's row order; stratified sampling on [your group column].
-- Use the same total sample size for all three methods, default 100.
+- Use the same total sample size for all three methods, default 100, and let users change it. Systematic sampling must work for every n up to N, including 10, 40, 100, 160 and 640, so never restrict n to divisors of N.
 - Users must be able to identify the selection rule for each method, change a relevant setting, and see the selected observations and the estimate update beside the true mean.
-- Systematic: show the row order, the interval and the random start. If N/n is not a whole number, tell me which design you used (restricted sizes or fractional interval) and show it in the app.
+- Systematic: show the row order, the interval and the random start, and tell the user whether the whole-number or the fractional-interval design is in use.
 - Stratified: show the allocation for each stratum (whole numbers that total n, none above the stratum size), and the population-weighted estimate with its weights.
 - Explain in the app what the row order of my file means and that interval sampling of an unordered list means something different from sampling a chronological record. Do not tell users how this will affect results.
-- When you finish, list how each rule is implemented (function names and the key lines) so I can check them myself.</code></pre>
+- When you finish, explain in plain language how each method behaves and what I can check in the running app. Do not tell me how the methods will compare.</code></pre>
 </div>
 
-<h2>Done when</h2>
+<h2 id="check">Check your app</h2>
 {{checklist s3-done
 - You ran <code>bash run_app.sh</code> and used all three methods yourself.
-- With a fixed seed, re-running gives the same sample; changing the seed gives a different one. {{help seed}}
-- Every sample has exactly n distinct rows, and the stratified allocations add up to n.
-- You checked the agent's list of rules against the required minimum.
+- <strong>Simple random:</strong> no row appears twice. With the same seed and settings you get the same sample; with several other seeds the rule and labels stay the same while the selected rows can change. {{help seed}}
+- <strong>Systematic:</strong> read the interval and the random start from the app, predict the next three selected row numbers, then check them. Change n (try 10, 40, 160 and 640): every sample still has exactly n distinct rows.
+- <strong>Stratified:</strong> the allocations add up to n and the weights add up to 1 (check by hand), and each stratum's allocation does not exceed its size.
 - Your choices and reasons are in <code>DECISIONS.md</code>. Commit and push.
 }}
+<p>Then ask yourself: can someone understand the difference between the three methods by using my app?</p>
 
-<div class="callout try-it">
-  <p class="callout-title">Try it yourself: identify a selection rule</p>
-  <ul>
-    <li><strong>Systematic:</strong> from the app alone, read the interval and the random start, then predict the next three selected row numbers before revealing them.</li>
-    <li><strong>Stratified:</strong> read each stratum's allocation and weight, and check by hand that the allocations add up to n and the weights add up to 1.</li>
-    <li><strong>Simple random:</strong> run it twice with different seeds. In one sentence, explain why the selected rows differ but the rule is the same.</li>
-  </ul>
-  <p>Then ask yourself: can someone understand the difference between the three methods by using my app?</p>
-</div>
+<h2 id="record">Record your findings</h2>
+<p>In <code>DECISIONS.md</code>, section 2, stage 3, before you build:</p>
+<ul>
+  <li>the interaction approach you chose and why;</li>
+  <li>your stratification column and why you chose it.</li>
+</ul>
+<p>Nothing else is needed for this stage.</p>
 
-<div class="callout avoid">
-  <p class="callout-title">Claims to avoid</p>
+<h2 id="more-help">More help</h2>
+<details><summary>Systematic sampling when N/n is not a whole number</summary><div class="details-body">
+  <p>There is no whole-number interval, so use the fractional-interval design: k = N/n, a random start u between 0 and k, and rows ceil(u + j·k) for j = 0 to n − 1. It gives exactly n distinct rows (k is at least 1) and the same chance n/N for every row. Do not restrict n to sizes where N/n is whole: the sizes you need later would not work. At each required size, your file needs:</p>
+  {{intervals clinic}}
+  {{intervals costs}}
+  {{intervals heart}}
+</div></details>
+<details><summary>How do I round a proportional allocation?</summary><div class="details-body">
+  <p>Give each stratum about n × N<sub>h</sub>/N rows, round down, then hand the leftover rows to the strata with the largest remainders. Check that each stratum gets at least one row, none gets more rows than it has, and the total is exactly n. If n is smaller than the number of strata, one row per stratum is impossible: tell your agent and decide together what to do.</p></div></details>
+<details><summary>Why weight the stratum means?</summary><div class="details-body">
+  <p>Each stratum's sample mean estimates that stratum's mean. Weighting by N<sub>h</sub>/N, each stratum's share of the population, combines them into an estimate of the whole population's mean. Without the weights, strata that got slightly more rows from rounding would count too much.</p></div></details>
+<details><summary>Claims to avoid</summary><div class="details-body">
   <ul>
     <li>“Systematic sampling isn't random.” With a random start, every row has the same chance of selection. {{help inclusion-probability}}</li>
     <li>Averaging all stratified rows together without weights, and calling that the stratified estimate.</li>
     <li>Different sample sizes for different methods in the same comparison.</li>
     <li>Changing a method's definition to make the app look more interesting.</li>
-  </ul>
-</div>
-
-<h2>Common questions</h2>
-<details><summary>What if N/n is not a whole number?</summary><div class="details-body">
-  <p>Then there is no single whole-number interval. Either allow only sample sizes where N/n is whole, or use a fractional interval: k = N/n, a random start u between 0 and k, and rows ceil(u + j·k). Both give exactly n rows and the same chance n/N for every row. Show the user which one you use.</p></div></details>
-<details><summary>How do I round a proportional allocation?</summary><div class="details-body">
-  <p>Give each stratum about n × N<sub>h</sub>/N rows, round down, then hand the leftover rows to the strata with the largest remainders. Check that each stratum gets at least one row, none gets more rows than it has, and the total is exactly n.</p></div></details>
-<details><summary>Why weight the stratum means?</summary><div class="details-body">
-  <p>Each stratum's sample mean estimates that stratum's mean. Weighting by N<sub>h</sub>/N, each stratum's share of the population, combines them into an estimate of the whole population's mean. Without the weights, strata that got slightly more rows from rounding would count too much.</p></div></details>
+  </ul></div></details>

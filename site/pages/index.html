@@ -1,7 +1,7 @@
 <!--meta {"title":"Overview","description":"An individual, agent-assisted sampling activity: choose a health population, build your own app with a coding agent, and judge simple random, systematic and stratified sampling with repeated-sampling evidence."} -->
 <p class="eyebrow">Individual activity</p>
 <h1>Judge the Sample</h1>
-<p class="lead">Choose one health population, then build your own app, with a coding agent writing the code, that shows how simple random, systematic and stratified sampling estimate its mean. You make the design decisions, the predictions and the judgements.</p>
+<p class="lead">Build an interactive app with a coding agent to explore three sampling methods using one health dataset. You choose the design, predict the results, and explain what the evidence shows. Your agent writes and debugs the code.</p>
 
 <p class="core-question">Which sampling method would you trust for this population, at what sample size, and with what limits?</p>
 
@@ -12,18 +12,18 @@
   <dt>Build</dt><dd>One app, developed across stages 2–6, in a stack you agree with your agent. Its design is yours.</dd>
   <dt>Investigate</dt><dd>Three sampling methods, repeated samples, sample size, and a challenge you devise yourself.</dd>
   <dt>Audience</dt><dd>A health professional who understands your scenario but is new to sampling.</dd>
-  <dt>Submit</dt><dd>Your app and source code, your scenario and seed, three comparisons (baseline, sample size, challenge), and your own explanations. <a href="submit.html">Submit evidence</a></dd>
+  <dt>Submit</dt><dd>Your app and source code, your scenario and seed(s), three comparisons (baseline, sample size, challenge), and your own explanations. <a href="submit.html">Submit evidence</a></dd>
 </dl>
 
 <h2 id="agent">How you work with your agent</h2>
 <ul>
   <li><strong>Your agent writes and debugs the code.</strong> It reads {{dl AGENT_BRIEF.md}} first: the task, the sampling rules and its boundaries. {{help agent-brief}}</li>
-  <li><strong>You choose and justify designs.</strong> Before each design, you switch the agent to Plan mode {{help plan-mode}} to brainstorm options, pick one and say why, then switch to implementation mode {{help implementation-mode}} to build it.</li>
+  <li><strong>You choose and justify designs.</strong> Before each design, switch the agent to Plan mode {{help plan-mode}} to brainstorm options, pick one and say why, then switch to implementation mode {{help implementation-mode}} to build it.</li>
   <li><strong>You predict before you test.</strong> Predictions go in your notes before any experiment runs.</li>
-  <li><strong>You devise the challenge.</strong> Your stage 6 hypothesis is written by you, before you consult your agent.</li>
-  <li><strong>You check and interpret.</strong> You run the app yourself, read the evidence and write your own explanations in {{dl DECISIONS.md}}. {{help decisions-md}}</li>
+  <li><strong>You devise the challenge.</strong> You write your stage 6 hypothesis yourself, before you consult your agent.</li>
+  <li><strong>You check and interpret.</strong> You run the app, read the evidence and write your own explanations in {{dl DECISIONS.md}}. {{help decisions-md}}</li>
 </ul>
-<p>Start your agent with the <a href="setup.html#start-prompt">starting prompt</a>. Each stage page has the prompts for that stage, adapted to your scenario.</p>
+<p>Start your agent with the <a href="setup.html#start-prompt">starting prompt</a>. Each stage page has the prompts for that stage, adapted to your scenario. Stages 2–6 follow the same pattern: <strong>Your task</strong>, <strong>Plan and build</strong>, <strong>Check your app</strong>, <strong>Record your findings</strong>.</p>
 
 <h2 id="start">Start here</h2>
 <ol class="steps roadmap">
@@ -33,12 +33,12 @@
     <span class="done-when"><strong>Done when:</strong> <code>bash run_app.sh</code> shows the full population, the sampled rows, and the sample mean beside the true mean. <a href="design.html">Stage 2 brief</a></span></li>
   <li><strong>Explore sampling methods.</strong> In Plan mode, brainstorm interactions; then add simple random, systematic and stratified sampling.
     <span class="done-when"><strong>Done when:</strong> a user can see each method's selection rule, change a setting and watch the sample and estimate update. <a href="methods.html">Stage 3 brief</a></span></li>
-  <li><strong>Compare repeated samples.</strong> Predict which method will do best, then add at least 1,000 repetitions per method.
-    <span class="done-when"><strong>Done when:</strong> your app shows each method's spread of estimates against the labelled true mean, with bias and RMSE {{help rmse}}. <a href="repeated.html">Stage 4 brief</a></span></li>
-  <li><strong>Change sample size.</strong> Predict, then let users compare repeated samples at several sizes.
-    <span class="done-when"><strong>Done when:</strong> users can compare at least 10, 40, 160 and 640 with 1,000 repetitions each. <a href="sample-size.html">Stage 5 brief</a></span></li>
+  <li><strong>Compare repeated samples.</strong> Predict which method will do best, then compare the three methods at n = 100 with at least 1,000 random repetitions each, or exact enumeration for systematic sampling when available.
+    <span class="done-when"><strong>Done when:</strong> your app shows each method's spread of estimates against the labelled true mean, with bias, SD and RMSE {{help rmse}}, each labelled Monte Carlo or exact. <a href="repeated.html">Stage 4 brief</a></span></li>
+  <li><strong>Change sample size.</strong> Predict, then let users compare simple random sampling at several sizes.
+    <span class="done-when"><strong>Done when:</strong> users can compare n = 10, 40, 160 and 640, with at least 1,000 repetitions each. <a href="sample-size.html">Stage 5 brief</a></span></li>
   <li><strong>Challenge a method.</strong> Write your own hypothesis first; then build controls that test it.
-    <span class="done-when"><strong>Done when:</strong> users can compare baseline and changed conditions, with repeated-sampling evidence and an alternative method or correction. <a href="challenge.html">Stage 6 brief</a></span></li>
+    <span class="done-when"><strong>Done when:</strong> users can compare baseline and changed conditions with repeated sampling, plus an alternative method or correction. <a href="challenge.html">Stage 6 brief</a></span></li>
   <li><strong>Submit evidence.</strong> Collect your comparisons and explanations.
     <span class="done-when"><strong>Done when:</strong> every item on the final self-check is ticked. <a href="submit.html">Stage 7 brief</a></span></li>
 </ol>
@@ -52,8 +52,8 @@
 <h2 id="integrity">Statistical integrity and AI use</h2>
 <ul>
   <li><strong>The file is the population.</strong> Your true mean describes the rows in your CSV, not all patients, all clinics or all days.</li>
-  <li><strong>Keep the rules correct.</strong> Creativity applies to how your app explains and explores the methods, never to their definitions. Every display uses the same shared calculation functions.</li>
-  <li><strong>Judge methods on many samples.</strong> Use repeated estimates, bias and RMSE, not one lucky or unlucky draw.</li>
-  <li><strong>Never manufacture a failure.</strong> A hypothesis that isn't supported is a valid result to explain.</li>
+  <li><strong>Keep the rules correct.</strong> Creativity applies to how your app explains and explores the methods, never to their definitions. Your agent follows the shared sampling rules in <code>AGENT_BRIEF.md</code>.</li>
+  <li><strong>Judge methods on many samples.</strong> Use repeated estimates, bias, SD and RMSE, not one lucky or unlucky draw. Label results Monte Carlo (random repetitions, with a seed) or exact (exact enumeration).</li>
+  <li><strong>Test fairly.</strong> A hypothesis that isn't supported is a valid result to explain; never change a sampling rule to force an outcome.</li>
   <li><strong>Your words, your decisions.</strong> Your agent does not write your notes, predictions, hypothesis or explanations. Record which AI tools you used and what you checked yourself. Follow your course's AI policy for anything not covered here.</li>
 </ul>

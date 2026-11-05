@@ -53,8 +53,8 @@
   "seed": {
     "term": "Seed",
     "group": "Populations and samples",
-    "short": "A starting number for the random number generator. The same seed reproduces the same samples, so you and others can check a result.",
-    "more": "Record the seed with every piece of evidence. Trying several seeds shows whether a conclusion depends on one lucky or unlucky run."
+    "short": "A starting number for the random number generator. The same seed and settings reproduce the same results, so you and others can check them.",
+    "more": "Record the seed with every piece of random-sampling evidence. Compare several seeds to see whether your conclusion is stable. Exact enumeration involves no random draws, so it does not depend on a seed."
   },
   "srs": {
     "term": "Simple random sampling (SRS)",
@@ -66,7 +66,7 @@
     "term": "Systematic sampling",
     "group": "Sampling methods",
     "short": "Take every k-th row in the file's order, beginning at a random start. With N rows and sample size n, the interval is k = N/n.",
-    "more": "When N/n is a whole number, there are only k possible samples, one for each start. When it is not, a design such as the fractional interval (start u on (0, k], rows ceil(u + j·k)) keeps exactly n rows and the same chance n/N for every row. What the method sees depends on the row order."
+    "more": "When N/n is a whole number, use the whole-number interval: there are only k possible samples, one for each start. When it is not, use the fractional-interval design (start u on (0, k], rows ceil(u + j·k)). Both give exactly n distinct rows and the same chance n/N for every row. What the method sees depends on the row order."
   },
   "sampling-interval": {
     "term": "Sampling interval (k)",
@@ -116,7 +116,8 @@
   "repeated-sampling": {
     "term": "Repeated sampling",
     "group": "Judging a method",
-    "short": "Drawing many samples with the same method, size and population, and keeping every estimate, to see how the method behaves rather than how one draw turned out."
+    "short": "Drawing many samples with the same method, size, settings and population, and keeping every estimate as one labelled set, to see how the method behaves rather than how one draw turned out.",
+    "more": "Keep each experiment's estimates as its own set. Never pool estimates from different populations, conditions, methods, settings or sample sizes."
   },
   "sampling-distribution": {
     "term": "Sampling distribution",
@@ -126,20 +127,20 @@
   "monte-carlo": {
     "term": "Monte Carlo",
     "group": "Judging a method",
-    "short": "Approximating a sampling distribution by drawing many random samples (here at least 1,000). Results change slightly with the seed.",
-    "more": "More repetitions make the approximation steadier; they do not change how good the method itself is."
+    "short": "Approximating a sampling distribution by drawing many random samples (here at least 1,000). Results vary with the seed, so label them Monte Carlo.",
+    "more": "More repetitions make the approximation steadier; they do not change how good the method itself is. Compare several seeds to see how much your numbers move."
   },
   "exact-enumeration": {
     "term": "Exact enumeration",
     "group": "Judging a method",
-    "short": "Listing every possible sample instead of drawing random ones. Systematic sampling with a whole-number interval k has only k possible samples, so all k can be listed.",
-    "more": "With N = 10,000 and n = 100 there are exactly 100 possible systematic samples, each with probability 1/100. Drawing 1,000 of them at random just repeats those 100."
+    "short": "Listing every possible sample instead of drawing random ones. Systematic sampling with a whole-number interval k has only k possible samples (one per random start), so all k can be listed.",
+    "more": "With N = 10,000 and n = 100 there are exactly 100 possible systematic samples, each with probability 1/100. The result is exact: it uses no random draws and does not depend on a seed. Label it exact, not Monte Carlo."
   },
   "bias": {
     "term": "Bias",
     "group": "Judging a method",
     "short": "The average of a method's estimates minus the true mean, in the target's units. It is a consistent error in one direction, seen across many samples.",
-    "more": "One estimate that misses the true mean is not evidence of bias. A Monte Carlo bias near zero, of a size that changes sign with the seed, is consistent with no bias."
+    "more": "One estimate that misses the true mean is not evidence of bias. A small nonzero Monte Carlo bias that changes sign from seed to seed can be simulation variability rather than real bias."
   },
   "variability": {
     "term": "Variability",
