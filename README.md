@@ -26,7 +26,9 @@ python tests/e2e_browser.py http://localhost:8765/some-repo/
 
 ## Publishing
 
-Not set up. `dist/` uses only relative links, so it can be served from any static host or project subpath (for example GitHub Pages, deploying the built `dist/` folder via a Pages workflow). Nothing is deployed automatically.
+Live site: https://snsie.github.io/sampling-activity/
+
+Deployed by `.github/workflows/deploy.yml`: pushes to `main` build `dist/` and publish it to GitHub Pages (Settings → Pages → Source: GitHub Actions). Pull requests build but do not deploy. `dist/` uses only relative links, so it also works from any static host or project subpath.
 
 ## Layout
 
