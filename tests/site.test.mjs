@@ -109,12 +109,38 @@ const STAGES = ["design", "methods", "compare", "challenge"];
 const text = (h) => h.replace(/<[^>]+>/g, " ").replace(/&[a-z]+;/g, " ").replace(/\s+/g, " ");
 const starterText = (name) => readFileSync(join(ROOT, "starter", name), "utf8").replace(/\s+/g, " ");
 
-test("stages 2-5 share the same four sections, in order", () => {
+test("stages 2-5 open with a finished result, then Decide, Plan, Build, Check, Record in order", () => {
   for (const p of STAGES) {
-    const ids = ["task", "plan-build", "check", "record"].map((id) => html[p].indexOf(`id="${id}"`));
+    const finished = html[p].indexOf('class="callout finished"');
+    const ids = ["decide", "plan", "build", "check", "record"].map((id) => html[p].indexOf(`<h2 id="${id}">`));
+    assert.ok(finished > 0 && finished < ids[0], `${p}: finished result before Decide`);
     assert.ok(ids.every((i) => i > 0) && ids.every((v, i) => i === 0 || v > ids[i - 1]), p);
-    for (const title of ["Your task", "Plan and build", "Check your app", "Record your findings"]) assert.ok(html[p].includes(title), `${p}: ${title}`);
+    for (const title of ["Decide", "Plan", "Build", "Check", "Record"]) assert.ok(html[p].includes(`">${title}</h2>`), `${p}: ${title}`);
+    assert.equal((html[p].match(/class="callout plan-task"/g) || []).length, 1, `${p}: one Plan prompt`);
+    assert.ok(html[p].indexOf('class="callout plan-task"') > ids[1] && html[p].indexOf('class="callout plan-task"') < ids[2], `${p}: Plan prompt under Plan`);
+    assert.ok(html[p].indexOf('class="callout agent-task"') > ids[2] && html[p].indexOf('class="callout agent-task"') < ids[3], `${p}: Build prompt under Build`);
+    assert.match(text(html[p].slice(ids[4], html[p].indexOf('id="more-help"'))), /DECISIONS\.md.*section \d/, `${p}: Record names a DECISIONS.md section`);
   }
+});
+
+test("Plan prompts: three visualizations in stage 2, two approaches (or one with an alternative) in stages 3-5", () => {
+  assert.match(text(html.design), /brainstorm three different ways to visualize/);
+  for (const p of ["methods", "compare", "challenge"]) {
+    assert.match(text(html[p]), /Propose two distinct ways .{0,200}or one proposal with a meaningful alternative/, p);
+    assert.ok(!/brainstorm three distinct/.test(text(html[p])), p);
+  }
+});
+
+test("build prompts ask for automated checks but leave results and interpretation to the student", () => {
+  for (const p of STAGES) {
+    const build = text(html[p].match(/<div class="callout agent-task">([\s\S]*?)<\/div>/)[1]);
+    assert.match(build, /Run automated correctness checks/, p);
+    assert.match(build, /Tell me which checks pass|tell me which pass/, p);
+  }
+  for (const p of ["compare", "challenge"]) assert.match(text(html[p]), /Do not run my (experiments|investigation) for me/, p);
+  const brief = starterText("AGENT_BRIEF.md");
+  assert.match(brief, /## Software verification \(you\) and interpretation \(the student\)/);
+  for (const k of ["sampling invariants", "reproducibility", "allocation totals", "estimator calculations", "known-answer cases on small synthetic populations", "Report technical verification only", "Reserved for the student", "explain terminology, ask clarifying questions"]) assert.ok(brief.includes(k), k);
 });
 
 test("required sample sizes give a valid systematic design for every dataset", () => {
@@ -142,9 +168,9 @@ test("the divisor-of-N option is gone and the repetition rule is consistent", ()
     assert.ok(!/restrict (your )?(sample )?sizes? to|restricted sizes|only allow sample sizes where/i.test(text(f)), "no restricted-size option");
     assert.ok(!/changes? them only slightly|always (produces|gives) a different/i.test(text(f)), "no seed guarantee");
   }
-  const rule = /at least 100 random repetitions \(default 100, with a control to increase to 1,000\), or all possible random starts when exact enumeration is available for systematic sampling/;
+  const rule = /at least 100 random repetitions \(default 100, with a control to increase to 1,000\), or all k random starts for systematic sampling with a whole-number interval \(exact enumeration\)/;
   for (const p of ["compare", "challenge"]) assert.match(text(html[p]), rule, p);
-  assert.match(starterText("AGENT_BRIEF.md"), /at least 100 random repetitions \(default 100, with a control to increase to 1,000\), or all possible random starts when exact enumeration is available for systematic sampling/);
+  assert.match(starterText("AGENT_BRIEF.md"), /at least 100 random repetitions \(default 100, with a control to increase to 1,000\), or all k random starts for systematic sampling with a whole-number interval \(exact enumeration\)/);
   assert.match(starterText("AGENT_BRIEF.md"), /The 100-repetition minimum applies only to Monte Carlo results; never replace exact enumeration/);
 });
 
@@ -154,7 +180,12 @@ test("stage 4 merges two experiments: methods at n = 100, then SRS at n = 1, 10 
   assert.match(t, /Experiment B: investigate sample size/);
   assert.match(t, /simple random sampling at n = 1, 10 and 100/);
   assert.match(t, /Reuse the simple random n = 100 results from experiment A when the population and settings match/);
-  assert.match(t, /For each condition, at least 100 random repetitions \(default 100, with a control to increase to 1,000\), or all possible random starts/);
+  assert.match(t, /For each condition, use at least 100 random repetitions \(default 100, with a control to increase to 1,000\), or all k random starts/);
+  assert.ok(t.indexOf("Three measures you will read") < t.indexOf("Experiment A"), "measures introduced before the experiments");
+  assert.match(t, /Is the average estimate off target\?/);
+  assert.match(t, /How much do estimates vary between samples\?/);
+  assert.match(t, /How large are estimation errors overall\?/);
+  assert.match(t, /spread of the repeated estimates, not the spread of individual/);
   assert.match(t, /At n = 10 with 100 repetitions, the app draws 100 separate samples of 10 observations and calculates 100 sample means/);
   assert.match(t, /no observation appears twice within a sample; an observation may appear again in a later repetition/);
   assert.match(t, /100 repetitions usually reveal the main pattern; 1,000 produce smoother distributions and more stable bias, SD and RMSE estimates/);
@@ -212,9 +243,10 @@ test("history, polish and extra features are marked optional and population visu
   const brief = starterText("AGENT_BRIEF.md");
   assert.match(brief, /Saved experiment histories and tools for managing earlier runs are optional/);
   assert.match(brief, /Optional:\*\* decorative styling, animations, elaborate layouts, experiment histories/);
-  assert.match(text(html.design), /The full population: all/);
-  assert.match(text(html.design), /One visual feature you chose to help reveal a sampling problem/);
-  assert.match(text(html.design), /Readable labels, usable controls/);
+  assert.match(text(html.design), /all .{0,40} of the population/);
+  assert.match(text(html.design), /one visual feature meant to help reveal a sampling problem/);
+  assert.match(text(html.design), /could read the labels and use the controls/);
+  for (const p of ["design", "methods", "compare", "challenge", "submit"]) assert.match(html[p], /href="\.\/#optional"/, `${p} links to the one optional list`);
 });
 
 test("DECISIONS.md has a compact results table with the three findings and the challenge", () => {
@@ -222,21 +254,24 @@ test("DECISIONS.md has a compact results table with the three findings and the c
   assert.match(d, /\| Experiment \| Population or condition \| Method \| Settings \| Seed \(or exact\) \| n \|/);
   for (const row of ["Simple random | | | 100", "Systematic | | | 100", "Stratified | | | 100", "Simple random | | | 1 |", "Simple random | | | 10 |"]) assert.ok(d.includes(row), row);
   assert.ok(!/\| 40 \||\| 160 \|/.test(d), "no 40 or 160 row");
-  for (const f of ["(a) The three sampling methods compared at n = 100", "(b) How sample size affects the spread of estimates and the estimation error", "Hypothesis, written before I consult my agent", "Evidence that would contradict my hypothesis"]) assert.ok(d.includes(f), f);
+  for (const f of ["(a) Method comparison: the three sampling methods compared at n = 100", "(b) Sample-size finding: how sample size affects the spread of estimates and the estimation error", "Hypothesis, written before I consult my agent", "Evidence that would contradict my hypothesis", "(c) Challenge interpretation"]) assert.ok(d.includes(f), f);
+  assert.ok(d.indexOf("(c) Challenge interpretation") > d.indexOf("## 5. Challenge"), "finding (c) lives in section 5");
+  assert.match(d, /\| Type \| True mean \| Bias \| SD \| RMSE \|/);
+  for (const row of ["| Challenge | baseline | (method I challenged)", "| Challenge | modified | (method I challenged)", "| Challenge | baseline | (alternative or correction)", "| Challenge | modified | (alternative or correction)"]) assert.ok(d.includes(row), row);
 });
 
 test("stage 5 explains unbiased-but-variable methods without example scenarios", () => {
   const t = text(html.challenge);
   assert.match(t, /unbiased for the finite-population mean/);
   assert.match(t, /stay unbiased and still become less reliable, because its estimates vary more/);
-  assert.match(t, /small nonzero bias/);
+  assert.match(t, /may be simulation noise; it is not guaranteed to be small/);
   assert.match(t, /You do not need to produce bias or .{0,3}break.{0,3} a method/);
   assert.ok(!/for example,? (sort|reorder|inflate|remove|add|multiply|group)/i.test(t));
 });
 
 test("DECISIONS.md has every field the instructions ask students to fill in", () => {
   const d = starterText("DECISIONS.md");
-  for (const field of ["Number of rows (N)", "Row order", "Date written", "Evidence that would contradict my hypothesis", "How sample size affects the spread", "stratification column"]) {
+  for (const field of ["Number of rows (N)", "Row order", "Date written", "Evidence that would contradict my hypothesis", "how sample size affects the spread", "stratification column", "Alternative method or correction I will compare"]) {
     assert.ok(d.includes(field), field);
   }
   assert.ok(!/Stage 6 \(what evidence I expect/.test(d), "challenge prediction lives with the hypothesis in section 5");
@@ -254,4 +289,47 @@ test("the ZIP carries the updated starter files", () => {
     assert.equal(read(name), readFileSync(join(ROOT, "starter", name), "utf8"), name);
   }
   assert.match(read("DECISIONS.md"), /Number of rows \(N\)/);
+});
+
+test("stage 5 states the minimum challenge experiment explicitly", () => {
+  const t = text(html.challenge);
+  assert.match(t, /The method you chose to challenge Required Required/);
+  assert.match(t, /One alternative method, or a correction you justify Required Required/);
+  assert.match(t, /its own population's true mean/);
+  assert.match(t, /You may reuse a matching baseline result from stage 4/);
+  assert.match(t, /Testing more methods or conditions is optional/);
+  assert.ok(t.indexOf("write your hypothesis") < t.indexOf("Minimum challenge experiment"), "hypothesis comes first");
+  const files = [...Object.values(html), ...["AGENT_BRIEF.md", "DECISIONS.md", "evidence/README.md"].map(starterText)];
+  for (const f of files) assert.ok(!/for each method and condition/i.test(text(f)), "no ambiguous 'for each method and condition'");
+  const brief = starterText("AGENT_BRIEF.md");
+  assert.match(brief, /the student's chosen method on the baseline and on the modified population/);
+  assert.match(brief, /one alternative method or justified correction on the corresponding baseline and modified populations/);
+});
+
+test("statistical wording: enumeration is the activity's rule, the true mean may change, Monte Carlo bias may be noise", () => {
+  const rule = "For this activity, use exact enumeration for whole-number systematic sampling and Monte Carlo for the other required results.";
+  assert.ok(text(html.compare).includes(rule), "compare");
+  assert.ok(starterText("AGENT_BRIEF.md").includes(rule), "brief");
+  assert.ok(text(html.glossary).includes(rule), "glossary");
+  const files = [...Object.values(html), ...["AGENT_BRIEF.md", "DECISIONS.md"].map(starterText)];
+  for (const f of files) {
+    const t = text(f);
+    assert.ok(!/(enumeration is available only|Only systematic sampling with a whole-number|when exact enumeration is available)/i.test(t), "no 'only'/'available' claim");
+    assert.ok(!/small nonzero/i.test(t), "no promise that Monte Carlo bias is small");
+    assert.ok(!/(values or membership (change|does)|changing values or membership does)\b(?! may)/i.test(t.replace(/whenever (its )?values or membership change|when values or membership change|whenever they change/g, "")), "true mean 'may' change");
+  }
+  assert.match(text(html.challenge), /may change it, so recalculate it every time/);
+  assert.match(starterText("AGENT_BRIEF.md"), /Reordering the same rows leaves it unchanged/);
+});
+
+test("submission: three named findings, and screenshots are labelled supporting evidence that may show baseline and modified together", () => {
+  const t = text(html.submit);
+  assert.match(t, /\(a\) the method comparison, \(b\) the sample-size finding and \(c\) the challenge interpretation/);
+  assert.match(t, /finding \(c\) , the challenge interpretation DECISIONS\.md section 5/);
+  assert.match(t, /supporting evidence/);
+  assert.match(t, /may show baseline and modified results together/);
+  assert.match(t, /never pooled/);
+  for (const f of [t, starterText("evidence/README.md")]) assert.ok(!/separate files/.test(f), "no separate-files rule");
+  assert.match(starterText("evidence/README.md"), /may show baseline and modified results together/);
+  assert.match(text(html.index), /the method comparison, the sample-size finding and the challenge interpretation/);
 });

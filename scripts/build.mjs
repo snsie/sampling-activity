@@ -205,7 +205,7 @@ export function intervalRows(key) {
 }
 function intervalTable(key) {
   const N = manifest.datasets[key].n_rows;
-  const rows = intervalRows(key).map((r) => `<tr><td>${r.n}</td><td>${int(N)} ÷ ${r.n} = ${r.text}</td><td>${r.whole ? "Whole-number interval; exact enumeration available" : "Fractional interval; Monte Carlo"}</td></tr>`).join("");
+  const rows = intervalRows(key).map((r) => `<tr><td>${r.n}</td><td>${int(N)} ÷ ${r.n} = ${r.text}</td><td>${r.whole ? "Whole-number interval; use exact enumeration" : "Fractional interval; use Monte Carlo"}</td></tr>`).join("");
   return `<div class="table-wrap" data-sc-only="${key}"><table>
     <caption>Systematic sampling design at each required sample size: ${esc(datasets[key].title)}</caption>
     <thead><tr><th scope="col">n</th><th scope="col">Interval k = N/n</th><th scope="col">Design to use</th></tr></thead>

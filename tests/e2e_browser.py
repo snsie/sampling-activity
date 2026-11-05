@@ -70,11 +70,11 @@ with sync_playwright() as p:
     check(len(page.evaluate("getSelection().toString()")) > 100, "copy fallback selects the prompt")
 
     # Checklists: tick, status, persistence
-    page.check("#s2-req-1")
-    status = page.inner_text('.checklist-status[data-for="s2-req"]')
-    check(status.startswith("1 of 6 done"), f"checklist status: {status}")
+    page.check("#s2-done-1")
+    status = page.inner_text('.checklist-status[data-for="s2-done"]')
+    check(status.startswith("1 of 5 done"), f"checklist status: {status}")
     page.reload()
-    check(page.is_checked("#s2-req-1"), "tick persists after reload")
+    check(page.is_checked("#s2-done-1"), "tick persists after reload")
 
     # Expandable sections open, and only the chosen scenario's interval table shows
     page.goto(BASE + "methods.html")
@@ -96,7 +96,7 @@ with sync_playwright() as p:
     page.click("button[data-reset]")
     page.wait_for_load_state()
     page.goto(BASE + "design.html")
-    check(not page.is_checked("#s2-req-1") and page.input_value("[data-scenario-select]") == "", "reset clears ticks and scenario")
+    check(not page.is_checked("#s2-done-1") and page.input_value("[data-scenario-select]") == "", "reset clears ticks and scenario")
 
     # Keyboard: first Tab reaches the skip link, which moves focus to main
     page.goto(BASE + "methods.html")

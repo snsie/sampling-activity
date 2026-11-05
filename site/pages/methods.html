@@ -1,4 +1,4 @@
-<!--meta {"title":"Explore sampling methods","description":"Stage 3: in Plan mode, brainstorm how users will explore the selection process, then add statistically correct simple random, systematic and stratified sampling to your app."} -->
+<!--meta {"title":"Explore sampling methods","description":"Stage 3: in Plan mode, compare ways users could explore the selection process, then add statistically correct simple random, systematic and stratified sampling to your app."} -->
 <p class="eyebrow">Stage 3 of 6</p>
 <h1>Explore sampling methods</h1>
 <p class="core-question">Can someone understand the difference between the three methods by using your app?</p>
@@ -9,26 +9,31 @@
   <dt>Data</dt><dd><code>data/{{sc file}}</code>, N = {{sc n}}, in its supplied row order. Same total n for all three methods; default n = 100.</dd>
 </dl>
 
-<h2 id="task">Your task</h2>
-<p>Keep your stage 2 visualization and add the three sampling methods. How users explore is your design; the sampling rules are not. Before you plan, decide what a user should be able to <em>do</em> to understand a selection rule, and choose the group column you will stratify on from your file's observable columns: {{sc groups}}.</p>
-{{checklist s3-req
-- <strong>Simple random sampling</strong> without replacement: n distinct rows, every set of n equally likely. {{help without-replacement}}
-- <strong>Systematic sampling</strong> with a random start through the file's row order. Use the whole-number interval when N/n is whole; otherwise use the fractional-interval design in <code>AGENT_BRIEF.md</code>. Either way the sample has exactly n distinct rows and every row has chance n/N. {{help random-start}} {{help sampling-interval}} {{help inclusion-probability}}
-- <strong>Stratified sampling</strong> on your chosen group column, with the allocation shown (whole numbers that total n, none larger than its stratum) and the estimate shown as the population-weighted mean, with its weights explained. {{help stratum}} {{help allocation}} {{help weighting}}
-- The same total n for all three methods (default 100), which users can change.
-- For each method, a user can see the selection rule, change a relevant setting, and watch the selected observations and the estimate update beside the true mean.
-- The row order is visible, and the app explains that interval sampling of an unordered list means something different from sampling a time-ordered record. {{help row-order}}
-}}
+<div class="callout finished">
+  <p class="callout-title">Finished result</p>
+  <p>Your stage 2 display now offers simple random, systematic and stratified sampling at the same total n (default 100, changeable). For each method a user can see the selection rule, change a relevant setting, and watch the selected rows and the estimate update beside the true mean.</p>
+</div>
 
-<h2 id="plan-build">Plan and build</h2>
+<h2 id="decide">Decide</h2>
+<p>How users explore is your design; the sampling rules are not. You decide:</p>
+<ul>
+  <li>what a user should be able to <em>do</em> to understand each selection rule, and which of your agent's approaches to build;</li>
+  <li>which group column to stratify on, from your file's observable columns ({{sc groups}}), and why. {{help stratum}}</li>
+</ul>
+<p><strong>Fixed rules</strong> (full detail in <code>AGENT_BRIEF.md</code>): simple random sampling is without replacement {{help without-replacement}}; systematic sampling walks the file's row order {{help row-order}} from a random start {{help random-start}}, giving exactly n distinct rows at every n; the stratified estimate is the population-weighted mean of the stratum means {{help weighting}}, not the plain average of all sampled rows.</p>
+<p class="small muted"><span class="tag optional">Optional</span> Styling, animations and extra features are never required. <a href="./#optional">Essential and optional</a></p>
+
+<h2 id="plan">Plan</h2>
 <div class="callout plan-task">
   <p class="callout-title">Ask your agent <span class="tag plan">Plan mode</span></p>
   <p class="mode-switch"><span class="mode-icon" aria-hidden="true">1</span><span>First, switch your agent to Plan mode.<span class="note">No file changes during this discussion. <a href="setup.html#modes">How to switch</a></span></span></p>
-<pre class="prompt"><code>I have switched you to Plan mode. Stay in Plan mode and do not implement changes yet. Help me brainstorm three distinct ways users could interact with my existing visualization to understand simple random, systematic, and stratified sampling. Keep the sampling rules statistically correct. For each approach, explain how users could understand why observations were selected, change a relevant sampling setting, and see the sample estimate update. Discuss the strengths and limitations with me before implementing anything.
+<pre class="prompt"><code>I have switched you to Plan mode. Stay in Plan mode and do not implement changes yet. Propose two distinct ways users could interact with my existing visualization to understand simple random, systematic, and stratified sampling (or one proposal with a meaningful alternative). Keep the sampling rules statistically correct. For each approach, explain how users could understand why observations were selected, change a relevant sampling setting, and see the sample estimate update. Discuss the strengths and limitations with me before implementing anything.
 
 Context: my data is data/<span class="sc" data-sc="file">your CSV file</span>, N = <span class="sc" data-sc="n">N</span>. <span class="sc" data-sc="order">Row order: see data/README.md.</span> The sampling rules are in AGENT_BRIEF.md.</code></pre>
+  <p>Choose one approach and your stratification column, and <a href="#record">record them</a> before you build.</p>
 </div>
-<p><strong>Choose one interaction approach</strong> and your stratification column, and record them with a brief reason in <code>DECISIONS.md</code> (<a href="#record">below</a>). Then switch your agent out of Plan mode and send the build prompt with your choices filled in.</p>
+
+<h2 id="build">Build</h2>
 <div class="callout agent-task">
   <p class="callout-title">Ask your agent <span class="tag">Implementation mode</span></p>
   <p class="mode-switch build"><span class="mode-icon" aria-hidden="true">2</span><span>Switch out of Plan mode before sending this.</span></p>
@@ -39,30 +44,26 @@ Context: my data is data/<span class="sc" data-sc="file">your CSV file</span>, N
 - Systematic: show the row order, the interval and the random start, and tell the user whether the whole-number or the fractional-interval design is in use.
 - Stratified: show the allocation for each stratum (whole numbers that total n, none above the stratum size), and the population-weighted estimate with its weights.
 - Explain in the app what the row order of my file means and that interval sampling of an unordered list means something different from sampling a chronological record. Do not tell users how this will affect results.
+- Run automated correctness checks on the shared module, as AGENT_BRIEF.md describes: exactly n distinct rows for simple random and systematic sampling at n = 1, 10, 100 and an n that does not divide N; the same seed reproduces the same sample; allocations total n and none exceeds its stratum; weights sum to 1; the weighted estimator gives the known answer on a small synthetic population. Tell me which checks pass.
 - When you finish, explain in plain language how each method behaves and what I can check in the running app. Do not tell me how the methods will compare.</code></pre>
 </div>
 
-<h2 id="check">Check your app</h2>
+<h2 id="check">Check</h2>
 {{checklist s3-done
-- You ran <code>bash run_app.sh</code> and used all three methods yourself.
+- You ran <code>bash run_app.sh</code> and used all three methods yourself, at the same n.
 - <strong>Simple random:</strong> no row appears twice. With the same seed and settings you get the same sample; with several other seeds the rule and labels stay the same while the selected rows can change. {{help seed}}
-- <strong>Systematic:</strong> read the interval and the random start from the app, predict the next three selected row numbers, then check them. Change n (try 1, 10 and 100, and one n that does not divide N): every sample still has exactly n distinct rows.
-- <strong>Stratified:</strong> the allocations add up to n and the weights add up to 1 (check by hand), and each stratum's allocation does not exceed its size.
+- <strong>Systematic:</strong> read the interval and the random start from the app, predict the next three selected row numbers, then check them. Change n (try 1, 10 and 100, and one n that does not divide N): every sample still has exactly n distinct rows. {{help sampling-interval}}
+- <strong>Stratified:</strong> the allocations add up to n and the weights add up to 1 (check by hand), and each stratum's allocation does not exceed its size. {{help allocation}}
+- The row order is visible, and the app explains what it means in your file.
 }}
 <p>Then ask yourself: can someone understand the difference between the three methods by using my app?</p>
-<p><span class="tag optional">Optional</span> Decorative styling, animations and extra features are optional; clear labels and working controls are what matter.</p>
 
-<h2 id="record">Record your findings</h2>
-<p>In <code>DECISIONS.md</code>, section 2, before you build:</p>
-<ul>
-  <li>the interaction approach you chose and why;</li>
-  <li>your stratification column and why you chose it.</li>
-</ul>
-<p>Then commit and push. Nothing else is needed for this stage.</p>
+<h2 id="record">Record</h2>
+<p><code>DECISIONS.md</code>, section 2, line <strong>“Stage 3, sampling interactions and stratification column”</strong>, written before you switch to Build: the approach you chose and why, and your stratification column and why. Then commit and push. No results are recorded at this stage.</p>
 
 <h2 id="more-help">More help</h2>
 <details><summary>Systematic sampling when N/n is not a whole number</summary><div class="details-body">
-  <p>There is no whole-number interval, so use the fractional-interval design: k = N/n, a random start u between 0 and k, and rows ceil(u + j·k) for j = 0 to n − 1. It gives exactly n distinct rows (k is at least 1) and the same chance n/N for every row. Do not restrict n to sizes where N/n is whole: the sizes you need later would not work. At each required size, your file needs:</p>
+  <p>There is no whole-number interval, so use the fractional-interval design: k = N/n, a random start u between 0 and k, and rows ceil(u + j·k) for j = 0 to n − 1. It gives exactly n distinct rows (k is at least 1) and the same chance n/N for every row {{help inclusion-probability}}. Do not restrict n to sizes where N/n is whole: the sizes you need later would not work. At each required size, your file needs:</p>
   {{intervals clinic}}
   {{intervals costs}}
   {{intervals heart}}

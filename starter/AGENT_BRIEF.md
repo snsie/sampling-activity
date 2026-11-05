@@ -24,20 +24,37 @@ days or all people.
 
 - **You write, run and debug code.** You explain what you did in plain language.
 - **The student decides.** They choose and justify designs, write the
-  challenge hypothesis, run the checks, interpret the evidence and write every explanation.
+  challenge hypothesis, run the investigation, interpret the evidence and write every explanation.
 - **Preserve the student's chosen design.** Build what they chose. If you think it must change,
   say why and ask first; never silently replace it with a default.
 - **Do not write the student's reasoning or responses.** Do not fill in or rewrite
   `DECISIONS.md`. You may build a display that shows notes the student wrote, unchanged.
-- **Do not supply the stage-5 challenge hypothesis.** Do not suggest population changes,
-  orderings or scenarios, before or after the student writes theirs. Do not suggest that a method
-  should fail or show bias. The student does not have to "break" anything: a hypothesis that is
-  not supported is a valid result. You may ask clarifying questions, check mathematical
-  consistency, and help interpret evidence after the test.
+- **Do not supply the stage-5 challenge hypothesis.** Do not propose a hypothesis, population
+  changes, orderings or scenarios, before or after the student writes theirs. Do not suggest that a
+  method should fail or show bias. The student does not have to "break" anything: a hypothesis
+  that is not supported is a valid result. You may explain terminology, ask clarifying questions
+  and check mathematical consistency, without writing any part of an assessed response.
 - **Do not reveal results or predict them.** Do not tell the student what to expect from an
-  experiment, and do not run one for them to interpret. Leave interpretation to the student.
+  experiment, and do not run the investigation for them.
 - Do not calculate the population's true mean for the student in stage 1 unless they ask you to
   check a value they have already calculated themselves.
+
+## Software verification (you) and interpretation (the student)
+
+- **You may, and should, run automated correctness checks** on the code you write, for example:
+  sampling invariants (exactly n distinct rows per sample, systematic rows following the interval
+  from the start), reproducibility (the same seed and settings give the same samples and
+  summaries), allocation totals (whole numbers summing to n, none above its stratum size, weights
+  summing to 1), estimator calculations (true mean, sample mean, population-weighted stratified
+  mean, bias, SD, RMSE, and RMSE² = bias² + SD²), exact enumeration listing each start once, and
+  known-answer cases on small synthetic populations.
+  Checks may load the real data to confirm it parses, but must not report investigation results.
+- **Report technical verification only:** which checks ran and whether they passed, and what the
+  student can check in the running app. Do not report or summarise the experiment results, rank
+  the methods, or say whether the evidence supports the hypothesis.
+- **Reserved for the student:** running the required investigation (the stage-4 experiments and
+  the stage-5 comparisons), assessing the hypothesis, writing the three findings, and all
+  reasoning in `DECISIONS.md`.
 
 ## Mode workflow
 
@@ -59,10 +76,12 @@ seed and settings must reproduce the same samples and results; never claim that 
 gives a different sample.
 
 The student checks the running app, not the source code. When you finish a stage, explain in plain
-language how each rule behaves and what the student can check in the app.
+language how each rule behaves, which automated checks you ran and whether they passed, and what
+the student can check in the app.
 
 - **Population and true mean.** N = number of rows. True mean = mean of the target over all N
-  rows. Recompute it whenever population values or membership change.
+  rows. Changing values or membership may change it, so recompute it whenever they change.
+  Reordering the same rows leaves it unchanged.
 - **Simple random sampling (SRS):** n distinct rows **without replacement**; every set of n rows
   equally likely. Support every n with 1 ≤ n ≤ N, including the required sizes 1, 10 and 100.
   Estimate = sample mean.
@@ -90,9 +109,9 @@ language how each rule behaves and what the student can check in the app.
   - Estimate = **population-weighted** mean: Σ (N_h / N) × (sample mean in stratum h). Not the
     plain average of all sampled rows (they only agree when allocation is exactly proportional).
 - **Same total n** for all three methods in any comparison. Default n = 100.
-- **Repeated sampling:** at least 100 random repetitions (default 100, with a control to increase
-  to 1,000), or all possible random starts when exact enumeration is available for systematic
-  sampling, for each method, size and condition. The 100-repetition minimum applies only to Monte
+- **Repeated sampling:** for each required result, at least 100 random repetitions (default 100,
+  with a control to increase to 1,000), or all k random starts for systematic sampling with a
+  whole-number interval (exact enumeration). The 100-repetition minimum applies only to Monte
   Carlo results; never replace exact enumeration with random repetitions.
   - Sample size and repetition count are separate settings. n is the number of rows in one
     sample; the repetition count is how many separate samples are drawn. At n = 10 with 100
@@ -108,14 +127,15 @@ language how each rule behaves and what the student can check in the app.
   - SD of estimates (the spread across repetitions)
   - RMSE = √(mean of (estimate − true mean)²) — typical estimation error, combining bias and
     variability (RMSE² = bias² + SD² when SD divides by the number of repetitions).
-- **Exact enumeration vs Monte Carlo.** Exact enumeration is available only for systematic
-  sampling with a whole-number interval: there are k equally likely starts, so list all k and
-  compute bias, SD and RMSE over them. This is exact, uses no random draws and needs no seed.
-  Everything else (simple random, stratified, and systematic with a fractional interval) is
-  Monte Carlo: at least 100 random seeded repetitions (default 100, up to 1,000). Label every
+- **Exact enumeration vs Monte Carlo.** For this activity, use exact enumeration for whole-number
+  systematic sampling and Monte Carlo for the other required results. (This is the activity's
+  implementation rule, not a mathematical limit.) With a whole-number interval there are k
+  equally likely starts, so list all k and compute bias, SD and RMSE over them; this uses no random
+  draws and needs no seed. Simple random, stratified, and systematic with a fractional interval
+  use Monte Carlo: at least 100 random seeded repetitions (default 100, up to 1,000). Label every
   result "exact" or "Monte Carlo". The specified designs with their correct estimators are
-  unbiased for the finite-population mean, so a small nonzero bias in a Monte Carlo result can be
-  simulation variability.
+  unbiased for the finite-population mean, so a nonzero bias in a Monte Carlo result may be
+  simulation noise; it is not guaranteed to be small.
 - **Current results.** The app must show its current results clearly identified with their
   settings: population or condition, method, settings (for example the stratification column and
   allocation), seed (where random), n, and the repetition count or exact-enumeration count.
@@ -127,9 +147,11 @@ language how each rule behaves and what the student can check in the app.
 - **Labels.** Always label the true population mean. Label a single sample's result separately
   from repeated-sampling results. Label baseline vs modified populations.
 - **Modified populations (stage 5).** Keep the original data recoverable and unchanged on disk;
-  apply changes to a copy, label it as modified, recompute its true mean (reordering rows does
-  not change it; changing values or membership does), and keep n equal across methods and
-  conditions. Never alter a sampling rule or estimator to force a result.
+  apply changes to a copy, label it as modified, and recompute its true mean from its own rows
+  (changing values or membership may change it; reordering the same rows does not). Measure each
+  result's bias against the true mean of the population it was drawn from. Keep n equal across
+  every comparison. Never alter a sampling rule or estimator to force a result. Baseline and
+  modified results may be displayed together, each labelled; never pool their estimates.
 
 ## Running the app
 
@@ -160,20 +182,28 @@ language how each rule behaves and what the student can check in the app.
 ## Stages (the student's guide has the full brief for each)
 
 1. Understand the population (student work; no app yet).
-2. Plan mode: brainstorm visualizations → student chooses → build the first app with a temporary,
-   clearly labelled SRS of 100 rows so the display can be tested; add `run_app.sh`.
-3. Plan mode: brainstorm interactions → student chooses → implement SRS, systematic and stratified
-   sampling (rules above), with an explained selection rule, a changeable setting, and the selected
-   rows and estimate updating.
-4. Plan mode: brainstorm a presentation → student chooses → two experiments on the baseline
-   population, each result labelled exact or Monte Carlo, with a distribution of estimates, the
-   labelled true mean, bias, SD and RMSE (repetition rule above):
+2. Plan mode: brainstorm three visualizations → student chooses → build the first app with a
+   temporary, clearly labelled SRS of 100 rows so the display can be tested; add `run_app.sh`.
+3. Plan mode: two interaction approaches (or one with a meaningful alternative) → student
+   chooses → implement SRS, systematic and stratified sampling (rules above), with an explained
+   selection rule, a changeable setting, and the selected rows and estimate updating.
+4. Plan mode: two presentations (or one with a meaningful alternative) → student chooses → two
+   experiments on the baseline population, each result labelled exact or Monte Carlo, with a
+   distribution of estimates, the labelled true mean, bias, SD and RMSE (repetition rule above):
    - Experiment A: SRS, systematic and stratified at n = 100.
    - Experiment B: SRS at n = 1, 10 and 100, with the population and method held fixed. Reuse
      the SRS n = 100 result from experiment A when the population and settings match.
    Other methods across sizes are an optional extension: every size must follow that method's rules.
-5. Student writes their own hypothesis first → Plan mode: plan controls for *their* hypothesis →
-   student chooses → build user-controlled conditions, baseline vs modified comparison, repeated
-   sampling (repetition rule above) for each method and condition, and an alternative method or
-   justified correction.
-6. Student assembles evidence: the results table, three findings and the challenge in `DECISIONS.md`.
+5. Student writes their own dated hypothesis first → Plan mode: two designs (or one with a
+   meaningful alternative) for controls that test *their* hypothesis → student chooses → build
+   user-controlled conditions on a labelled modified copy. Minimum: four results at the same total
+   n, each with repeated sampling (repetition rule above) and each compared with its own
+   population's true mean:
+   - the student's chosen method on the baseline and on the modified population;
+   - one alternative method or justified correction on the corresponding baseline and modified
+     populations.
+   A matching baseline result from stage 4 (same method, n, seed and settings) may be reused.
+   Further methods or conditions are optional.
+6. Student assembles evidence in `DECISIONS.md`: the results table, findings (a) method comparison
+   and (b) sample size in section 4, and (c) challenge interpretation in section 5; plus labelled
+   screenshots or exports in `evidence/` as supporting evidence.

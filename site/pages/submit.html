@@ -6,32 +6,32 @@
 
 <h2 id="deliverables">Deliverables <span class="tag required">Required</span></h2>
 <div class="table-wrap"><table>
-  <thead><tr><th scope="col">Deliverable</th><th scope="col">Where it goes</th></tr></thead>
+  <thead><tr><th scope="col">Deliverable</th><th scope="col">Where it goes</th><th scope="col">Stage</th></tr></thead>
   <tbody>
-    <tr><td><strong>Your app</strong>, runnable with <code>bash run_app.sh</code> (and its public link, if your course requires one)</td><td>Project folder; link on the first line of <code>README.md</code></td></tr>
-    <tr><td><strong>Source code</strong>, including the shared sampling module and <code>run_app.sh</code></td><td>Your git repository</td></tr>
-    <tr><td><strong>Scenario, data source and seed(s)</strong> used for your evidence (exact enumeration needs no seed)</td><td><code>README.md</code></td></tr>
-    <tr><td><strong>Population and true mean:</strong> row count, row order, target and your calculated true mean</td><td><code>DECISIONS.md</code> section 1</td></tr>
-    <tr><td><strong>Results table:</strong> the key results, each with its population or condition, method, settings (such as the stratification column and allocation, or challenge-control values), seed (or exact), n, repetition or start count, Monte Carlo or exact, and bias, SD and RMSE: the three methods at n = 100; simple random sampling at n = 1, 10 and 100; and your challenge conditions</td><td><code>DECISIONS.md</code> section 3</td></tr>
-    <tr><td><strong>Evidence from your app:</strong> a screenshot or export for the method comparison, the sample-size comparison and the challenge comparison, each showing its settings</td><td><code>evidence/</code></td></tr>
-    <tr><td><strong>Your design choices</strong> (stages 2–5)</td><td><code>DECISIONS.md</code> section 2</td></tr>
-    <tr><td><strong>Your findings,</strong> in your own words and using your own numbers: (a) the three methods compared at n = 100; (b) the effect of sample size on the spread of estimates and the estimation error</td><td><code>DECISIONS.md</code> section 4</td></tr>
-    <tr><td><strong>Your challenge:</strong> hypothesis with its date, reasoning, expected evidence and evidence that would contradict it, written independently; then your test settings, results and interpretation</td><td><code>DECISIONS.md</code> section 5</td></tr>
-    <tr><td><strong>AI use:</strong> tools used, and what you checked yourself</td><td><code>DECISIONS.md</code> section 6</td></tr>
+    <tr><td><strong>Your app</strong>, runnable with <code>bash run_app.sh</code> (and its public link, if your course requires one)</td><td>Project folder; link on the first line of <code>README.md</code></td><td>2–5</td></tr>
+    <tr><td><strong>Source code</strong>, including the shared sampling module and <code>run_app.sh</code></td><td>Your git repository</td><td>2–5</td></tr>
+    <tr><td><strong>Scenario, data source and seed(s)</strong> used for your evidence (exact enumeration needs no seed)</td><td><code>README.md</code></td><td>1–5</td></tr>
+    <tr><td><strong>Population and true mean:</strong> row count, row order, target and your calculated true mean</td><td><code>DECISIONS.md</code> section 1</td><td>1</td></tr>
+    <tr><td><strong>Your design choices</strong>, one line per stage, written before each build</td><td><code>DECISIONS.md</code> section 2</td><td>2–5</td></tr>
+    <tr><td><strong>Results table:</strong> one row per result, with its population or condition, method, settings, seed (or exact), n, repetition or start count, Monte Carlo or exact, the true mean it is compared with, and bias, SD and RMSE. Rows: the three methods at n = 100; simple random sampling at n = 1, 10 and 100; and the four challenge results</td><td><code>DECISIONS.md</code> section 3</td><td>4–5</td></tr>
+    <tr><td><strong>Findings (a) and (b)</strong>, in your own words and using your own numbers: (a) the method comparison at n = 100; (b) the sample-size finding: the effect of n on the spread of estimates and the estimation error</td><td><code>DECISIONS.md</code> section 4</td><td>4</td></tr>
+    <tr><td><strong>Your challenge:</strong> the dated hypothesis, written independently before consulting your agent; your test settings; and finding <strong>(c)</strong>, the challenge interpretation</td><td><code>DECISIONS.md</code> section 5</td><td>5</td></tr>
+    <tr><td><strong>Supporting evidence from your app:</strong> one labelled screenshot or export each for the method comparison, the sample-size comparison and the challenge comparison</td><td><code>evidence/</code></td><td>4–5</td></tr>
+    <tr><td><strong>AI use:</strong> tools used, what you asked your agent to do, the automated checks it reported, and what you checked yourself</td><td><code>DECISIONS.md</code> section 6</td><td>1–6</td></tr>
   </tbody>
 </table></div>
-<p>Your notes file is {{dl DECISIONS.md}} (blank copy). Evidence comes from your own app. Label each screenshot or export with the population or condition, method, settings, seed (where random), n, and the repetition or exact-enumeration count, and mark it Monte Carlo or exact. Keep results from different conditions in separate files.</p>
-<p><span class="tag optional">Optional</span> Your app does not need to keep a history of every run, and decorative styling, animations and extra features are not required. Rerun when you need to and record the key results in the table.</p>
+<p>Your notes file is {{dl DECISIONS.md}} (blank copy). Your three written findings are (a) the method comparison, (b) the sample-size finding and (c) the challenge interpretation; nothing else needs a written report. Screenshots and exports are supporting evidence for the numbers in your table: label each with the population or condition, method, settings, seed (where random), n and repetition or start count, and mark it Monte Carlo or exact. One challenge image may show baseline and modified results together, as long as each result is labelled separately and their estimates are never pooled.</p>
+<p class="small muted"><span class="tag optional">Optional</span> Run histories, styling, animations and extra features are not required. <a href="./#optional">Essential and optional</a></p>
 
 <h2 id="checklist">Final self-check</h2>
 {{checklist submit
 - <code>bash run_app.sh</code> starts your app from a fresh terminal, and the features from every stage work.
 - Your population visualization shows the full population, the sampled rows, the sample estimate and the labelled true mean, and the true mean matches your stage 1 value. {{help true-mean}}
 - All three methods use the same n, follow the rules in <code>AGENT_BRIEF.md</code>, and show their selection rule.
-- Every result is labelled with population or condition, method, settings, seed (if random), n and repetition or start count, and marked Monte Carlo or exact. Single-sample and repeated results, and baseline and modified populations, are never combined. {{help modified-population}}
-- The results table and <code>evidence/</code> cover the three methods at n = 100, simple random sampling at n = 1, 10 and 100, and your challenge.
-- Your challenge hypothesis is dated, written before your Plan mode discussion about it and unchanged since (revisions are added separately), and your interpretation says whether the evidence supported it.
-- Your findings use your own numbers and explain bias versus variability and the effect of sample size, and you checked they hold across several seeds. {{help bias}} {{help variability}}
+- Every result is labelled with population or condition, method, settings, seed (if random), n and repetition or start count, and marked Monte Carlo or exact. Single-sample and repeated results, and baseline and modified estimates, are never pooled. {{help modified-population}}
+- The results table and <code>evidence/</code> cover the three methods at n = 100, simple random sampling at n = 1, 10 and 100, and the four challenge results (your method and your alternative or correction, each on the baseline and modified populations, at the same n, each compared with its own population's true mean).
+- Your challenge hypothesis is dated, written before your Plan mode discussion about it and unchanged since (revisions are added separately), and finding (c) says whether the evidence supported it.
+- Findings (a) and (b) use your own numbers and explain bias versus variability and the effect of sample size, and you checked they hold across several seeds. {{help bias}} {{help variability}}
 - Every section of <code>DECISIONS.md</code> is complete and in your own words, including AI use.
 - <code>README.md</code> names your scenario, data source and seed(s); everything is committed and pushed.
 - If your course requires a public app: the link opens in a private window and live sampling and challenge controls work there.
