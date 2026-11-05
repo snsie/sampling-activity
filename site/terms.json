@@ -117,7 +117,7 @@
     "term": "Repeated sampling",
     "group": "Judging a method",
     "short": "Drawing many samples with the same method, size, settings and population, and keeping every estimate together, labelled with its settings, to see how the method behaves rather than how one draw turned out.",
-    "more": "Keep each experiment's estimates as its own set. Never pool estimates from different populations, conditions, methods, settings or sample sizes."
+    "more": "The repetition count is separate from the sample size n: at n = 10 with 100 repetitions, you draw 100 separate samples of 10 observations and get 100 sample means. Each sample is drawn without replacement; an observation may appear again in a later repetition. Keep each experiment's estimates as its own set. Never pool estimates from different populations, conditions, methods, settings or sample sizes."
   },
   "sampling-distribution": {
     "term": "Sampling distribution",
@@ -127,8 +127,8 @@
   "monte-carlo": {
     "term": "Monte Carlo",
     "group": "Judging a method",
-    "short": "Approximating a sampling distribution by drawing many random samples (here at least 1,000). Results vary with the seed, so label them Monte Carlo.",
-    "more": "More repetitions make the approximation steadier; they do not change how good the method itself is. Compare several seeds to see how much your numbers move."
+    "short": "Approximating a sampling distribution by drawing many random samples (here at least 100 by default, with the option to increase to 1,000). Results vary with the seed, so label them Monte Carlo.",
+    "more": "100 repetitions usually reveal the main pattern; 1,000 give smoother distributions and more stable bias, SD and RMSE estimates. Neither guarantees stable results, and more repetitions do not change how good the method itself is. Rerun with different seeds to check whether your main conclusions hold."
   },
   "exact-enumeration": {
     "term": "Exact enumeration",

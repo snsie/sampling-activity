@@ -27,7 +27,7 @@
 - A baseline: the supplied population, labelled and recoverable at any time. {{help baseline}}
 - User-controlled changes to the conditions you identified, applied to a clearly labelled modified copy. {{help modified-population}}
 - The true mean recalculated whenever the modified population's values or membership change. {{help true-mean}}
-- For each method and condition at the same total n: <strong>at least 1,000 random repetitions, or all possible random starts when exact enumeration is available for systematic sampling</strong>, with bias, SD and RMSE side by side for baseline and changed conditions. {{help rmse}} {{help exact-enumeration}}
+- For each method and condition at the same total n: <strong>at least 100 random repetitions (default 100, with a control to increase to 1,000), or all possible random starts when exact enumeration is available for systematic sampling</strong>, with bias, SD and RMSE side by side for baseline and changed conditions. {{help rmse}} {{help exact-enumeration}}
 - Every current result labelled Monte Carlo (with its seed) or exact, and showing its population or condition, method, settings, n, and repetition or start count. Baseline and modified results are compared, never pooled.
 - A comparison with an alternative method, or a correction you justify.
 - Readable labels, usable controls and visualizations someone else can interpret.
@@ -49,7 +49,7 @@
 - Keep the original data recoverable and unchanged on disk. Apply user changes to a copy, label it clearly as modified, and let users return to the baseline.
 - Recalculate the true mean whenever the modified population's values or membership change, and show which population each result comes from.
 - Keep the sampling rules in AGENT_BRIEF.md exactly; never change a rule or estimator to force a result.
-- Keep the same total n across methods and conditions. For each method and condition, run at least 1,000 seeded random repetitions, or all possible random starts for systematic sampling when exact enumeration is available. Label each result Monte Carlo or exact.
+- Keep the same total n across methods and conditions. For each method and condition, run at least 100 seeded random repetitions (default 100, with a control to increase to 1,000), or all possible random starts for systematic sampling when exact enumeration is available. Keep n and the repetition count as separate settings. Label each result Monte Carlo or exact.
 - Label each current result with its population or condition, method, settings, seed (if random), n, and repetition or start count. Never pool results from different conditions. Show bias, SD and RMSE for baseline and changed conditions side by side. The app does not need to save earlier runs, and do not add histories, styling or extra features unless I ask.
 - Include the comparison method or correction I chose: [describe it].
 - Do not tell me whether my hypothesis is supported; I will interpret the evidence myself.</code></pre>
@@ -61,7 +61,7 @@
 - Back at the baseline, your stage 4 numbers at n = 100 come back (same seed and settings; exact results are identical every time). {{help seed}}
 - When you change the condition, the label switches to modified, and the true mean updates when, and only when, values or membership change.
 - n is identical across methods and conditions, and results from different conditions are never combined.
-- With several other seeds, you checked whether your conclusion is stable or depended on one run.
+- With several other seeds, and at 1,000 repetitions, you checked whether your conclusion is stable or depended on one run. 100 repetitions usually show the main pattern but cannot reliably separate small differences.
 - A surprising result is not a coding or averaging mistake (for example wrong weights, a stale true mean, or unequal n).
 }}
 
@@ -70,7 +70,7 @@
 <ul>
   <li><strong>Before you consult your agent</strong> (section 5): the date, the method you chose to challenge, the change you will test, why the selection rule would interact with it, the evidence you expect, and the evidence that would contradict your hypothesis.</li>
   <li><strong>Before you build</strong> (section 2): the controls you chose and why.</li>
-  <li><strong>After you run it</strong> (section 5): your test settings, and your results in the results table (section 3): baseline and changed conditions, each method and your alternative or correction.</li>
+  <li><strong>After you run it</strong> (section 5): your test settings, and your results in the results table (section 3): baseline and changed conditions, each method and your alternative or correction, with the relevant settings or challenge-control values in the Settings column.</li>
   <li><strong>After you read it</strong> (section 5), in your own words: whether the evidence supported your hypothesis, separating bias from variability; other explanations; what the alternative or correction showed; and any dated revision. Keep your original hypothesis unchanged.</li>
 </ul>
 <p>Then commit and push.</p>

@@ -34,7 +34,7 @@ Context: my data is data/<span class="sc" data-sc="file">your CSV file</span>, N
   <p class="mode-switch build"><span class="mode-icon" aria-hidden="true">2</span><span>Switch out of Plan mode before sending this.</span></p>
 <pre class="prompt"><code>I have switched you out of Plan mode. Implement the interaction approach I chose: [describe it]. My reason: [your reason]. Keep my existing visualization and design.
 - Replace the temporary sample with three methods in the shared sampling module, following the sampling rules in AGENT_BRIEF.md: simple random sampling without replacement; systematic sampling with a random start in the file's row order; stratified sampling on [your group column].
-- Use the same total sample size for all three methods, default 100, and let users change it. Systematic sampling must work for every n up to N, including 10, 100 and 640, so never restrict n to divisors of N.
+- Use the same total sample size for all three methods, default 100, and let users change it. Simple random and systematic sampling must work for every n from 1 to N, including 1, 10 and 100, so never restrict n to divisors of N.
 - Users must be able to identify the selection rule for each method, change a relevant setting, and see the selected observations and the estimate update beside the true mean.
 - Systematic: show the row order, the interval and the random start, and tell the user whether the whole-number or the fractional-interval design is in use.
 - Stratified: show the allocation for each stratum (whole numbers that total n, none above the stratum size), and the population-weighted estimate with its weights.
@@ -46,7 +46,7 @@ Context: my data is data/<span class="sc" data-sc="file">your CSV file</span>, N
 {{checklist s3-done
 - You ran <code>bash run_app.sh</code> and used all three methods yourself.
 - <strong>Simple random:</strong> no row appears twice. With the same seed and settings you get the same sample; with several other seeds the rule and labels stay the same while the selected rows can change. {{help seed}}
-- <strong>Systematic:</strong> read the interval and the random start from the app, predict the next three selected row numbers, then check them. Change n (try 10, 100 and 640): every sample still has exactly n distinct rows.
+- <strong>Systematic:</strong> read the interval and the random start from the app, predict the next three selected row numbers, then check them. Change n (try 1, 10 and 100, and one n that does not divide N): every sample still has exactly n distinct rows.
 - <strong>Stratified:</strong> the allocations add up to n and the weights add up to 1 (check by hand), and each stratum's allocation does not exceed its size.
 }}
 <p>Then ask yourself: can someone understand the difference between the three methods by using my app?</p>

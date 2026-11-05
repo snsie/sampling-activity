@@ -4,6 +4,7 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { join, relative } from "node:path";
+import { createHash } from "node:crypto";
 import { build, NAV, ZIP_NAME, starterFiles, intervalRows, REQUIRED_SIZES } from "../scripts/build.mjs";
 
 const ROOT = new URL("..", import.meta.url).pathname;
@@ -117,11 +118,17 @@ test("stages 2-5 share the same four sections, in order", () => {
 });
 
 test("required sample sizes give a valid systematic design for every dataset", () => {
-  assert.deepEqual(REQUIRED_SIZES, [10, 100, 640]);
+  const m = JSON.parse(readFileSync(join(ROOT, "starter/data/manifest.json"), "utf8")).datasets;
+  assert.deepEqual(REQUIRED_SIZES, [1, 10, 100]);
   for (const key of ["clinic", "costs", "heart"]) {
     const rows = intervalRows(key);
     assert.equal(rows.length, REQUIRED_SIZES.length);
     assert.ok(rows.every((r) => r.k >= 1), key);
+  }
+  for (const key of ["clinic", "costs", "heart"]) {
+    const one = intervalRows(key).find((r) => r.n === 1);
+    assert.ok(one.whole && one.k === m[key].n_rows, `${key} n=1 has k = N, a whole interval`);
+    for (const r of intervalRows(key)) assert.equal(r.whole, m[key].n_rows % r.n === 0, `${key} n=${r.n} design matches N mod n`);
   }
   assert.ok(intervalRows("clinic").find((r) => r.n === 100).whole, "clinic n=100 is a whole interval");
   assert.ok(!intervalRows("costs").find((r) => r.n === 100).whole, "costs n=100 needs the fractional interval");
@@ -135,22 +142,55 @@ test("the divisor-of-N option is gone and the repetition rule is consistent", ()
     assert.ok(!/restrict (your )?(sample )?sizes? to|restricted sizes|only allow sample sizes where/i.test(text(f)), "no restricted-size option");
     assert.ok(!/changes? them only slightly|always (produces|gives) a different/i.test(text(f)), "no seed guarantee");
   }
-  const rule = /at least 1,000 random repetitions, or all possible random starts when exact enumeration is available for systematic sampling/;
+  const rule = /at least 100 random repetitions \(default 100, with a control to increase to 1,000\), or all possible random starts when exact enumeration is available for systematic sampling/;
   for (const p of ["compare", "challenge"]) assert.match(text(html[p]), rule, p);
-  assert.match(starterText("AGENT_BRIEF.md"), /at least 1,000 random repetitions, or all possible random starts when\s+exact enumeration is available for systematic sampling/);
+  assert.match(starterText("AGENT_BRIEF.md"), /at least 100 random repetitions \(default 100, with a control to increase to 1,000\), or all possible random starts when exact enumeration is available for systematic sampling/);
+  assert.match(starterText("AGENT_BRIEF.md"), /The 100-repetition minimum applies only to Monte Carlo results; never replace exact enumeration/);
 });
 
-test("stage 4 merges two experiments: methods at n = 100, then SRS at n = 10, 100 and 640", () => {
+test("stage 4 merges two experiments: methods at n = 100, then SRS at n = 1, 10 and 100", () => {
   const t = text(html.compare);
   assert.match(t, /Experiment A: compare the three methods at n = 100/);
   assert.match(t, /Experiment B: investigate sample size/);
-  assert.match(t, /simple random sampling at n = 10, 100 and 640/);
+  assert.match(t, /simple random sampling at n = 1, 10 and 100/);
   assert.match(t, /Reuse the simple random n = 100 results from experiment A when the population and settings match/);
-  assert.match(t, /For each condition, at least 1,000 random repetitions, or all possible random starts/);
+  assert.match(t, /For each condition, at least 100 random repetitions \(default 100, with a control to increase to 1,000\), or all possible random starts/);
+  assert.match(t, /At n = 10 with 100 repetitions, the app draws 100 separate samples of 10 observations and calculates 100 sample means/);
+  assert.match(t, /no observation appears twice within a sample; an observation may appear again in a later repetition/);
+  assert.match(t, /100 repetitions usually reveal the main pattern; 1,000 produce smoother distributions and more stable bias, SD and RMSE estimates/);
+  assert.match(t, /cannot reliably distinguish small differences between methods/);
+  assert.match(t, /Rerun with different seeds to check whether your main conclusions hold/);
   assert.match(t, /population and method held fixed/);
   assert.match(t, /Unbiased does not mean reliable/);
   assert.match(t, /Optional Not needed to finish/);
-  assert.match(text(html.submit), /simple random sampling at n = 10, 100 and 640/);
+  assert.match(text(html.submit), /simple random sampling at n = 1, 10 and 100/);
+  assert.match(text(html.index), /simple random sampling at n = 1, 10 and 100/);
+});
+
+test("no outdated n = 640 requirement or 1,000-repetition minimum remains", () => {
+  const files = [...Object.values(html), ...["AGENT_BRIEF.md", "DECISIONS.md", "README.md", "SETUP.md", "evidence/README.md", "data/README.md"].map(starterText)];
+  for (const f of files) {
+    const t = text(f);
+    assert.ok(!/\b640\b/.test(t), "no n = 640");
+    // 1,000 may appear only as the optional upper setting (or a systematic interval, N ÷ n = 1,000), never as a minimum
+    const rest = t.replace(/(increase ((it|this) )?to|up to|at|=) 1,000( repetitions)?|1,000 (produce|give) smoother/g, "");
+    assert.ok(!/(?<![\d,])1,000(?![\d,])/.test(rest), `unexpected 1,000: ${rest.match(/.{60}(?<![\d,])1,000(?![\d,]).{40}/)?.[0]}`);
+  }
+});
+
+test("every downloadable starter file is identical to its source", () => {
+  for (const f of starterFiles()) {
+    const rel = relative(join(ROOT, "starter"), f);
+    assert.ok(readFileSync(join(DIST, "starter", rel)).equals(readFileSync(f)), `dist/starter/${rel}`);
+  }
+  const zip = join(DIST, "downloads", ZIP_NAME);
+  const script = "import sys, zipfile, hashlib, json; z = zipfile.ZipFile(sys.argv[1]); print(json.dumps({n: hashlib.sha256(z.read(n)).hexdigest() for n in z.namelist()}))";
+  const hashes = JSON.parse(execFileSync("python3", ["-I", "-c", script, zip]).toString());
+  for (const f of starterFiles()) {
+    const rel = relative(join(ROOT, "starter"), f);
+    const want = createHash("sha256").update(readFileSync(f)).digest("hex");
+    assert.equal(hashes[`judge-the-sample/${rel}`], want, `ZIP ${rel}`);
+  }
 });
 
 test("no required four-size comparison, old stage pages or experiment history requirement remains", () => {
@@ -162,7 +202,7 @@ test("no required four-size comparison, old stage pages or experiment history re
     assert.ok(!/(Compare repeated samples|Change sample size)/.test(t), "old stage titles are gone");
   }
   for (const gone of ["repeated.html", "sample-size.html"]) assert.ok(!existsSync(join(DIST, gone)), gone);
-  for (const f of files) assert.ok(!/kept as (a|its own) (separate|labelled) set|as its own labelled set|separate set/i.test(text(f)), "no persistent result-set requirement");
+  for (const f of files) assert.ok(!/kept as (a|its own) (separate|labelled) set|as its own labelled set|separate set\b/i.test(text(f)), "no persistent result-set requirement");
 });
 
 test("history, polish and extra features are marked optional and population visualization stays required", () => {
@@ -179,8 +219,8 @@ test("history, polish and extra features are marked optional and population visu
 
 test("DECISIONS.md has a compact results table with the three findings and the challenge", () => {
   const d = starterText("DECISIONS.md");
-  assert.match(d, /\| Experiment \| Population or condition \| Method \| Seed \(or exact\) \| n \|/);
-  for (const row of ["Simple random | | 100", "Systematic | | 100", "Stratified | | 100", "Simple random | | 10", "Simple random | | 640"]) assert.ok(d.includes(row), row);
+  assert.match(d, /\| Experiment \| Population or condition \| Method \| Settings \| Seed \(or exact\) \| n \|/);
+  for (const row of ["Simple random | | | 100", "Systematic | | | 100", "Stratified | | | 100", "Simple random | | | 1 |", "Simple random | | | 10 |"]) assert.ok(d.includes(row), row);
   assert.ok(!/\| 40 \||\| 160 \|/.test(d), "no 40 or 160 row");
   for (const f of ["(a) The three sampling methods compared at n = 100", "(b) How sample size affects the spread of estimates and the estimation error", "Hypothesis, written before I consult my agent", "Evidence that would contradict my hypothesis"]) assert.ok(d.includes(f), f);
 });

@@ -6,7 +6,7 @@
 <h2 id="needs">What you need</h2>
 <ul>
   <li><strong>A Bash terminal:</strong> Terminal on macOS or Linux; on Windows, <strong>Git Bash</strong> (installed with <a href="https://git-scm.com/downloads">Git for Windows</a>) or <strong>WSL</strong>. PowerShell and Command Prompt cannot run <code>bash run_app.sh</code>.</li>
-  <li><strong>git</strong>, and <strong>Python 3.10 or newer</strong>. Node.js 20 or newer too, if you and your agent choose a JavaScript app.</li>
+  <li><strong>git</strong>, and <strong>Node.js 20 or newer</strong> (it includes <code>npm</code>). Your app is a JavaScript web app; we suggest <strong>React</strong> with <strong>Vite</strong>.</li>
   <li><strong>An AI coding agent</strong> that can read and edit your project folder and has a Plan mode.</li>
   <li>The starter, from <a href="data.html">Data &amp; files</a>, unzipped into a folder of its own.</li>
 </ul>
@@ -30,11 +30,11 @@
   <li>Give it this starting prompt. It works in the agent's normal mode, because setup is not a design discussion.
 <pre class="prompt" id="start-prompt"><code>Read AGENT_BRIEF.md and follow it for this whole project.
 My scenario is <span class="sc" data-sc="title">your scenario</span>, file data/<span class="sc" data-sc="file">your CSV file</span>.
-Inspect the project (README.md, SETUP.md, DECISIONS.md, load_data.py) and the data (data/README.md and my CSV). Summarise in a few sentences what the project contains and what the columns of my CSV are. Do not calculate the true mean for me.
-Then explain what setup this project needs on my computer, recommend one simple stack that can run my app locally (following my course's tools if I name them), and wait for my OK before installing anything.
+Inspect the project (README.md, SETUP.md, DECISIONS.md, load_data.mjs) and the data (data/README.md and my CSV). Summarise in a few sentences what the project contains and what the columns of my CSV are. Do not calculate the true mean for me.
+Then explain what setup this project needs on my computer for a browser-only JavaScript app built with React and Vite, as AGENT_BRIEF.md describes, and wait for my OK before installing anything.
 After I agree, prepare the environment, explaining each command before you run it and what its output means. Do not design or build the app yet: I will brainstorm the design with you in Plan mode in stage 2.</code></pre></li>
   <li>Read the summary yourself. Check it against <code>data/README.md</code>.</li>
-  <li>Confirm the data loads: <code>python3 load_data.py data/<span class="sc" data-sc="file">your CSV file</span></code> (in Git Bash, the command may be <code>python</code>).</li>
+  <li>Confirm the data loads: <code>node load_data.mjs data/<span class="sc" data-sc="file">your CSV file</span></code></li>
 </ol>
 
 <h2 id="launch">2. Run your app: <code>bash run_app.sh</code></h2>
@@ -64,8 +64,7 @@ git push -u origin main</code></pre>
 <p>Running locally is enough unless your course requires a public app. If it does, publish only once your app exists, and only the app you built.</p>
 <details><summary>Choosing a host and checking the link</summary><div class="details-body">
   <ul>
-    <li><strong>A browser-only app</strong> (HTML and JavaScript, sampling done in the page) can be served by GitHub Pages: repository <strong>Settings → Pages</strong>, deploy from branch <code>main</code>. GitHub Pages serves files only; it cannot run a Python or Node server.</li>
-    <li><strong>An app that needs a Python or Node server</strong> needs a host that runs one, such as the host your course recommends, or must be converted to run in the browser. Ask your agent in Plan mode which option fits your stack.</li>
+    <li><strong>Your app runs entirely in the browser</strong>, so any static host can serve it, such as GitHub Pages. Vite builds it into a <code>dist/</code> folder with <code>npm run build</code>; ask your agent in Plan mode how to publish that folder (for GitHub Pages, usually a GitHub Actions workflow and Vite's <code>base</code> option set to your repository name).</li>
     <li><strong>The published app must really work:</strong> live sampling, repeated sampling and your challenge controls must run there. Static exported results or screenshots do not satisfy these interactions.</li>
     <li><strong>Check it in a private (incognito) window</strong>: it must load without signing in. Then put the link on the first line of your <code>README.md</code>.</li>
   </ul>
@@ -77,8 +76,8 @@ git push -u origin main</code></pre>
   <p>You are in the wrong folder, or the launcher has not been written yet. Run <code>ls</code>; if <code>run_app.sh</code> is not listed, <code>cd</code> into your project folder or ask your agent to write it.</p></div></details>
 <details><summary><code>\r</code>, <code>$'\r': command not found</code> or “bad interpreter”</summary><div class="details-body">
   <p>The script has Windows line endings. Ask your agent to save <code>run_app.sh</code> with LF line endings. The starter's <code>.gitattributes</code> keeps them LF in git.</p></div></details>
-<details><summary>“python3: command not found” on Windows</summary><div class="details-body">
-  <p>In Git Bash the command is often <code>python</code>, or <code>py</code>. Tell your agent which one works so <code>run_app.sh</code> uses it.</p></div></details>
+<details><summary>“node: command not found” or “npm: command not found”</summary><div class="details-body">
+  <p>Install Node.js 20 or newer (LTS) from <a href="https://nodejs.org/">nodejs.org</a>, then open a new terminal and check with <code>node --version</code>. On Windows, restart Git Bash after installing so it finds <code>node</code> and <code>npm</code>.</p></div></details>
 <details><summary>“Address already in use” or the port is busy</summary><div class="details-body">
   <p>An earlier copy is still running. Stop it with <kbd>Ctrl</kbd>+<kbd>C</kbd> in its terminal, or ask your agent to make the launcher choose a free port.</p></div></details>
 <details><summary>The page is blank or shows no data</summary><div class="details-body">

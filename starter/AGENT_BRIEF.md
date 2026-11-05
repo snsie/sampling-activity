@@ -51,7 +51,7 @@ days or all people.
 
 ## Sampling rules (must stay statistically correct, whatever the design)
 
-Put every calculation in **one shared module** (for example `sampling.py` or `sampling.js`) and
+Put every calculation in **one shared module** (for example `src/sampling.js`) and
 call it from every display, so a different chart can never silently change an estimator.
 At minimum it provides: true mean, the three samplers, the estimator for each, and a repeated-
 sampling summary. Use a seedable random number generator and show the seed in the app. The same
@@ -64,9 +64,10 @@ language how each rule behaves and what the student can check in the app.
 - **Population and true mean.** N = number of rows. True mean = mean of the target over all N
   rows. Recompute it whenever population values or membership change.
 - **Simple random sampling (SRS):** n distinct rows **without replacement**; every set of n rows
-  equally likely. Estimate = sample mean.
+  equally likely. Support every n with 1 ≤ n ≤ N, including the required sizes 1, 10 and 100.
+  Estimate = sample mean.
 - **Systematic sampling with a random start**, in the file's row order (show that order). Support
-  every n with 1 ≤ n ≤ N, including the required sizes 10, 100 and 640: never restrict n
+  every n with 1 ≤ n ≤ N, including the required sizes 1, 10 and 100: never restrict n
   to divisors of N.
   - If N/n is a whole number k: random start r from 1..k, then rows r, r+k, r+2k, … (n rows).
   - Otherwise use the fractional-interval design: k = N/n, start u uniform on (0, k], rows
@@ -89,8 +90,19 @@ language how each rule behaves and what the student can check in the app.
   - Estimate = **population-weighted** mean: Σ (N_h / N) × (sample mean in stratum h). Not the
     plain average of all sampled rows (they only agree when allocation is exactly proportional).
 - **Same total n** for all three methods in any comparison. Default n = 100.
-- **Repeated sampling:** at least 1,000 random repetitions, or all possible random starts when
-  exact enumeration is available for systematic sampling, for each method, size and condition.
+- **Repeated sampling:** at least 100 random repetitions (default 100, with a control to increase
+  to 1,000), or all possible random starts when exact enumeration is available for systematic
+  sampling, for each method, size and condition. The 100-repetition minimum applies only to Monte
+  Carlo results; never replace exact enumeration with random repetitions.
+  - Sample size and repetition count are separate settings. n is the number of rows in one
+    sample; the repetition count is how many separate samples are drawn. At n = 10 with 100
+    repetitions, draw 100 separate samples of 10 rows each and calculate 100 sample means. Each
+    sample is drawn without replacement (no row twice within a sample); a row may appear again in
+    a later repetition. Show both settings separately.
+  - Tell users briefly: 100 repetitions usually reveal the main pattern; 1,000 give smoother
+    distributions and more stable bias, SD and RMSE estimates. Neither guarantees stable results,
+    and 100 repetitions cannot reliably separate small differences between methods. Users should
+    rerun with different seeds to check whether their main conclusions hold.
   Report, in the target's original units:
   - bias = mean of estimates − true mean
   - SD of estimates (the spread across repetitions)
@@ -100,10 +112,10 @@ language how each rule behaves and what the student can check in the app.
   sampling with a whole-number interval: there are k equally likely starts, so list all k and
   compute bias, SD and RMSE over them. This is exact, uses no random draws and needs no seed.
   Everything else (simple random, stratified, and systematic with a fractional interval) is
-  Monte Carlo: at least 1,000 random seeded repetitions. Label every result "exact" or
-  "Monte Carlo". The specified designs with their correct estimators are unbiased for the
-  finite-population mean, so a small nonzero bias in a Monte Carlo result can be simulation
-  variability.
+  Monte Carlo: at least 100 random seeded repetitions (default 100, up to 1,000). Label every
+  result "exact" or "Monte Carlo". The specified designs with their correct estimators are
+  unbiased for the finite-population mean, so a small nonzero bias in a Monte Carlo result can be
+  simulation variability.
 - **Current results.** The app must show its current results clearly identified with their
   settings: population or condition, method, settings (for example the stratification column and
   allocation), seed (where random), n, and the repetition count or exact-enumeration count.
@@ -121,12 +133,19 @@ language how each rule behaves and what the student can check in the app.
 
 ## Running the app
 
-- Follow the student's course conventions and the stack the student agrees to; ask if unsure.
-- Write `run_app.sh`, a Bash script that starts the app locally from the project folder (set up
-  or reuse the environment, then launch). Save it with LF line endings. Print the address to open.
+- Build a **browser-only JavaScript app**. Use **React with Vite** unless the student asks for
+  another JavaScript setup (for example plain JavaScript with Vite). Do not use Python app
+  frameworks such as Streamlit, and do not add a backend server: load the CSV and do every
+  sampling calculation in the browser.
+- Keep `data/` unchanged and load the student's CSV from it (for example with a Vite `?raw`
+  import), parsing the target as numbers.
+- Write `run_app.sh`, a Bash script that starts the app locally from the project folder: run
+  `npm install` if `node_modules/` is missing, then start the Vite dev server (`npm run dev`).
+  Save it with LF line endings. Print the address to open.
 - Tell the student the exact command `bash run_app.sh`, where to run it, what address to open and
   how to stop it (Ctrl+C). Let the student run it themselves.
-- Keep dependencies few and pinned (for example in `requirements.txt` or `package.json`).
+- Keep dependencies few and pinned in `package.json`, and commit `package-lock.json`. A
+  charting library is fine if the student agrees; prefer one or none.
 
 ## Essential and optional
 
@@ -150,7 +169,7 @@ language how each rule behaves and what the student can check in the app.
    population, each result labelled exact or Monte Carlo, with a distribution of estimates, the
    labelled true mean, bias, SD and RMSE (repetition rule above):
    - Experiment A: SRS, systematic and stratified at n = 100.
-   - Experiment B: SRS at n = 10, 100 and 640, with the population and method held fixed. Reuse
+   - Experiment B: SRS at n = 1, 10 and 100, with the population and method held fixed. Reuse
      the SRS n = 100 result from experiment A when the population and settings match.
    Other methods across sizes are an optional extension: every size must follow that method's rules.
 5. Student writes their own hypothesis first → Plan mode: plan controls for *their* hypothesis →

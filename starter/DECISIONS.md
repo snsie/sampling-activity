@@ -26,18 +26,20 @@ For each stage: the option I chose, why, and what it is meant to help a user lea
 
 One row per result I read from my app. Add rows as needed. Rerun and update a row whenever I
 like: my app does not need to keep a history of runs. Seed is "exact" for exact enumeration;
-type is Monte Carlo or exact. Keep results from different conditions in separate rows.
+type is Monte Carlo or exact. In Settings I record the settings that matter for the result, such
+as the stratification column and allocation, or my challenge-control values. Keep results from
+different conditions in separate rows.
 
-| Experiment | Population or condition | Method | Seed (or exact) | n | Repetitions or starts | Type | Bias | SD | RMSE |
-|---|---|---|---|---|---|---|---|---|---|
-| Methods at n = 100 | baseline | Simple random | | 100 | | | | | |
-| Methods at n = 100 | baseline | Systematic | | 100 | | | | | |
-| Methods at n = 100 | baseline | Stratified | | 100 | | | | | |
-| Sample size | baseline | Simple random | | 10 | | | | | |
-| Sample size | baseline | Simple random | | 640 | | | | | |
-| Challenge | | | | | | | | | |
+| Experiment | Population or condition | Method | Settings | Seed (or exact) | n | Repetitions or starts | Type | Bias | SD | RMSE |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Methods at n = 100 | baseline | Simple random | | | 100 | | | | | |
+| Methods at n = 100 | baseline | Systematic | | | 100 | | | | | |
+| Methods at n = 100 | baseline | Stratified | | | 100 | | | | | |
+| Sample size | baseline | Simple random | | | 1 | | | | | |
+| Sample size | baseline | Simple random | | | 10 | | | | | |
+| Challenge | | | | | | | | | | |
 
-The simple random n = 100 row is also the middle sample-size result when the population and
+The simple random n = 100 row is also the n = 100 sample-size result when the population and
 settings match. If I reran it with different settings, I add a separate row.
 
 ## 4. Findings (in my own words, using my own numbers)

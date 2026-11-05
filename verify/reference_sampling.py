@@ -5,7 +5,7 @@ populations behave as the guide claims, and it lets an instructor sanity-check a
 numbers. It prints results; it never asserts which method "should" win.
 
     python3 verify/reference_sampling.py            # checks + report to verify/out/report.json
-    python3 verify/reference_sampling.py --reps 2000
+    python3 verify/reference_sampling.py --reps 1000   # default 100, as in the student apps
 
 Standard library only.
 """
@@ -149,16 +149,19 @@ def check_dataset(key: str, reps: int) -> dict:
     groups = [r[STRATA[key]] for r in rows]
     rng = random.Random(1)
 
-    for n in (10, 40, 100, 160, 640):  # required sizes 10, 100, 640, plus others: systematic must work for any n
+    n_strata = len(set(groups))
+    for n in (1, 10, 40, 100, 160, 640):  # required sizes 1, 10, 100, plus others: SRS and systematic must work for any n
         a = srs(N, n, rng)
         assert len(set(a)) == n and len(a) == n
         b = systematic(N, n, rng)
         assert len(set(b)) == n and 0 <= min(b) and max(b) < N, f"systematic n={n}"
+        if n < n_strata:  # stratified needs at least one row per stratum
+            continue
         c, alloc = stratified(groups, n, rng)
         assert len(set(c)) == n and sum(alloc.values()) == n
         assert all(alloc[h] <= groups.count(h) for h in alloc)
     # every row has inclusion probability n/N under systematic sampling (exact count over starts)
-    for n in (100, 160, 640):
+    for n in (1, 10, 100, 160, 640):
         k = N / n
         if N % n == 0:
             hits = [0] * N
@@ -189,7 +192,7 @@ def check_dataset(key: str, reps: int) -> dict:
         report["baseline_n100"][m] = s
     if N % 100 == 0:
         report["baseline_n100"]["systematic_exact"] = summary(enumerate_systematic(y, 100), truth)
-    for n in (10, 100, 640):
+    for n in (1, 10, 100):
         report["srs_by_size"][n] = summary(repeat("srs", y, groups, n, reps, seed=200 + n), truth)
     report["demonstration_challenges"] = demonstrations(key, rows, target, reps)
     return report
@@ -225,7 +228,7 @@ def demonstrations(key: str, rows: list[dict], target: str, reps: int) -> dict:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--reps", type=int, default=1000)
+    ap.add_argument("--reps", type=int, default=100)
     args = ap.parse_args()
     OUT.mkdir(exist_ok=True)
     full = {}

@@ -141,7 +141,7 @@ const FILE_NOTES = {
   "SETUP.md": "Setup, running, git backup and optional publishing.",
   "AGENT_BRIEF.md": "Your agent's task, sampling rules, mode workflow and boundaries. It reads this first.",
   "DECISIONS.md": "Your notes file (blank): you write every section yourself.",
-  "load_data.py": "Minimal loader: prints a dataset's size and columns. No sampling.",
+  "load_data.mjs": "Minimal Node.js loader: prints a dataset's size and columns. No sampling.",
   ".gitignore": "Keeps environments, caches and secrets out of git.",
   ".gitattributes": "Keeps run_app.sh with LF line endings, so it runs on Windows checkouts.",
   "evidence/README.md": "Where to save screenshots or exports for your submission.",
@@ -193,7 +193,7 @@ function scenarioData() {
 }
 
 // Systematic-sampling design for each required sample size, computed from the manifest's row counts.
-export const REQUIRED_SIZES = [10, 100, 640];
+export const REQUIRED_SIZES = [1, 10, 100];
 const fmtRatio = (r) => (Number.isInteger(r) ? int(r) : r.toLocaleString("en-US", { maximumFractionDigits: 2 }));
 export function intervalRows(key) {
   const N = manifest.datasets[key].n_rows;

@@ -9,7 +9,7 @@
 <dl class="facts">
   <dt>Who</dt><dd>You, individually. No partner or peer testing is needed.</dd>
   <dt>Data</dt><dd>Choose one supplied population: clinic waiting times (the default), healthcare costs, or wearable heart rate. The whole CSV is your finite population {{help population}}. <a href="data.html">Data &amp; files</a></dd>
-  <dt>Build</dt><dd>One app, developed across stages 2–5, in a stack you agree with your agent. Its design is yours.</dd>
+  <dt>Build</dt><dd>One app, developed across stages 2–5, as a JavaScript web app (we suggest React with Vite). Its design is yours.</dd>
   <dt>Investigate</dt><dd>Three sampling methods compared at n = 100, how sample size changes reliability, and a challenge you devise yourself.</dd>
   <dt>Audience</dt><dd>A health professional who understands your scenario but is new to sampling.</dd>
   <dt>Submit</dt><dd>Your app and source code, your scenario and seed(s), a results table, and three short written findings: the methods compared, the effect of sample size, and your challenge. <a href="submit.html">Submit evidence</a></dd>
@@ -32,7 +32,7 @@
     <span class="done-when"><strong>Done when:</strong> <code>bash run_app.sh</code> shows the full population, the sampled rows, and the sample mean beside the true mean. <a href="design.html">Stage 2 brief</a></span></li>
   <li><strong>Explore sampling methods.</strong> In Plan mode, brainstorm interactions; then add simple random, systematic and stratified sampling.
     <span class="done-when"><strong>Done when:</strong> a user can see each method's selection rule, change a setting and watch the sample and estimate update. <a href="methods.html">Stage 3 brief</a></span></li>
-  <li><strong>Compare methods and sample size.</strong> Two experiments in one stage: compare the three methods at n = 100, then use simple random sampling at n = 10, 100 and 640. At least 1,000 random repetitions per condition, or exact enumeration for systematic sampling when available.
+  <li><strong>Compare methods and sample size.</strong> Two experiments in one stage: compare the three methods at n = 100, then use simple random sampling at n = 1, 10 and 100. At least 100 random repetitions per condition (default 100, with a control to increase to 1,000), or exact enumeration for systematic sampling when available.
     <span class="done-when"><strong>Done when:</strong> your app shows each result's spread of estimates against the labelled true mean, with bias, SD and RMSE {{help rmse}}, each labelled Monte Carlo or exact. <a href="compare.html">Stage 4 brief</a></span></li>
   <li><strong>Challenge a method.</strong> Write your own hypothesis first; then build controls that test it.
     <span class="done-when"><strong>Done when:</strong> users can compare baseline and changed conditions with repeated sampling, plus an alternative method or correction. <a href="challenge.html">Stage 5 brief</a></span></li>

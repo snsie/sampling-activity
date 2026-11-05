@@ -1,6 +1,6 @@
 # Judge the Sample
 
-Student guide and starter for an individual, agent-assisted sampling activity. Students choose one health population, build their own app with a coding agent across six stages, and judge simple random, systematic and stratified sampling with repeated-sampling evidence.
+Student guide and starter for an individual, agent-assisted sampling activity. Students choose one health population, build their own browser-based JavaScript app (React + Vite suggested) with a coding agent across six stages, and judge simple random, systematic and stratified sampling with repeated-sampling evidence.
 
 > Which sampling method would you trust for this population, at what sample size, and with what limits?
 

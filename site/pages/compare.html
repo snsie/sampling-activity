@@ -1,4 +1,4 @@
-<!--meta {"title":"Compare methods & sample size","description":"Stage 4: in Plan mode, design two experiments in your app: compare simple random, systematic and stratified sampling at n = 100, then investigate how sample size (n = 10, 100 and 640) changes the reliability of simple random sampling."} -->
+<!--meta {"title":"Compare methods & sample size","description":"Stage 4: in Plan mode, design two experiments in your app: compare simple random, systematic and stratified sampling at n = 100, then investigate how sample size (n = 1, 10 and 100) changes the reliability of simple random sampling."} -->
 <p class="eyebrow">Stage 4 of 6</p>
 <h1>Compare methods &amp; sample size</h1>
 <p class="core-question">Across many samples, which method's estimates stay close to the true mean, and how does sample size change how reliable they are?</p>
@@ -13,13 +13,18 @@
 <p>Add two experiments to your app. How you present them is your design. Each result must show its settings, so you can read it and record it.</p>
 <ol class="steps">
   <li><strong>Experiment A: compare the three methods at n = 100.</strong> Simple random {{help srs}}, systematic {{help systematic}} and stratified {{help stratified}} sampling, same population, same n.</li>
-  <li><strong>Experiment B: investigate sample size.</strong> Simple random sampling only, at <strong>n = 10, 100 and 640</strong>. Keep the population and method fixed so n is the only thing that changes. Reuse the simple random n = 100 results from experiment A when the population and settings match; otherwise rerun them.</li>
+  <li><strong>Experiment B: investigate sample size.</strong> Simple random sampling only, at <strong>n = 1, 10 and 100</strong>. Keep the population and method fixed so n is the only thing that changes. Reuse the simple random n = 100 results from experiment A when the population and settings match; otherwise rerun them.</li>
 </ol>
+<div class="callout">
+  <p class="callout-title">Sample size and repetitions are separate settings</p>
+  <p><strong>n</strong> is the number of observations in one sample; the <strong>repetition count</strong> is how many separate samples your app draws. At n = 10 with 100 repetitions, the app draws 100 separate samples of 10 observations and calculates 100 sample means. Each sample is drawn without replacement, so no observation appears twice within a sample; an observation may appear again in a later repetition.</p>
+  <p>Monte Carlo results use 100 repetitions by default, and your app must let users increase this to 1,000. 100 repetitions usually reveal the main pattern; 1,000 produce smoother distributions and more stable bias, SD and RMSE estimates. Neither count guarantees stable results, and 100 repetitions cannot reliably distinguish small differences between methods. Rerun with different seeds to check whether your main conclusions hold.</p>
+</div>
 <p>Your app must have all of these:</p>
 {{checklist s4-req
 - <strong>Experiment A:</strong> all three methods at n = 100, on the same population.
-- <strong>Experiment B:</strong> simple random sampling at n = 10, 100 and 640 (you may offer more sizes), with the population and method held fixed.
-- For each condition, <strong>at least 1,000 random repetitions, or all possible random starts when exact enumeration is available for systematic sampling.</strong> {{help repeated-sampling}} {{help exact-enumeration}}
+- <strong>Experiment B:</strong> simple random sampling at n = 1, 10 and 100 (you may offer more sizes), with the population and method held fixed.
+- For each condition, <strong>at least 100 random repetitions (default 100, with a control to increase to 1,000), or all possible random starts when exact enumeration is available for systematic sampling.</strong> {{help repeated-sampling}} {{help exact-enumeration}}
 - Every current result labelled <strong>Monte Carlo</strong> (random repetitions, with the seed shown) or <strong>exact</strong> (every possible start; no seed), with its population, method, settings, n and repetition or start count. Different conditions are shown separately, never pooled. {{help monte-carlo}}
 - For each result: a display of the distribution of estimates with a clearly labelled true mean, and bias, SD of the estimates and RMSE in {{sc units}}.
 - A single sample's result clearly distinguished from the distribution across repetitions.
@@ -34,7 +39,7 @@
 <div class="callout plan-task">
   <p class="callout-title">Ask your agent <span class="tag plan">Plan mode</span></p>
   <p class="mode-switch"><span class="mode-icon" aria-hidden="true">1</span><span>First, switch your agent to Plan mode.<span class="note">No file changes during this discussion. <a href="setup.html#modes">How to switch</a></span></span></p>
-<pre class="prompt"><code>I have switched you to Plan mode. Stay in Plan mode and do not implement changes yet. Help me brainstorm three distinct ways to present two experiments in my app. Experiment A compares simple random, systematic and stratified sampling at n = 100 on the same population. Experiment B investigates sample size using simple random sampling at n = 10, 100 and 640, with the population and method fixed. Users must be able to see how much estimates vary, compare them with the true population mean, and tell consistent error from random variation. Keep the true mean visible and label each current result with its settings. Keep the plan simple: do not design saved experiment histories or extra features unless I ask. Explain the strengths and limitations of each approach, and discuss the ideas with me before implementing anything.
+<pre class="prompt"><code>I have switched you to Plan mode. Stay in Plan mode and do not implement changes yet. Help me brainstorm three distinct ways to present two experiments in my app. Experiment A compares simple random, systematic and stratified sampling at n = 100 on the same population. Experiment B investigates sample size using simple random sampling at n = 1, 10 and 100, with the population and method fixed. Monte Carlo results use 100 repetitions by default, with a control to increase to 1,000; n and the repetition count are separate settings. Users must be able to see how much estimates vary, compare them with the true population mean, and tell consistent error from random variation. Keep the true mean visible and label each current result with its settings. Keep the plan simple: do not design saved experiment histories or extra features unless I ask. Explain the strengths and limitations of each approach, and discuss the ideas with me before implementing anything.
 
 Please do not run any experiments or tell me what results to expect: I will read and interpret them myself.</code></pre>
 </div>
@@ -43,9 +48,10 @@ Please do not run any experiments or tell me what results to expect: I will read
   <p class="callout-title">Ask your agent <span class="tag">Implementation mode</span></p>
   <p class="mode-switch build"><span class="mode-icon" aria-hidden="true">2</span><span>Switch out of Plan mode before sending this.</span></p>
 <pre class="prompt"><code>I have switched you out of Plan mode. Implement the presentation I chose: [describe it]. My reason: [your reason]. Add it to my existing app and keep my design.
-- Following AGENT_BRIEF.md, add repeated sampling to the shared sampling module: for each condition, at least 1,000 random repetitions, or all possible random starts when exact enumeration is available for systematic sampling. Random repetitions must be seeded and reproducible.
+- Following AGENT_BRIEF.md, add repeated sampling to the shared sampling module: for each condition, at least 100 random repetitions (default 100, with a control to increase to 1,000), or all possible random starts when exact enumeration is available for systematic sampling. Random repetitions must be seeded and reproducible.
+- Keep n and the repetition count as separate settings: each repetition draws one sample of n observations without replacement and calculates one estimate. Show the repetition count beside each result, and explain briefly in the app that 100 repetitions usually reveal the main pattern while 1,000 give smoother distributions and more stable bias, SD and RMSE estimates.
 - Experiment A: simple random, systematic and stratified sampling at n = 100, same population.
-- Experiment B: simple random sampling at n = 10, 100 and 640, with the population and method fixed. Reuse the simple random n = 100 result from Experiment A when the population and settings match.
+- Experiment B: simple random sampling at n = 1, 10 and 100, with the population and method fixed. Reuse the simple random n = 100 result from Experiment A when the population and settings match.
 - Label every current result Monte Carlo (with its seed) or exact (no seed), and show its population, method, settings, n and repetition or start count. Never pool results that differ in any label.
 - Show the distribution of estimates in my chosen presentation, with the true population mean clearly labelled, plus bias (mean of estimates minus true mean), the SD of the estimates and RMSE, in <span class="sc" data-sc="units">the target's units</span>, as AGENT_BRIEF.md defines them. Clearly distinguish a single sample's result from the distribution across repetitions.
 - The app only needs to show current results. Do not add saved experiment histories, styling, animations or other extras unless I ask.
@@ -54,8 +60,9 @@ Please do not run any experiments or tell me what results to expect: I will read
 
 <h2 id="check">Check your app</h2>
 {{checklist s4-done
+- Your app defaults to 100 repetitions for Monte Carlo results and lets you increase to 1,000. At n = 10 with 100 repetitions, it shows 100 estimates, each the mean of 10 distinct observations.
 - You ran both experiments yourself, and every result shows its label (Monte Carlo or exact), seed if random, n and repetition or start count.
-- The same seed and settings reproduce the same Monte Carlo numbers. Compare several seeds: does the pattern stay the same? Exact results need no seed. {{help seed}}
+- The same seed and settings reproduce the same Monte Carlo numbers. Rerun with different seeds (and at 1,000 repetitions): do your main conclusions still hold? Exact results need no seed. {{help seed}}
 - The simple random n = 100 result in experiment B matches experiment A (reused, or rerun with the same seed and settings).
 - Using only your app, you can point to the number or feature that shows each method's spread and each method's distance from the true mean.
 - For one result, RMSE² is close to bias² + SD². {{help rmse}}
@@ -66,14 +73,14 @@ Please do not run any experiments or tell me what results to expect: I will read
 <p>In <code>DECISIONS.md</code>:</p>
 <ul>
   <li><strong>Before you build</strong> (section 2): the presentation you chose and why.</li>
-  <li><strong>After you run it</strong> (section 3): one row per result in the compact results table: population or condition, method, seed (or “exact”), n, repetition or start count, Monte Carlo or exact, and bias, SD and RMSE.</li>
+  <li><strong>After you run it</strong> (section 3): one row per result in the compact results table: population or condition, method, settings (such as the stratification column and allocation), seed (or “exact”), n, repetition or start count, Monte Carlo or exact, and bias, SD and RMSE.</li>
   <li><strong>After you read it</strong> (section 4), in your own words: <strong>(a)</strong> how the three methods compare at n = 100; <strong>(b)</strong> how sample size affects the spread of estimates and the estimation error, and what a larger sample cannot fix.</li>
 </ul>
 <p>Then commit and push.</p>
 
 <h2 id="more-help">More help</h2>
 <details><summary>Which methods can be enumerated exactly?</summary><div class="details-body">
-  <p>Only systematic sampling with a whole-number interval k = N/n. The random start is its only random step, so there are just k equally likely samples; listing all k gives the exact distribution, and drawing 1,000 random starts would only repeat them. Simple random sampling, stratified sampling and the fractional-interval design use random repetitions, which are Monte Carlo. For your file, the interval at each size is:</p>
+  <p>Only systematic sampling with a whole-number interval k = N/n. The random start is its only random step, so there are just k equally likely samples; listing all k gives the exact distribution, and drawing random starts would only repeat them. Simple random sampling, stratified sampling and the fractional-interval design use random repetitions, which are Monte Carlo. For your file, the interval at each size is:</p>
   {{intervals clinic}}
   {{intervals costs}}
   {{intervals heart}}
@@ -91,7 +98,7 @@ Please do not run any experiments or tell me what results to expect: I will read
   <ul>
     <li><strong>Numbers change every time I run it.</strong> Check the seed is shown, fixed and passed to the shared sampling module. The same seed and settings must give the same numbers.</li>
     <li><strong>The simple random n = 100 numbers differ between experiments.</strong> The seed, repetition count or population differs. Rerun both with identical settings.</li>
-    <li><strong>It runs slowly.</strong> Ask your agent to run the repetitions once, in the shared module, and reuse the numbers for every display. Do not lower the repetition count below 1,000.</li>
+    <li><strong>It runs slowly.</strong> Ask your agent to run the repetitions once, in the shared module, and reuse the numbers for every display. Do not lower the repetition count below 100.</li>
     <li><strong>A result is missing a label.</strong> Ask your agent to show population, method, settings, seed, n and repetition count beside every result.</li>
   </ul></div></details>
 <details><summary>Claims to avoid</summary><div class="details-body">
